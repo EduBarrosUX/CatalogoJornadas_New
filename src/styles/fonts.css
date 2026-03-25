@@ -1,0 +1,101 @@
+/* Fontes do Banco do Brasil */
+
+/* 
+================================================================================
+ATENÇÃO: FONTES TEMPORÁRIAS - SUBSTITUIR COM FONTES REAIS PARA PUBLICAÇÃO
+================================================================================
+
+Atualmente, as fontes estão usando fallback para fontes do sistema (Arial/Helvetica).
+Para que as fontes do Banco do Brasil apareçam corretamente quando você publicar:
+
+PASSO 1: Obtenha os arquivos de fonte do Banco do Brasil
+  - Peça ao time de design os arquivos .woff2 e .woff das fontes
+  - Você precisa das famílias: BancoDoBrasil_Titulos e BancoDoBrasil_Textos
+  - Em cada família, precisa dos pesos: Bold (700), Medium (500), Regular (400), Light (300)
+
+PASSO 2: Adicione os arquivos ao projeto
+  - Crie uma pasta /public/fonts/
+  - Coloque todos os arquivos .woff2 e .woff nessa pasta
+  - Exemplo de estrutura:
+    /public/fonts/
+      ├── BancoDoBrasil-Titulos-Bold.woff2
+      ├── BancoDoBrasil-Titulos-Bold.woff
+      ├── BancoDoBrasil-Titulos-Medium.woff2
+      ├── BancoDoBrasil-Titulos-Medium.woff
+      ├── BancoDoBrasil-Textos-Bold.woff2
+      ├── BancoDoBrasil-Textos-Bold.woff
+      └── etc...
+
+PASSO 3: Atualize este arquivo (fonts.css)
+  - Substitua os 'local()' por URLs reais conforme exemplos comentados abaixo
+  - Exemplo de como deve ficar:
+  
+    @font-face {
+      font-family: 'BancoDoBrasil_Titulos:Bold';
+      src: url('/fonts/BancoDoBrasil-Titulos-Bold.woff2') format('woff2'),
+           url('/fonts/BancoDoBrasil-Titulos-Bold.woff') format('woff');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
+================================================================================
+*/
+
+/* BancoDoBrasil Titulos */
+@font-face {
+  font-family: 'BancoDoBrasil_Titulos:Bold';
+  src: local('Arial'), local('Helvetica'), local('sans-serif');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil_Titulos:Medium';
+  src: local('Arial'), local('Helvetica'), local('sans-serif');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil_Titulos:Regular';
+  src: local('Arial'), local('Helvetica'), local('sans-serif');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* BancoDoBrasil Textos */
+@font-face {
+  font-family: 'BancoDoBrasil_Textos:Bold';
+  src: local('Arial'), local('Helvetica'), local('sans-serif');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil_Textos:Medium';
+  src: local('Arial'), local('Helvetica'), local('sans-serif');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil_Textos:Regular';
+  src: local('Arial'), local('Helvetica'), local('sans-serif');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil_Textos:Light';
+  src: local('Arial'), local('Helvetica'), local('sans-serif');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
