@@ -135,7 +135,7 @@ export function FormularioAlteracao({ register, errors, watch, setValue }: Formu
               9. Detalhe as alterações que foram realizadas: *
             </p>
             <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] not-italic relative shrink-0 text-[#686c73] text-[12px] tracking-[0.06px] w-full">
-              Ex: Alteração para correção técnica, UX, Atualização de Conteúdo, etc e detalhe o que foi feito
+              Correção técnica, atualização de conteúdo, ajuste de mídia e outros. Detalhe de forma breve
             </p>
             
             <div className="bg-[#f0f2f4] content-stretch flex flex-col items-start relative rounded-[4px] shrink-0 w-full">
@@ -302,7 +302,7 @@ export function FormularioAlteracao({ register, errors, watch, setValue }: Formu
               11. Detalhe as alterações que foram realizadas: *
             </p>
             <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] not-italic relative shrink-0 text-[#686c73] text-[12px] tracking-[0.06px] w-full">
-              Ex: Alteração para correção técnica, UX, Atualização de Conteúdo, etc e detalhe o que foi feito
+              Correção técnica, atualização de conteúdo, ajuste de mídia e outros. Detalhe de forma breve
             </p>
             
             <div className="bg-[#f0f2f4] content-stretch flex flex-col items-start relative rounded-[4px] shrink-0 w-full">

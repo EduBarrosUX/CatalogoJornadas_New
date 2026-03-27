@@ -37,6 +37,8 @@ export interface JornadaCadastrada {
   sistemaResponsavel?: string;
   periodicidade?: string;
   templateMeta?: string;
+  linkPlanoRequisitos?: string;
+  ausenciaPlanoRequisitos?: string;
   categoriaAtivo?: string;
   nomeHashInicial?: string;
   hashInicio?: string;
@@ -381,6 +383,8 @@ export default function App() {
       sistemaResponsavel: data.sistemaResponsavel,
       periodicidade: data.periodicidade,
       templateMeta: data.templateMeta,
+      linkPlanoRequisitos: data.linkPlanoRequisitos,
+      ausenciaPlanoRequisitos: data.ausenciaPlanoRequisitos,
       categoriaAtivo: data.categoriaAtivo,
       nomeHashInicial: data.nomeHashInicial,
       hashInicio: data.hashInicio,

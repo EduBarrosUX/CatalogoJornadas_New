@@ -35,6 +35,7 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
   const [colunasVisiveis, setColunasVisiveis] = useState<string[]>(['TIPO', 'TEMA', 'STATUS', 'DIRETORIA', 'CANAL']);
   const [maisFiltrosExpandido, setMaisFiltrosExpandido] = useState(false); // Controla expansão dos filtros extras
   const [inclusaoFiltro, setInclusaoFiltro] = useState(''); // Filtro de Inclusão
+  const [planoRequisitosFiltro, setPlanoRequisitosFiltro] = useState<'com_link' | 'com_justificativa' | ''>(''); // Filtro (TRN)
 
   // Garantir que STATUS sempre seja renderizado por último
   const colunasOrdenadas = [...colunasVisiveis].sort((a, b) => {
@@ -200,7 +201,16 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
     // Filtro de inclusão
     const matchInclusao = !inclusaoFiltro || jornada.inclusao === inclusaoFiltro;
 
-    return matchSearch && matchTipo && matchStatus && matchData && matchPeriodo && matchTema && matchDiretoria && matchCanal && matchInclusao;
+    // Filtro de Plano de Requisitos (somente Transação/TRN)
+    const isTransacao = jornada.tipo === 'Transação';
+    const hasLinkPlano = !!jornada.jornadaOriginal?.linkPlanoRequisitos?.trim();
+    const hasJustificativa = !!jornada.jornadaOriginal?.ausenciaPlanoRequisitos?.trim();
+    const matchPlanoRequisitos =
+      !planoRequisitosFiltro ||
+      (planoRequisitosFiltro === 'com_link' && isTransacao && hasLinkPlano) ||
+      (planoRequisitosFiltro === 'com_justificativa' && isTransacao && hasJustificativa);
+
+    return matchSearch && matchTipo && matchStatus && matchData && matchPeriodo && matchTema && matchDiretoria && matchCanal && matchInclusao && matchPlanoRequisitos;
   });
 
   // Verificar se há algum filtro ativo
@@ -217,7 +227,8 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
     periodoMes ||
     diretoriaFiltro ||
     canalFiltro ||
-    inclusaoFiltro
+    inclusaoFiltro ||
+    planoRequisitosFiltro
   );
 
   // Paginação
@@ -732,6 +743,20 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
               />
             </div>
 
+            {/* Filtro: Plano de Requisitos (somente TRN/Transação) */}
+            <div className="content-stretch flex flex-[1_0_0] flex-col gap-[8px] items-start min-h-px min-w-px relative">
+              <SelectField
+                label="Plano de Requisitos"
+                value={planoRequisitosFiltro}
+                onChange={(v) => setPlanoRequisitosFiltro(v as typeof planoRequisitosFiltro)}
+                options={[
+                  { value: 'com_link', label: 'Com link informado' },
+                  { value: 'com_justificativa', label: 'Sem link (com justificativa)' }
+                ]}
+                placeholder="Filtro"
+              />
+            </div>
+
             {/* Filtro de Diretoria */}
             <div className="content-stretch flex flex-[1_0_0] flex-col gap-[8px] items-start min-h-px min-w-px relative">
               <SelectField
@@ -765,8 +790,6 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
               />
             </div>
 
-            {/* Espaços vazios para manter o alinhamento */}
-            <div className="flex-[1_0_0]" />
           </div>
         )}
 
@@ -789,6 +812,7 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
               setDiretoriaFiltro('');
               setCanalFiltro('');
               setInclusaoFiltro('');
+              setPlanoRequisitosFiltro('');
               setCurrentPage(1);
             }}
           />

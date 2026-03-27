@@ -12,13 +12,21 @@ interface Passo2FormularioProps {
 }
 
 export function Passo2Formulario({ register, errors, control, periodicidade, tipoHU, tipoInclusao }: Passo2FormularioProps) {
+  const mostrarRME = tipoHU === 'Ativo' || tipoInclusao !== 'novo';
+  const numeroRME = '7.';
+  const numeroSistema = mostrarRME ? '8.' : '7.';
+  const numeroPeriodicidade = mostrarRME ? '9.' : '8.';
+  const numeroTemplateMeta = mostrarRME ? '10.' : '9.';
+  const numeroCategoriaAtivo = mostrarRME ? '11.' : '10.';
+  const numeroPlanoRequisitos = mostrarRME ? '11.' : '10.';
+  const numeroAusenciaPlano = mostrarRME ? '12.' : '11.';
   return (
     <div className="content-stretch flex flex-col gap-[24px] items-start w-full max-w-[692px]">
-      {/* Campo 6: RME - Mostrar apenas se não for "Novo fluxo" */}
-      {tipoInclusao !== 'novo' && (
+      {/* Campo RME - Mostrar para Ativo e também para alterações */}
+      {mostrarRME && (
       <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
         <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-          6. Qual o RME? *
+          {numeroRME} Qual o número do RME? *
         </p>
         <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
           <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
@@ -27,7 +35,7 @@ export function Passo2Formulario({ register, errors, control, periodicidade, tip
                 <input
                   type="text"
                   {...register('rme', { required: tipoInclusao !== 'novo' ? 'Campo obrigatório' : false })}
-                  placeholder="RME- "
+                  placeholder="Digite somente números"
                   className="flex-[1_0_0] bg-transparent font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] outline-none placeholder:text-[#686c73]"
                 />
               </div>
@@ -36,7 +44,7 @@ export function Passo2Formulario({ register, errors, control, periodicidade, tip
           <div className="bg-[#b4b9c1] h-px shrink-0 w-full" />
         </div>
         <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#686c73] text-[14px] tracking-[0.196px] w-full">
-          Preencha RME- Titulo
+          Informe somente números, sem iniciar com RME
         </p>
         {errors.rme && (
           <p className="text-red-500 text-xs mt-1">{errors.rme.message as string}</p>
@@ -49,7 +57,7 @@ export function Passo2Formulario({ register, errors, control, periodicidade, tip
         <SelectFieldForm
           control={control}
           name="sistemaResponsavel"
-          label="7. Sistema Responsável: *"
+          label={`${numeroSistema} Sistema Responsável: *`}
           rules={{ required: 'Campo obrigatório' }}
           options={[
             { value: 'NIA', label: 'NIA' },
@@ -58,13 +66,15 @@ export function Passo2Formulario({ register, errors, control, periodicidade, tip
             { value: 'CRM', label: 'CRM' },
           ]}
           errorMessage={errors.sistemaResponsavel?.message as string}
+          isSearchable
+          isCreatable
         />
       </div>
 
       {/* Campo 8: Periodicidade de envio - Radio Buttons */}
       <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
         <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-          8. Qual a periodicidade de envio ?
+          {numeroPeriodicidade} Qual a periodicidade de envio ?
         </p>
         <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
           {/* Opção: Disparo único */}
@@ -131,7 +141,7 @@ export function Passo2Formulario({ register, errors, control, periodicidade, tip
       {/* Campo 9: Nome do template na META */}
       <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
         <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-          9. Qual o nome do template na META? *
+          {numeroTemplateMeta} Qual o nome do template na META? *
         </p>
         <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
           <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
@@ -159,7 +169,7 @@ export function Passo2Formulario({ register, errors, control, periodicidade, tip
           <SelectFieldForm
             control={control}
             name="categoriaAtivo"
-            label="10. Qual a categoria do Ativo na Meta ?"
+            label={`${numeroCategoriaAtivo} Qual a categoria do Ativo na Meta ?`}
             rules={{ required: tipoHU === 'Ativo' ? 'Campo obrigatório' : false }}
             options={[
               { value: 'Autenticação', label: 'Autenticação' },
@@ -177,7 +187,7 @@ export function Passo2Formulario({ register, errors, control, periodicidade, tip
           {/* Campo: Link para acesso ao Plano de Requisitos */}
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              10. Link para acesso ao Plano de Requisitos:
+              {numeroPlanoRequisitos} Link para acesso ao Plano de Requisitos:
             </p>
             <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
               <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
@@ -202,7 +212,7 @@ export function Passo2Formulario({ register, errors, control, periodicidade, tip
           {/* Campo: Ausência - Plano de Requisitos */}
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              11. Ausência - Plano de Requisitos:
+              {numeroAusenciaPlano} Ausência - Plano de Requisitos:
             </p>
             <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
               <div className="bg-[#f0f2f4] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full min-h-[80px]">

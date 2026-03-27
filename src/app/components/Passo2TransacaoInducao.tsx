@@ -269,6 +269,26 @@ export function Passo2TransacaoInducao({ register, errors, control, tipoHU, cont
         <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
           10. Hash inicial (UUID/Hash)? *
         </p>
+
+        <div className="mb-2 bg-[#e8f2ff] flex flex-col items-start justify-center p-[12px] relative rounded-[8px] w-full">
+          <div aria-hidden="true" className="absolute border border-[#4a90e2] border-solid inset-0 pointer-events-none rounded-[8px]" />
+          <div className="relative w-full">
+            <div className="flex items-start gap-[8px]">
+              <div className="relative shrink-0 size-[20px] mt-[1px]">
+                <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="8" stroke="#2D37F5" strokeWidth="1.5" fill="none"/>
+                  <path d="M10 6.5v4.5M10 13.5h.01" stroke="#2D37F5" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+              </div>
+              <div className="flex-1">
+                <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#111214] text-[14px] leading-[1.4]">
+                  Para informacionais, ativos e induções, se a jornada estiver em uma múltipla resposta, informe a hash da múltipla.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
           <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
             <div className="flex flex-row items-center size-full">

@@ -125,7 +125,7 @@ export function PassoAlteracaoCompleto({ register, errors, watch, setValue }: Pa
               9. Detalhe as alterações que foram realizadas: *
             </p>
             <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] not-italic relative shrink-0 text-[#686c73] text-[12px] tracking-[0.06px] w-full">
-              Ex: Alteração para correção técnica, UX, Atualização de Conteúdo, etc e detalhe o que foi feito
+              Correção técnica, atualização de conteúdo, ajuste de mídia e outros. Detalhe de forma breve
             </p>
             
             <div className="bg-[#f0f2f4] content-stretch flex flex-col items-start relative rounded-[4px] shrink-0 w-full">
@@ -152,10 +152,57 @@ export function PassoAlteracaoCompleto({ register, errors, watch, setValue }: Pa
             )}
           </div>
 
+          {/* Link para acesso ao Plano de Requisitos */}
+          <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
+            <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
+              10. Link para acesso ao Plano de Requisitos:
+            </p>
+            <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
+              <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
+                <div className="flex flex-row items-center size-full">
+                  <div className="content-stretch flex items-center pb-[7px] pl-[12px] pr-[4px] pt-[8px] relative size-full">
+                    <input
+                      type="url"
+                      {...register('linkPlanoRequisitos')}
+                      placeholder="https://..."
+                      className="flex-[1_0_0] bg-transparent font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] outline-none placeholder:text-[#686c73]"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="bg-[#b4b9c1] h-px shrink-0 w-full" />
+            </div>
+            <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#686c73] text-[14px] tracking-[0.196px] w-full">
+              Somente para TRN: Informe o plano de requisitos para todas as transações. Se não for possível, justifique abaixo.
+            </p>
+          </div>
+
+          {/* Ausência - Plano de Requisitos */}
+          <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
+            <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
+              11. Ausência - Plano de Requisitos:
+            </p>
+            <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
+              <div className="bg-[#f0f2f4] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full min-h-[80px]">
+                <div className="flex flex-row items-start size-full">
+                  <div className="content-stretch flex items-start pb-[7px] pl-[12px] pr-[4px] pt-[8px] relative size-full">
+                    <textarea
+                      {...register('ausenciaPlanoRequisitos')}
+                      placeholder="Justifique caso não seja possível informar o plano de requisitos"
+                      rows={3}
+                      className="flex-[1_0_0] bg-transparent font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] outline-none placeholder:text-[#686c73] resize-none w-full"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="bg-[#b4b9c1] h-px shrink-0 w-full" />
+            </div>
+          </div>
+
           {/* Link do Figma */}
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              10. Link do Figma: *
+              12. Link do Figma: *
             </p>
             
             <div className="bg-[#f0f2f4] content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
@@ -281,7 +328,7 @@ export function PassoAlteracaoCompleto({ register, errors, watch, setValue }: Pa
               11. Detalhe as alterações que foram realizadas: *
             </p>
             <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] not-italic relative shrink-0 text-[#686c73] text-[12px] tracking-[0.06px] w-full">
-              Ex: Alteração para correção técnica, UX, Atualização de Conteúdo, etc e detalhe o que foi feito
+              Correção técnica, atualização de conteúdo, ajuste de mídia e outros. Detalhe de forma breve
             </p>
             
             <div className="bg-[#f0f2f4] content-stretch flex flex-col items-start relative rounded-[4px] shrink-0 w-full">
@@ -308,10 +355,57 @@ export function PassoAlteracaoCompleto({ register, errors, watch, setValue }: Pa
             )}
           </div>
 
+          {/* Link para acesso ao Plano de Requisitos */}
+          <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
+            <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
+              12. Link para acesso ao Plano de Requisitos:
+            </p>
+            <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
+              <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
+                <div className="flex flex-row items-center size-full">
+                  <div className="content-stretch flex items-center pb-[7px] pl-[12px] pr-[4px] pt-[8px] relative size-full">
+                    <input
+                      type="url"
+                      {...register('linkPlanoRequisitos')}
+                      placeholder="https://..."
+                      className="flex-[1_0_0] bg-transparent font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] outline-none placeholder:text-[#686c73]"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="bg-[#b4b9c1] h-px shrink-0 w-full" />
+            </div>
+            <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#686c73] text-[14px] tracking-[0.196px] w-full">
+              Somente para TRN: Informe o plano de requisitos para todas as transações. Se não for possível, justifique abaixo.
+            </p>
+          </div>
+
+          {/* Ausência - Plano de Requisitos */}
+          <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
+            <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
+              13. Ausência - Plano de Requisitos:
+            </p>
+            <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
+              <div className="bg-[#f0f2f4] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full min-h-[80px]">
+                <div className="flex flex-row items-start size-full">
+                  <div className="content-stretch flex items-start pb-[7px] pl-[12px] pr-[4px] pt-[8px] relative size-full">
+                    <textarea
+                      {...register('ausenciaPlanoRequisitos')}
+                      placeholder="Justifique caso não seja possível informar o plano de requisitos"
+                      rows={3}
+                      className="flex-[1_0_0] bg-transparent font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] outline-none placeholder:text-[#686c73] resize-none w-full"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="bg-[#b4b9c1] h-px shrink-0 w-full" />
+            </div>
+          </div>
+
           {/* Link do Figma */}
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              12. Link do Figma: *
+              14. Link do Figma: *
             </p>
             
             <div className="bg-[#f0f2f4] content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">

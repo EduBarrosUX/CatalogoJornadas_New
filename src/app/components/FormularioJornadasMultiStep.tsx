@@ -75,7 +75,7 @@ const STEP_LABELS = [
   'Sistema e Periodicidade',
   'Categoria e Tema',
   'Título e Descrição',
-  'Canal e Gatilho'
+  'Gatilho e Link'
 ];
 
 // Labels específicos para Transação/Indução (3 passos)
@@ -139,7 +139,7 @@ export function FormularioJornadasMultiStep({ onSubmitSuccess, jornadaEditando }
   // Determinar o número total de passos baseado no tipo de inclusão
   const totalSteps = (tipoInclusao === 'alteracao' || tipoInclusao === 'alteracao-trn') 
     ? 2 
-    : (tipoHU === 'Transação' || tipoHU === 'Indução') && tipoInclusao === 'novo'
+    : (tipoHU === 'Transação' || tipoHU === 'Indução' || tipoHU === 'Informacional') && tipoInclusao === 'novo'
     ? 4
     : 5;
 
@@ -313,21 +313,28 @@ export function FormularioJornadasMultiStep({ onSubmitSuccess, jornadaEditando }
               'Sistema e Periodicidade',
               'Categoria e Tema',
               'Título e Descrição',
-              'Canal e Gatilho'
+              'Gatilho e Link'
             ];
             
             const stepLabelsTransacao = [
               'Informações Básicas',
               'Tema e Hash',
               'Título e Descrição',
-              'Canal e Gatilho'
+              'Gatilho e Link'
             ];
-            
+
             const stepLabelsInducao = [
               'Informações Básicas',
-              'Tema e Hash',
+              'Categoria e Tema',
               'Título e Descrição',
-              'Canal e Gatilho'
+              'Gatilho e Link'
+            ];
+
+            const stepLabelsInformacional = [
+              'Informações Básicas',
+              'Categoria e Tema',
+              'Título e Descrição',
+              'Gatilho e Link'
             ];
             
             const stepLabelsAlteracao = [
@@ -341,6 +348,8 @@ export function FormularioJornadasMultiStep({ onSubmitSuccess, jornadaEditando }
               ? stepLabelsTransacao
               : tipoHU === 'Indução' && tipoInclusao === 'novo'
               ? stepLabelsInducao
+              : tipoHU === 'Informacional' && tipoInclusao === 'novo'
+              ? stepLabelsInformacional
               : stepLabelsNovo;
             
             return (
@@ -592,8 +601,8 @@ export function FormularioJornadasMultiStep({ onSubmitSuccess, jornadaEditando }
           />
         )}
 
-        {/* Passo 2: Tema e Hash - PARA TRANSAÇÃO E INDUÇÃO (NOVO) */}
-        {currentStep === 2 && tipoInclusao === 'novo' && (tipoHU === 'Transação' || tipoHU === 'Indução') && (
+        {/* Passo 2: Tema e Hash - PARA TRANSAÇÃO (NOVO) */}
+        {currentStep === 2 && tipoInclusao === 'novo' && (tipoHU === 'Transação') && (
           <Passo2TransacaoInducao
             register={register}
             errors={errors}
@@ -625,8 +634,8 @@ export function FormularioJornadasMultiStep({ onSubmitSuccess, jornadaEditando }
           />
         )}
 
-        {/* Passo 3: Título e Canal - PARA TRANSAÇÃO E INDUÇÃO (NOVO) */}
-        {currentStep === 3 && tipoInclusao === 'novo' && (tipoHU === 'Transação' || tipoHU === 'Indução') && (
+        {/* Passo 3: Título e Canal - PARA TRANSAÇÃO (NOVO) */}
+        {currentStep === 3 && tipoInclusao === 'novo' && (tipoHU === 'Transação') && (
           <Passo3TransacaoInducao
             register={register}
             errors={errors}
@@ -634,6 +643,16 @@ export function FormularioJornadasMultiStep({ onSubmitSuccess, jornadaEditando }
             onCanaisChange={handleCanaisChange}
             tipoHU={tipoHU}
             watch={watch}
+          />
+        )}
+
+        {/* Passo 2: Categoria e Tema - PARA INDUÇÃO e INFORMACIONAL (NOVO) */}
+        {currentStep === 2 && tipoInclusao === 'novo' && (tipoHU === 'Indução' || tipoHU === 'Informacional') && (
+          <Passo3Formulario
+            register={register}
+            errors={errors}
+            tipoHU={tipoHU}
+            contextoInducao={contextoInducao}
           />
         )}
 
@@ -647,6 +666,15 @@ export function FormularioJornadasMultiStep({ onSubmitSuccess, jornadaEditando }
           />
         )}
 
+        {/* Passo 3: Título e Descrição - PARA INDUÇÃO e INFORMACIONAL (NOVO) */}
+        {currentStep === 3 && tipoInclusao === 'novo' && (tipoHU === 'Indução' || tipoHU === 'Informacional') && (
+          <Passo4Formulario
+            register={register}
+            errors={errors}
+            watch={watch}
+          />
+        )}
+
         {/* Passo 4: Título e Descrição - SOMENTE PARA ATIVO (NOVO) */}
         {currentStep === 4 && tipoInclusao === 'novo' && tipoHU === 'Ativo' && (
           <Passo4Formulario
@@ -656,9 +684,19 @@ export function FormularioJornadasMultiStep({ onSubmitSuccess, jornadaEditando }
           />
         )}
 
-        {/* Passo 4: Canal e Gatilho - PARA TRANSAÇÃO E INDUÇÃO (NOVO) */}
-        {currentStep === 4 && tipoInclusao === 'novo' && (tipoHU === 'Transação' || tipoHU === 'Indução') && (
+        {/* Passo 4: Canal e Gatilho - PARA TRANSAÇÃO (NOVO) */}
+        {currentStep === 4 && tipoInclusao === 'novo' && (tipoHU === 'Transação') && (
           <Passo4CanalGatilho
+            register={register}
+            errors={errors}
+            canaisSelecionados={canalSelecionado}
+            onCanaisChange={handleCanaisChange}
+          />
+        )}
+
+        {/* Passo 4: Canal e Gatilho - PARA INDUÇÃO e INFORMACIONAL (NOVO) */}
+        {currentStep === 4 && tipoInclusao === 'novo' && (tipoHU === 'Indução' || tipoHU === 'Informacional') && (
+          <Passo5Formulario
             register={register}
             errors={errors}
             canaisSelecionados={canalSelecionado}
