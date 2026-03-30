@@ -69,7 +69,7 @@ export function Passo3Formulario({ register, errors, tipoHU, contextoInducao }: 
         <>
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              10. A INDUÇÃO foi incluída em qual contexto: *
+              10. A indução foi incluída em qual contexto:
             </p>
             <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
               {['Saudação', 'Feedback', 'QR Code / Link', 'Outro'].map((opcao) => (
@@ -106,21 +106,24 @@ export function Passo3Formulario({ register, errors, tipoHU, contextoInducao }: 
 
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              11. Qual o público? *
+              11. Qual o público?
             </p>
             <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
-              {['PF', 'PJ'].map((opcao) => (
-                <label key={opcao} className="relative rounded-[4px] shrink-0 w-full cursor-pointer">
-                  <div aria-hidden="true" className={`absolute border ${publicoSelecionado === opcao ? 'border-[#2d37f5]' : 'border-[#b4b9c1]'} border-solid inset-0 pointer-events-none rounded-[4px]`} />
+              {[
+                { value: 'PF', label: 'Pessoa Física' },
+                { value: 'PJ', label: 'Pessoa Jurídica' }
+              ].map((opcao) => (
+                <label key={opcao.value} className="relative rounded-[4px] shrink-0 w-full cursor-pointer">
+                  <div aria-hidden="true" className={`absolute border ${publicoSelecionado === opcao.value ? 'border-[#2d37f5]' : 'border-[#b4b9c1]'} border-solid inset-0 pointer-events-none rounded-[4px]`} />
                   <div className="content-stretch flex gap-[8px] items-start p-[12px] relative w-full">
                     <div className="relative shrink-0 size-[24px]">
                       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
-                        <path d={publicoSelecionado === opcao ? svgPaths.p4501f00 : svgPaths.p26f9ce00} fill={publicoSelecionado === opcao ? '#2D37F5' : '#313338'} />
+                        <path d={publicoSelecionado === opcao.value ? svgPaths.p4501f00 : svgPaths.p26f9ce00} fill={publicoSelecionado === opcao.value ? '#2D37F5' : '#313338'} />
                       </svg>
                     </div>
                     <input
                       type="radio"
-                      value={opcao}
+                      value={opcao.value}
                       {...register('publico', {
                         required: tipoHU === 'Indução' ? 'Campo obrigatório' : false,
                         onChange: (e) => setPublicoSelecionado(e.target.value),
@@ -129,7 +132,7 @@ export function Passo3Formulario({ register, errors, tipoHU, contextoInducao }: 
                     />
                     <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-px relative">
                       <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] text-[#111214] text-[16px] tracking-[0.08px] w-full">
-                        {opcao}
+                        {opcao.label}
                       </p>
                     </div>
                   </div>
@@ -143,7 +146,7 @@ export function Passo3Formulario({ register, errors, tipoHU, contextoInducao }: 
 
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              12. Em qual canal esse fluxo será disponibilizado? *
+              12. Em qual canal esse fluxo será disponibilizado?
             </p>
             <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
               {canais.map((canal) => (
@@ -175,6 +178,30 @@ export function Passo3Formulario({ register, errors, tipoHU, contextoInducao }: 
             </div>
             {errors.canais && (
               <p className="text-red-500 text-xs mt-1">{errors.canais.message as string}</p>
+            )}
+            {canalSelecionado === 'Outros' && (
+              <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full mt-2">
+                <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.125] text-[#686c73] text-[14px] tracking-[0.07px] w-full">
+                  Informe o canal
+                </p>
+                <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
+                  <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
+                    <div className="flex flex-row items-center size-full">
+                      <div className="content-stretch flex items-center pb-[7px] pl-[12px] pr-[4px] pt-[8px] relative size-full">
+                        <input
+                          type="text"
+                          {...register('canalOutro', {
+                            required: canalSelecionado === 'Outros' ? 'Campo obrigatório' : false
+                          })}
+                          placeholder="Digite o canal"
+                          className="flex-[1_0_0] bg-transparent font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px text-[#686c73] text-[16px] tracking-[0.08px] outline-none placeholder:text-[#686c73]"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-[#b4b9c1] h-px shrink-0 w-full" />
+                </div>
+              </div>
             )}
           </div>
         </>
@@ -184,21 +211,24 @@ export function Passo3Formulario({ register, errors, tipoHU, contextoInducao }: 
         <>
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              11. Qual o público? *
+              11. Qual o público?
             </p>
             <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
-              {['PF', 'PJ'].map((opcao) => (
-                <label key={opcao} className="relative rounded-[4px] shrink-0 w-full cursor-pointer">
-                  <div aria-hidden="true" className={`absolute border ${publicoSelecionado === opcao ? 'border-[#2d37f5]' : 'border-[#b4b9c1]'} border-solid inset-0 pointer-events-none rounded-[4px]`} />
+              {[
+                { value: 'PF', label: 'Pessoa Física' },
+                { value: 'PJ', label: 'Pessoa Jurídica' }
+              ].map((opcao) => (
+                <label key={opcao.value} className="relative rounded-[4px] shrink-0 w-full cursor-pointer">
+                  <div aria-hidden="true" className={`absolute border ${publicoSelecionado === opcao.value ? 'border-[#2d37f5]' : 'border-[#b4b9c1]'} border-solid inset-0 pointer-events-none rounded-[4px]`} />
                   <div className="content-stretch flex gap-[8px] items-start p-[12px] relative w-full">
                     <div className="relative shrink-0 size-[24px]">
                       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
-                        <path d={publicoSelecionado === opcao ? svgPaths.p4501f00 : svgPaths.p26f9ce00} fill={publicoSelecionado === opcao ? '#2D37F5' : '#313338'} />
+                        <path d={publicoSelecionado === opcao.value ? svgPaths.p4501f00 : svgPaths.p26f9ce00} fill={publicoSelecionado === opcao.value ? '#2D37F5' : '#313338'} />
                       </svg>
                     </div>
                     <input
                       type="radio"
-                      value={opcao}
+                      value={opcao.value}
                       {...register('publico', {
                         required: tipoHU === 'Informacional' ? 'Campo obrigatório' : false,
                         onChange: (e) => setPublicoSelecionado(e.target.value),
@@ -207,7 +237,7 @@ export function Passo3Formulario({ register, errors, tipoHU, contextoInducao }: 
                     />
                     <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-px relative">
                       <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] text-[#111214] text-[16px] tracking-[0.08px] w-full">
-                        {opcao}
+                        {opcao.label}
                       </p>
                     </div>
                   </div>
@@ -221,7 +251,7 @@ export function Passo3Formulario({ register, errors, tipoHU, contextoInducao }: 
 
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              12. Em qual canal esse fluxo será disponibilizado? *
+              12. Em qual canal esse fluxo será disponibilizado?
             </p>
             <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
               {canais.map((canal) => (
@@ -253,6 +283,30 @@ export function Passo3Formulario({ register, errors, tipoHU, contextoInducao }: 
             </div>
             {errors.canais && (
               <p className="text-red-500 text-xs mt-1">{errors.canais.message as string}</p>
+            )}
+            {canalSelecionado === 'Outros' && (
+              <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full mt-2">
+                <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.125] text-[#686c73] text-[14px] tracking-[0.07px] w-full">
+                  Informe o canal
+                </p>
+                <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
+                  <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
+                    <div className="flex flex-row items-center size-full">
+                      <div className="content-stretch flex items-center pb-[7px] pl-[12px] pr-[4px] pt-[8px] relative size-full">
+                        <input
+                          type="text"
+                          {...register('canalOutro', {
+                            required: canalSelecionado === 'Outros' ? 'Campo obrigatório' : false
+                          })}
+                          placeholder="Digite o canal"
+                          className="flex-[1_0_0] bg-transparent font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px text-[#686c73] text-[16px] tracking-[0.08px] outline-none placeholder:text-[#686c73]"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-[#b4b9c1] h-px shrink-0 w-full" />
+                </div>
+              </div>
             )}
           </div>
         </>
@@ -262,21 +316,24 @@ export function Passo3Formulario({ register, errors, tipoHU, contextoInducao }: 
         <>
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              11. Qual o público? *
+              11. Qual o público?
             </p>
             <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
-              {['PF', 'PJ'].map((opcao) => (
-                <label key={opcao} className="relative rounded-[4px] shrink-0 w-full cursor-pointer">
-                  <div aria-hidden="true" className={`absolute border ${publicoSelecionado === opcao ? 'border-[#2d37f5]' : 'border-[#b4b9c1]'} border-solid inset-0 pointer-events-none rounded-[4px]`} />
+              {[
+                { value: 'PF', label: 'Pessoa Física' },
+                { value: 'PJ', label: 'Pessoa Jurídica' }
+              ].map((opcao) => (
+                <label key={opcao.value} className="relative rounded-[4px] shrink-0 w-full cursor-pointer">
+                  <div aria-hidden="true" className={`absolute border ${publicoSelecionado === opcao.value ? 'border-[#2d37f5]' : 'border-[#b4b9c1]'} border-solid inset-0 pointer-events-none rounded-[4px]`} />
                   <div className="content-stretch flex gap-[8px] items-start p-[12px] relative w-full">
                     <div className="relative shrink-0 size-[24px]">
                       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
-                        <path d={publicoSelecionado === opcao ? svgPaths.p4501f00 : svgPaths.p26f9ce00} fill={publicoSelecionado === opcao ? '#2D37F5' : '#313338'} />
+                        <path d={publicoSelecionado === opcao.value ? svgPaths.p4501f00 : svgPaths.p26f9ce00} fill={publicoSelecionado === opcao.value ? '#2D37F5' : '#313338'} />
                       </svg>
                     </div>
                     <input
                       type="radio"
-                      value={opcao}
+                      value={opcao.value}
                       {...register('publico', {
                         required: tipoHU === 'Ativo' ? 'Campo obrigatório' : false,
                         onChange: (e) => setPublicoSelecionado(e.target.value),
@@ -285,7 +342,7 @@ export function Passo3Formulario({ register, errors, tipoHU, contextoInducao }: 
                     />
                     <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-px relative">
                       <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] text-[#111214] text-[16px] tracking-[0.08px] w-full">
-                        {opcao}
+                        {opcao.label}
                       </p>
                     </div>
                   </div>
@@ -299,7 +356,7 @@ export function Passo3Formulario({ register, errors, tipoHU, contextoInducao }: 
 
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              12. Em qual canal esse fluxo será disponibilizado? *
+              12. Em qual canal esse fluxo será disponibilizado?
             </p>
             <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
               {canais.map((canal) => (
@@ -332,13 +389,37 @@ export function Passo3Formulario({ register, errors, tipoHU, contextoInducao }: 
             {errors.canais && (
               <p className="text-red-500 text-xs mt-1">{errors.canais.message as string}</p>
             )}
+            {canalSelecionado === 'Outros' && (
+              <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full mt-2">
+                <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.125] text-[#686c73] text-[14px] tracking-[0.07px] w-full">
+                  Informe o canal
+                </p>
+                <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
+                  <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
+                    <div className="flex flex-row items-center size-full">
+                      <div className="content-stretch flex items-center pb-[7px] pl-[12px] pr-[4px] pt-[8px] relative size-full">
+                        <input
+                          type="text"
+                          {...register('canalOutro', {
+                            required: canalSelecionado === 'Outros' ? 'Campo obrigatório' : false
+                          })}
+                          placeholder="Digite o canal"
+                          className="flex-[1_0_0] bg-transparent font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px text-[#686c73] text-[16px] tracking-[0.08px] outline-none placeholder:text-[#686c73]"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-[#b4b9c1] h-px shrink-0 w-full" />
+                </div>
+              </div>
+            )}
           </div>
         </>
       )}
 
       <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full" ref={temaContainerRef}>
         <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] text-[#111214] text-[14px] tracking-[0.07px] w-full">
-          {numeroTema} Qual é o Tema do seu fluxo? *
+          {numeroTema} Qual o tema do seu fluxo ?
         </p>
 
         <input type="hidden" name={temaField.name} ref={temaField.ref} />
@@ -435,7 +516,7 @@ export function Passo3Formulario({ register, errors, tipoHU, contextoInducao }: 
 
       <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
         <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] text-[#111214] text-[14px] tracking-[0.07px] w-full">
-          {numeroNomeHash} Qual o nome da Hash Inicial? *
+          {numeroNomeHash} Qual o nome da hash inicial?
         </p>
         <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
           <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
@@ -459,7 +540,7 @@ export function Passo3Formulario({ register, errors, tipoHU, contextoInducao }: 
 
       <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
         <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] text-[#111214] text-[14px] tracking-[0.07px] w-full">
-          {numeroHashInicio} Qual a Hash de início (UUID/Hash)? *
+          {numeroHashInicio} Qual a hash inicial (UUID/Hash) ?
         </p>
 
         <div className="mb-2 bg-[#e8f2ff] flex flex-col items-start justify-center p-[12px] relative rounded-[8px] w-full">

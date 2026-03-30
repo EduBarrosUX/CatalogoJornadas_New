@@ -10,7 +10,7 @@ export function PassoCodigoFluxo({ register, errors }: PassoCodigoFluxoProps) {
     <div className="content-stretch flex flex-col gap-[32px] items-start relative shrink-0 w-full">
       <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
         <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-          4. Qual o Código do Fluxo que consta no Catálogo de Jornadas?
+          4. Qual o código do fluxo que consta no catálogo de jornadas?
         </p>
         <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] not-italic relative shrink-0 text-[#686c73] text-[12px] tracking-[0.06px] w-full">
           ESCREVA A SIGLA E NÚMERO - Ex: RME0986, TRN0128, IND0003

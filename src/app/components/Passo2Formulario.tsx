@@ -26,7 +26,7 @@ export function Passo2Formulario({ register, errors, control, periodicidade, tip
       {mostrarRME && (
       <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
         <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-          {numeroRME} Qual o número do RME? *
+          {numeroRME} Qual o número do RME?
         </p>
         <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
           <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
@@ -52,12 +52,12 @@ export function Passo2Formulario({ register, errors, control, periodicidade, tip
       </div>
       )}
 
-      {/* Campo 7: Sistema Responsável */}
+      {/* Campo 7: Sistema responsável */}
       <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
         <SelectFieldForm
           control={control}
           name="sistemaResponsavel"
-          label={`${numeroSistema} Sistema Responsável: *`}
+          label={`${numeroSistema} Sistema responsável`}
           rules={{ required: 'Campo obrigatório' }}
           options={[
             { value: 'NIA', label: 'NIA' },
@@ -141,7 +141,7 @@ export function Passo2Formulario({ register, errors, control, periodicidade, tip
       {/* Campo 9: Nome do template na META */}
       <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
         <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-          {numeroTemplateMeta} Qual o nome do template na META? *
+          {numeroTemplateMeta} Qual o nome do template na META?
         </p>
         <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
           <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
@@ -205,7 +205,7 @@ export function Passo2Formulario({ register, errors, control, periodicidade, tip
               <div className="bg-[#b4b9c1] h-px shrink-0 w-full" />
             </div>
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#686c73] text-[14px] tracking-[0.196px] w-full">
-              Somente para TRN: Informe o plano de requisitos para todas as transações. Se não for possível, justifique abaixo.
+              Informe o plano de requisitos para todas as transações. Se não for possível, justifique abaixo.
             </p>
           </div>
 
