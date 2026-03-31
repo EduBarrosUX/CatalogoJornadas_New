@@ -19,7 +19,7 @@ export function Passo1Formulario({ register, errors, control, utilizaIAGenerativ
       {/* Campo 1: Número da História no GENTI */}
       <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
         <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-          1. Qual é o número da história no Genti?
+          1. Qual é o número da história no GENTI?
         </p>
         <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
           <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
@@ -233,7 +233,7 @@ export function Passo1Formulario({ register, errors, control, utilizaIAGenerativ
               {/* Campo 5: Data de implementação */}
               <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-[402px]">
                 <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-                  5. Informe a data em que o fluxo finalizado foi implementado em produção no nia:
+                  5. Informe a data em que o fluxo finalizado foi implementado em produção no NIA:
                 </p>
                 <DateInput
                   register={register}

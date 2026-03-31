@@ -126,6 +126,7 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'BancoDoBrasil_Textos:Regular', 'BancoDoBrasil Textos:Regular', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
   }
 
   /**

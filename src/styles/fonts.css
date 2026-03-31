@@ -1,51 +1,23 @@
-/* Fontes do Banco do Brasil */
-
-/* 
-================================================================================
-ATENÇÃO: FONTES TEMPORÁRIAS - SUBSTITUIR COM FONTES REAIS PARA PUBLICAÇÃO
-================================================================================
-
-Atualmente, as fontes estão usando fallback para fontes do sistema (Arial/Helvetica).
-Para que as fontes do Banco do Brasil apareçam corretamente quando você publicar:
-
-PASSO 1: Obtenha os arquivos de fonte do Banco do Brasil
-  - Peça ao time de design os arquivos .woff2 e .woff das fontes
-  - Você precisa das famílias: BancoDoBrasil_Titulos e BancoDoBrasil_Textos
-  - Em cada família, precisa dos pesos: Bold (700), Medium (500), Regular (400), Light (300)
-
-PASSO 2: Adicione os arquivos ao projeto
-  - Crie uma pasta /public/fonts/
-  - Coloque todos os arquivos .woff2 e .woff nessa pasta
-  - Exemplo de estrutura:
-    /public/fonts/
-      ├── BancoDoBrasil-Titulos-Bold.woff2
-      ├── BancoDoBrasil-Titulos-Bold.woff
-      ├── BancoDoBrasil-Titulos-Medium.woff2
-      ├── BancoDoBrasil-Titulos-Medium.woff
-      ├── BancoDoBrasil-Textos-Bold.woff2
-      ├── BancoDoBrasil-Textos-Bold.woff
-      └── etc...
-
-PASSO 3: Atualize este arquivo (fonts.css)
-  - Substitua os 'local()' por URLs reais conforme exemplos comentados abaixo
-  - Exemplo de como deve ficar:
-  
-    @font-face {
-      font-family: 'BancoDoBrasil_Titulos:Bold';
-      src: url('/fonts/BancoDoBrasil-Titulos-Bold.woff2') format('woff2'),
-           url('/fonts/BancoDoBrasil-Titulos-Bold.woff') format('woff');
-      font-weight: 700;
-      font-style: normal;
-      font-display: swap;
-    }
-
-================================================================================
-*/
+/* Fontes do Banco do Brasil
+ *
+ * Opção B (via src/assets):
+ * - Coloque os arquivos em: src/assets/fonts/BancoDoBrasil/*.ttf
+ * - Este CSS referencia as fontes via paths relativos para que o Vite empacote os assets.
+ */
 
 /* BancoDoBrasil Titulos */
 @font-face {
   font-family: 'BancoDoBrasil_Titulos:Bold';
-  src: local('Arial'), local('Helvetica'), local('sans-serif');
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTitulos-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Alias (alguns trechos do CSS gerado aparecem com espaço no nome) */
+@font-face {
+  font-family: 'BancoDoBrasil Titulos:Bold';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTitulos-Bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -53,7 +25,15 @@ PASSO 3: Atualize este arquivo (fonts.css)
 
 @font-face {
   font-family: 'BancoDoBrasil_Titulos:Medium';
-  src: local('Arial'), local('Helvetica'), local('sans-serif');
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTitulos-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil Titulos:Medium';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTitulos-Medium.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -61,16 +41,144 @@ PASSO 3: Atualize este arquivo (fonts.css)
 
 @font-face {
   font-family: 'BancoDoBrasil_Titulos:Regular';
-  src: local('Arial'), local('Helvetica'), local('sans-serif');
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTitulos-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil Titulos:Regular';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTitulos-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil_Titulos:Light';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTitulos-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil Titulos:Light';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTitulos-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil_Titulos:XBold';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTitulos-XBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil Titulos:XBold';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTitulos-XBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil_Titulos:Bold';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTitulos-BoldIt.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil Titulos:Bold';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTitulos-BoldIt.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil_Titulos:Medium';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTitulos-MediumIt.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil Titulos:Medium';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTitulos-MediumIt.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil_Titulos:Regular';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTitulos-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil Titulos:Regular';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTitulos-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil_Titulos:Light';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTitulos-LightIt.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil Titulos:Light';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTitulos-LightIt.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil_Titulos:XBold';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTitulos-XBoldIt.ttf') format('truetype');
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil Titulos:XBold';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTitulos-XBoldIt.ttf') format('truetype');
+  font-weight: 800;
+  font-style: italic;
   font-display: swap;
 }
 
 /* BancoDoBrasil Textos */
 @font-face {
   font-family: 'BancoDoBrasil_Textos:Bold';
-  src: local('Arial'), local('Helvetica'), local('sans-serif');
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTextos-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil Textos:Bold';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTextos-Bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -78,7 +186,15 @@ PASSO 3: Atualize este arquivo (fonts.css)
 
 @font-face {
   font-family: 'BancoDoBrasil_Textos:Medium';
-  src: local('Arial'), local('Helvetica'), local('sans-serif');
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTextos-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil Textos:Medium';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTextos-Medium.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -86,7 +202,15 @@ PASSO 3: Atualize este arquivo (fonts.css)
 
 @font-face {
   font-family: 'BancoDoBrasil_Textos:Regular';
-  src: local('Arial'), local('Helvetica'), local('sans-serif');
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTextos-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil Textos:Regular';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTextos-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -94,8 +218,112 @@ PASSO 3: Atualize este arquivo (fonts.css)
 
 @font-face {
   font-family: 'BancoDoBrasil_Textos:Light';
-  src: local('Arial'), local('Helvetica'), local('sans-serif');
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTextos-Light.ttf') format('truetype');
   font-weight: 300;
   font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil Textos:Light';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTextos-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil_Textos:XBold';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTextos-XBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil Textos:XBold';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTextos-XBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil_Textos:Bold';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTextos-BoldIt.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil Textos:Bold';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTextos-BoldIt.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil_Textos:Medium';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTextos-MediumIt.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil Textos:Medium';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTextos-MediumIt.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil_Textos:Regular';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTextos-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil Textos:Regular';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTextos-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil_Textos:Light';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTextos-LightIt.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil Textos:Light';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTextos-LightIt.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil_Textos:XBold';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTextos-XBoldIt.ttf') format('truetype');
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasil Textos:XBold';
+  src: url('../assets/fonts/BancoDoBrasil/BancoDoBrasilTextos-XBoldIt.ttf') format('truetype');
+  font-weight: 800;
+  font-style: italic;
   font-display: swap;
 }
