@@ -19,7 +19,7 @@ export function Passo2TransacaoInducao({ register, errors, control, tipoHU, cont
           {/* Campo 6: Link para acesso ao Plano de Requisitos */}
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              6. Link para acesso ao Plano de Requisitos:
+              6. Link para acesso ao plano de requisitos:
             </p>
             <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
               <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
@@ -37,14 +37,14 @@ export function Passo2TransacaoInducao({ register, errors, control, tipoHU, cont
               <div className="bg-[#b4b9c1] h-px shrink-0 w-full" />
             </div>
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#686c73] text-[14px] tracking-[0.196px] w-full">
-              (Somente para TRN): Informe o plano de requisitos para todas as transações. Se não for possível, justifique abaixo.
+              Informe o plano de requisitos para todas as transações. Se não for possível, justifique abaixo.
             </p>
           </div>
 
           {/* Campo 7: Ausência - Plano de Requisitos */}
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              7. Ausência - Plano de Requisitos:
+              7. Ausência - plano de requisitos:
             </p>
             <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
               <div className="bg-[#f0f2f4] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full min-h-[80px]">
@@ -71,7 +71,7 @@ export function Passo2TransacaoInducao({ register, errors, control, tipoHU, cont
           {/* Campo 6: A INDUÇÃO foi incluída em qual contexto */}
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              6. A INDUÇÃO foi incluída em qual contexto: *
+              6. A indução foi incluída em qual contexto:
             </p>
             <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
               {/* Opção: Saudação */}
@@ -174,7 +174,7 @@ export function Passo2TransacaoInducao({ register, errors, control, tipoHU, cont
           {/* Campo 7: Informe em qual jornada a INDUÇÃO foi incluída */}
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              7. Informe em qual jornada a INDUÇÃO foi incluída: *
+              7. Informe em qual jornada a indução foi incluída:
             </p>
             <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
               <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
@@ -203,7 +203,7 @@ export function Passo2TransacaoInducao({ register, errors, control, tipoHU, cont
         <SelectFieldForm
           control={control}
           name="tema"
-          label={`${tipoHU === 'Transação' ? '8.' : '8.'} Qual é o Tema do seu fluxo? *`}
+          label={`${tipoHU === 'Transação' ? '8.' : '8.'} Qual é o tema do seu fluxo ?`}
           rules={{ required: 'Campo obrigatório' }}
           options={[
             { value: 'Agronegócio', label: 'Agronegócio' },
@@ -219,7 +219,7 @@ export function Passo2TransacaoInducao({ register, errors, control, tipoHU, cont
       {/* Campo: Nome da Hash Inicial */}
       <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
         <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-          9. Qual o nome da Hash Inicial? *
+          9. Qual o nome da hash inicial?
         </p>
         
         {/* Alerta azul - Para Ativo e Indução */}
@@ -267,8 +267,28 @@ export function Passo2TransacaoInducao({ register, errors, control, tipoHU, cont
       {/* Campo: Hash de início (UUID/Hash) */}
       <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
         <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-          10. Hash inicial (UUID/Hash)? *
+          10. Qual a hash inicial (UUID/Hash) ?
         </p>
+
+        <div className="mb-2 bg-[#e8f2ff] flex flex-col items-start justify-center p-[12px] relative rounded-[8px] w-full">
+          <div aria-hidden="true" className="absolute border border-[#4a90e2] border-solid inset-0 pointer-events-none rounded-[8px]" />
+          <div className="relative w-full">
+            <div className="flex items-start gap-[8px]">
+              <div className="relative shrink-0 size-[20px] mt-[1px]">
+                <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="8" stroke="#2D37F5" strokeWidth="1.5" fill="none"/>
+                  <path d="M10 6.5v4.5M10 13.5h.01" stroke="#2D37F5" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+              </div>
+              <div className="flex-1">
+                <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#111214] text-[14px] leading-[1.4]">
+                  Para informacionais, ativos e induções, se a jornada estiver em uma múltipla resposta, informe a hash da múltipla.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
           <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
             <div className="flex flex-row items-center size-full">

@@ -19,7 +19,7 @@ export function Passo1Formulario({ register, errors, control, utilizaIAGenerativ
       {/* Campo 1: Número da História no GENTI */}
       <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
         <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-          1. Qual é o número da História no GENTI? *
+          1. Qual é o número da história no GENTI?
         </p>
         <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
           <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
@@ -44,7 +44,7 @@ export function Passo1Formulario({ register, errors, control, utilizaIAGenerativ
       {/* Campo 2: A jornada utiliza IA Generativa? */}
       <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
         <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-          2. A jornada utiliza IA Generativa? *
+          2. A jornada utiliza IA generativa?
         </p>
         <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
           {/* Opção: Sim */}
@@ -102,7 +102,7 @@ export function Passo1Formulario({ register, errors, control, utilizaIAGenerativ
       {utilizaIAGenerativa === 'true' && (
         <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
           <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-            3. IA Generativa responde ao cliente? *
+            3. IA generativa responde ao cliente?
           </p>
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             {/* Opção: Sim */}
@@ -160,7 +160,7 @@ export function Passo1Formulario({ register, errors, control, utilizaIAGenerativ
       {/* Campo 4: Tipo de Inclusão - Radio Buttons */}
       <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
         <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-          {utilizaIAGenerativa === 'true' ? '4.' : '3.'} Sua inclusão é referente a: *
+          {utilizaIAGenerativa === 'true' ? '4.' : '3.'} Sua inclusão é referente a:
         </p>
         <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
           {/* Opção: Novo fluxo */}
@@ -233,7 +233,7 @@ export function Passo1Formulario({ register, errors, control, utilizaIAGenerativ
               {/* Campo 5: Data de implementação */}
               <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-[402px]">
                 <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-                  5. Informe a data em que o fluxo finalizado foi implementado em Produção no NIA: *
+                  5. Informe a data em que o fluxo finalizado foi implementado em produção no NIA:
                 </p>
                 <DateInput
                   register={register}
@@ -248,7 +248,7 @@ export function Passo1Formulario({ register, errors, control, utilizaIAGenerativ
               {/* Campo 6: Diretoria */}
               <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-[328px]">
                 <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-                  6. Selecione a Diretoria demandante da HU: *
+                  6. Selecione a diretoria demandante da HU:
                 </p>
                 <SelectFieldForm
                   control={control}
@@ -295,7 +295,7 @@ export function Passo1Formulario({ register, errors, control, utilizaIAGenerativ
             <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
               <div className="content-stretch flex h-[20px] items-start relative shrink-0 w-full">
                 <p className="css-4hzbpn flex-[1_0_0] font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] min-h-px min-w-px not-italic relative text-[#111214] text-[14px] tracking-[0.07px]">
-                  7. Sua HU é referente à: *
+                  7. Selecione o tipo de jornada
                 </p>
               </div>
               <div className="content-stretch flex gap-[8px] items-start relative shrink-0 w-full">
