@@ -38,6 +38,27 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
   const dataInicioRef = useRef<HTMLInputElement>(null);
   const dataTerminoRef = useRef<HTMLInputElement>(null);
 
+  const formatDateMask = (value: string) => {
+    const digits = value.replace(/\D/g, '').slice(0, 8);
+    if (digits.length <= 2) return digits;
+    if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+    return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+  };
+
+  const isoToDisplayDate = (iso: string) => {
+    if (!iso || !iso.includes('-')) return '';
+    const [year, month, day] = iso.split('-');
+    if (!year || !month || !day) return '';
+    return `${day}/${month}/${year}`;
+  };
+
+  const displayToIsoDate = (display: string) => {
+    const match = display.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (!match) return '';
+    const [, day, month, year] = match;
+    return `${year}-${month}-${day}`;
+  };
+
   // Garantir que STATUS sempre seja renderizado por último
   const colunasOrdenadas = [...colunasVisiveis].sort((a, b) => {
     if (a === 'STATUS') return 1;
@@ -577,11 +598,21 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
                     <div className="content-stretch flex gap-[8px] items-center pb-[7px] pt-[8px] px-[12px] relative w-full">
                       <div className="content-stretch flex flex-[1_0_0] items-center min-h-px min-w-px relative">
                         <input
+                          type="text"
+                          value={dataInicio}
+                          onChange={(e) => setDataInicio(formatDateMask(e.target.value))}
+                          placeholder="dd / mm / aaaa"
+                          inputMode="numeric"
+                          className="flex-[1_0_0] font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] bg-transparent border-none outline-none w-full"
+                        />
+                        <input
                           ref={dataInicioRef}
                           type="date"
-                          value={dataInicio}
-                          onChange={(e) => setDataInicio(e.target.value)}
-                          className="date-no-native-picker flex-[1_0_0] font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] bg-transparent border-none outline-none w-full"
+                          value={displayToIsoDate(dataInicio)}
+                          onChange={(e) => setDataInicio(isoToDisplayDate(e.target.value))}
+                          className="sr-only"
+                          tabIndex={-1}
+                          aria-hidden="true"
                         />
                       </div>
                       <button
@@ -617,11 +648,21 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
                     <div className="content-stretch flex gap-[8px] items-center pb-[7px] pt-[8px] px-[12px] relative w-full">
                       <div className="content-stretch flex flex-[1_0_0] items-center min-h-px min-w-px relative">
                         <input
+                          type="text"
+                          value={dataTermino}
+                          onChange={(e) => setDataTermino(formatDateMask(e.target.value))}
+                          placeholder="dd / mm / aaaa"
+                          inputMode="numeric"
+                          className="flex-[1_0_0] font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] bg-transparent border-none outline-none w-full"
+                        />
+                        <input
                           ref={dataTerminoRef}
                           type="date"
-                          value={dataTermino}
-                          onChange={(e) => setDataTermino(e.target.value)}
-                          className="date-no-native-picker flex-[1_0_0] font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] bg-transparent border-none outline-none w-full"
+                          value={displayToIsoDate(dataTermino)}
+                          onChange={(e) => setDataTermino(isoToDisplayDate(e.target.value))}
+                          className="sr-only"
+                          tabIndex={-1}
+                          aria-hidden="true"
                         />
                       </div>
                       <button
