@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import svgPaths from '@/imports/svg-3dkfh9akxg';
 import svgPathsPaginator from '@/imports/svg-yxb1sqbp9k';
 import svgPathsRadio from '@/imports/svg-st0q96v9y6';
@@ -35,6 +35,29 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
   const [colunasVisiveis, setColunasVisiveis] = useState<string[]>(['TIPO', 'TEMA', 'STATUS', 'DIRETORIA', 'CANAL']);
   const [maisFiltrosExpandido, setMaisFiltrosExpandido] = useState(false); // Controla expansão dos filtros extras
   const [abaAtiva, setAbaAtiva] = useState<'todas' | 'minhas'>('todas'); // Estado para controlar a aba ativa
+  const dataInicioRef = useRef<HTMLInputElement>(null);
+  const dataTerminoRef = useRef<HTMLInputElement>(null);
+
+  const formatDateMask = (value: string) => {
+    const digits = value.replace(/\D/g, '').slice(0, 8);
+    if (digits.length <= 2) return digits;
+    if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+    return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+  };
+
+  const isoToDisplayDate = (iso: string) => {
+    if (!iso || !iso.includes('-')) return '';
+    const [year, month, day] = iso.split('-');
+    if (!year || !month || !day) return '';
+    return `${day}/${month}/${year}`;
+  };
+
+  const displayToIsoDate = (display: string) => {
+    const match = display.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (!match) return '';
+    const [, day, month, year] = match;
+    return `${year}-${month}-${day}`;
+  };
 
   // Garantir que STATUS sempre seja renderizado por último
   const colunasOrdenadas = [...colunasVisiveis].sort((a, b) => {
@@ -576,17 +599,39 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
                       <div className="content-stretch flex flex-[1_0_0] items-center min-h-px min-w-px relative">
                         <input
                           type="text"
-                          placeholder="DD / MM / AAAA"
                           value={dataInicio}
-                          onChange={(e) => setDataInicio(e.target.value)}
+                          onChange={(e) => setDataInicio(formatDateMask(e.target.value))}
+                          placeholder="dd / mm / aaaa"
+                          inputMode="numeric"
                           className="flex-[1_0_0] font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] bg-transparent border-none outline-none w-full"
                         />
+                        <input
+                          ref={dataInicioRef}
+                          type="date"
+                          value={displayToIsoDate(dataInicio)}
+                          onChange={(e) => setDataInicio(isoToDisplayDate(e.target.value))}
+                          className="sr-only"
+                          tabIndex={-1}
+                          aria-hidden="true"
+                        />
                       </div>
-                      <div className="relative shrink-0 size-[24px]">
+                      <button
+                        type="button"
+                        className="relative shrink-0 size-[24px] cursor-pointer"
+                        onClick={() => {
+                          if (dataInicioRef.current) {
+                            if (typeof dataInicioRef.current.showPicker === 'function') {
+                              dataInicioRef.current.showPicker();
+                            } else {
+                              dataInicioRef.current.focus();
+                            }
+                          }
+                        }}
+                      >
                         <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
                           <path d={svgPaths.p3079f800} fill="#888D95" />
                         </svg>
-                      </div>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -604,17 +649,39 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
                       <div className="content-stretch flex flex-[1_0_0] items-center min-h-px min-w-px relative">
                         <input
                           type="text"
-                          placeholder="DD / MM / AAAA"
                           value={dataTermino}
-                          onChange={(e) => setDataTermino(e.target.value)}
+                          onChange={(e) => setDataTermino(formatDateMask(e.target.value))}
+                          placeholder="dd / mm / aaaa"
+                          inputMode="numeric"
                           className="flex-[1_0_0] font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] bg-transparent border-none outline-none w-full"
                         />
+                        <input
+                          ref={dataTerminoRef}
+                          type="date"
+                          value={displayToIsoDate(dataTermino)}
+                          onChange={(e) => setDataTermino(isoToDisplayDate(e.target.value))}
+                          className="sr-only"
+                          tabIndex={-1}
+                          aria-hidden="true"
+                        />
                       </div>
-                      <div className="relative shrink-0 size-[24px]">
+                      <button
+                        type="button"
+                        className="relative shrink-0 size-[24px] cursor-pointer"
+                        onClick={() => {
+                          if (dataTerminoRef.current) {
+                            if (typeof dataTerminoRef.current.showPicker === 'function') {
+                              dataTerminoRef.current.showPicker();
+                            } else {
+                              dataTerminoRef.current.focus();
+                            }
+                          }
+                        }}
+                      >
                         <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
                           <path d={svgPaths.p3079f800} fill="#888D95" />
                         </svg>
-                      </div>
+                      </button>
                     </div>
                   </div>
                 </div>
