@@ -3,6 +3,7 @@ import { FormularioJornadasMultiStep } from '@/app/components/FormularioJornadas
 import { SugestoesExternas } from '@/app/components/SugestoesExternas';
 import { ToastNotification } from '@/app/components/ToastNotification';
 import { ModalSugestoes } from '@/app/components/ModalSugestoes';
+import { ModalConsultaFeedbacks, type FeedbackRegistro } from '@/app/components/ModalConsultaFeedbacks';
 import { PainelVisaoCAD } from '@/app/components/PainelVisaoCAD';
 import { PainelGovernanca } from '@/app/components/PainelGovernanca';
 import { DetalhesJornadaGovernanca } from '@/app/components/DetalhesJornadaGovernanca';
@@ -305,10 +306,103 @@ export default function App() {
   ]);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [showModalSugestoes, setShowModalSugestoes] = useState(false);
+  const [showModalConsultaFeedbacks, setShowModalConsultaFeedbacks] = useState(false);
   const [jornadaSelecionadaAcompanhamento, setJornadaSelecionadaAcompanhamento] = useState<JornadaCadastrada | null>(null);
   const [jornadaSelecionadaGovernanca, setJornadaSelecionadaGovernanca] = useState<JornadaCadastrada | null>(null);
   const [acompanhamentoSubView, setAcompanhamentoSubView] = useState<AcompanhamentoSubView>('painel');
   const [jornadaParaEditarGovernanca, setJornadaParaEditarGovernanca] = useState<JornadaCadastrada | null>(null);
+  const [registrosFeedback, setRegistrosFeedback] = useState<FeedbackRegistro[]>([
+    {
+      id: 'fb-1',
+      tipo: 'problema',
+      descricao: 'Campo de data aceitava texto livre na visão de acompanhamento.',
+      codigoFluxo: 'RME-0001',
+      dataEnvio: '31/03/2026 14:22',
+      origem: 'Catálogo',
+    },
+    {
+      id: 'fb-2',
+      tipo: 'sugestao',
+      descricao: 'Adicionar filtro por presença de Plano de Requisitos no painel.',
+      dataEnvio: '31/03/2026 14:45',
+      origem: 'Catálogo',
+    },
+    {
+      id: 'fb-3',
+      tipo: 'problema',
+      descricao: 'Descrição da jornada não estava quebrando linha no detalhe.',
+      codigoFluxo: 'TRN-0007',
+      dataEnvio: '31/03/2026 15:02',
+      origem: 'Catálogo',
+    },
+    {
+      id: 'fb-4',
+      tipo: 'sugestao',
+      descricao: 'Incluir filtro por diretoria no topo da visão acompanhamento.',
+      dataEnvio: '31/03/2026 15:10',
+      origem: 'Catálogo',
+    },
+    {
+      id: 'fb-5',
+      tipo: 'problema',
+      descricao: 'Campo de código do fluxo aceita caracteres especiais indevidos.',
+      codigoFluxo: 'INF-0012',
+      dataEnvio: '31/03/2026 15:18',
+      origem: 'Catálogo',
+    },
+    {
+      id: 'fb-6',
+      tipo: 'sugestao',
+      descricao: 'Padronizar textos de ajuda do Plano de Requisitos em todos os fluxos.',
+      dataEnvio: '31/03/2026 15:24',
+      origem: 'Catálogo',
+    },
+    {
+      id: 'fb-7',
+      tipo: 'problema',
+      descricao: 'Botão de voltar no detalhe de governança não preserva filtro aplicado.',
+      codigoFluxo: 'RME-0021',
+      dataEnvio: '31/03/2026 15:33',
+      origem: 'Catálogo',
+    },
+    {
+      id: 'fb-8',
+      tipo: 'sugestao',
+      descricao: 'Adicionar contador de registros encontrados na tabela de consulta.',
+      dataEnvio: '31/03/2026 15:37',
+      origem: 'Catálogo',
+    },
+    {
+      id: 'fb-9',
+      tipo: 'problema',
+      descricao: 'Canal "Outros" não exibe texto salvo em alguns detalhes.',
+      codigoFluxo: 'IND-0009',
+      dataEnvio: '31/03/2026 15:42',
+      origem: 'Catálogo',
+    },
+    {
+      id: 'fb-10',
+      tipo: 'sugestao',
+      descricao: 'Permitir exportar a lista de consultas em CSV.',
+      dataEnvio: '31/03/2026 15:48',
+      origem: 'Catálogo',
+    },
+    {
+      id: 'fb-11',
+      tipo: 'problema',
+      descricao: 'Status NIA não atualiza no card após salvar em governança.',
+      codigoFluxo: 'TRN-0014',
+      dataEnvio: '31/03/2026 15:54',
+      origem: 'Catálogo',
+    },
+    {
+      id: 'fb-12',
+      tipo: 'sugestao',
+      descricao: 'Exibir destaque para jornadas sem Plano de Requisitos.',
+      dataEnvio: '31/03/2026 16:01',
+      origem: 'Catálogo',
+    },
+  ]);
 
   const handleNovaJornada = (data: Omit<JornadaCadastrada, 'dataAbertura' | 'status'>) => {
     console.log('Dados recebidos do formulário:', data);
@@ -417,7 +511,19 @@ export default function App() {
       console.log('Código do Fluxo:', codigoFluxo);
       console.log('Arquivo:', arquivo?.name);
     }
-    // Aqui você pode adicionar a lógica para enviar a sugestão/problema
+    const agora = new Date();
+    const dataEnvio = agora.toLocaleDateString('pt-BR') + ' ' + agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    setRegistrosFeedback((prev) => [
+      {
+        id: `fb-${Date.now()}`,
+        tipo,
+        descricao,
+        codigoFluxo,
+        dataEnvio,
+        origem: 'Catálogo',
+      },
+      ...prev,
+    ]);
     setShowSuccessToast(true);
   };
 
@@ -453,8 +559,8 @@ export default function App() {
               </>
             )}
             
-            {/* Botões de Ação - Ocultos na aba Governança */}
-            {currentView !== 'governanca' && (
+            {/* Botões de Ação */}
+            {currentView !== 'sugestoes' && (
               <div className="flex gap-[32px] mt-[24px]">
                 <a
                   href="https://app.powerbi.com/reportEmbed?reportId=d8a196bc-b7bc-4f47-af44-a950dc54bbd5&autoAuth=true&ctid=ea0c2907-38d2-4181-8750-b0b190b60443"
@@ -485,35 +591,46 @@ export default function App() {
                   </div>
                 </a>
                 
-                <button
-                  onClick={() => setShowModalSugestoes(true)}
-                  className="bg-[#e0e9ff] flex gap-[10px] items-center justify-center px-[16px] py-[12px] rounded-[4px] hover:bg-[#d0dcff] hover:scale-105 transition-all duration-200 cursor-pointer"
-                >
-                  <div className="flex flex-row items-center">
-                    <div className="h-full relative shrink-0">
-                      <div className="flex flex-col items-center size-full">
-                        <div className="flex flex-col items-center pt-[2px] relative">
-                          <div className="overflow-clip relative shrink-0 size-[18px]">
-                            <div className="-translate-y-1/2 absolute aspect-[22.000995635986328/22] left-[4.17%] right-[4.16%] top-1/2">
-                              <svg className="absolute block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16.5007 16.5">
-                                <g>
-                                  <path d={buttonSvgPaths.p11ae4600} fill="var(--fill-0, #465EFF)" />
-                                  <path d={buttonSvgPaths.p3859b380} fill="var(--fill-0, #465EFF)" />
-                                  <path d={buttonSvgPaths.p1a74ce00} fill="var(--fill-0, #465EFF)" />
-                                  <path d={buttonSvgPaths.pd942e38} fill="var(--fill-0, #465EFF)" />
-                                  <path d={buttonSvgPaths.p34fb2400} fill="var(--fill-0, #465EFF)" />
-                                </g>
-                              </svg>
+                {currentView === 'formulario' ? (
+                  <button
+                    onClick={() => setShowModalSugestoes(true)}
+                    className="bg-[#e0e9ff] flex gap-[10px] items-center justify-center px-[16px] py-[12px] rounded-[4px] hover:bg-[#d0dcff] hover:scale-105 transition-all duration-200 cursor-pointer"
+                  >
+                    <div className="flex flex-row items-center">
+                      <div className="h-full relative shrink-0">
+                        <div className="flex flex-col items-center size-full">
+                          <div className="flex flex-col items-center pt-[2px] relative">
+                            <div className="overflow-clip relative shrink-0 size-[18px]">
+                              <div className="-translate-y-1/2 absolute aspect-[22.000995635986328/22] left-[4.17%] right-[4.16%] top-1/2">
+                                <svg className="absolute block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16.5007 16.5">
+                                  <g>
+                                    <path d={buttonSvgPaths.p11ae4600} fill="var(--fill-0, #465EFF)" />
+                                    <path d={buttonSvgPaths.p3859b380} fill="var(--fill-0, #465EFF)" />
+                                    <path d={buttonSvgPaths.p1a74ce00} fill="var(--fill-0, #465EFF)" />
+                                    <path d={buttonSvgPaths.pd942e38} fill="var(--fill-0, #465EFF)" />
+                                    <path d={buttonSvgPaths.p34fb2400} fill="var(--fill-0, #465EFF)" />
+                                  </g>
+                                </svg>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex flex-col font-['BancoDoBrasil_Titulos:Bold',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[#465eff] text-[14px] text-center tracking-[0.07px] uppercase whitespace-nowrap">
-                    <p className="leading-[1.125]">Enviar erro ou sugestão</p>
-                  </div>
-                </button>
+                    <div className="flex flex-col font-['BancoDoBrasil_Titulos:Bold',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[#465eff] text-[14px] text-center tracking-[0.07px] uppercase whitespace-nowrap">
+                      <p className="leading-[1.125]">Enviar erro ou sugestão</p>
+                    </div>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setShowModalConsultaFeedbacks(true)}
+                    className="bg-[#e0e9ff] flex gap-[10px] items-center justify-center px-[16px] py-[12px] rounded-[4px] hover:bg-[#d0dcff] hover:scale-105 transition-all duration-200 cursor-pointer"
+                  >
+                    <div className="flex flex-col font-['BancoDoBrasil_Titulos:Bold',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[#465eff] text-[14px] text-center tracking-[0.07px] uppercase whitespace-nowrap">
+                      <p className="leading-[1.125]">Consultar erros e sugestões</p>
+                    </div>
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -693,6 +810,13 @@ export default function App() {
         <ModalSugestoes
           onClose={() => setShowModalSugestoes(false)}
           onSubmit={handleSugestaoSubmit}
+        />
+      )}
+
+      {showModalConsultaFeedbacks && (
+        <ModalConsultaFeedbacks
+          onClose={() => setShowModalConsultaFeedbacks(false)}
+          registros={registrosFeedback}
         />
       )}
     </div>
