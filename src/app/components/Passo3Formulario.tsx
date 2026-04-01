@@ -8,13 +8,14 @@ interface Passo3FormularioProps {
   errors: FieldErrors<any>;
   tipoHU?: 'Transação' | 'Ativo' | 'Indução' | 'Informacional';
   contextoInducao?: 'Saudação' | 'Feedback' | 'QR Code / Link' | 'Outro';
+  inducaoQrModo?: 'padrao' | 'checkin';
 }
 
 function normalizeText(text: string) {
   return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
-export function Passo3Formulario({ register, errors, tipoHU, contextoInducao }: Passo3FormularioProps) {
+export function Passo3Formulario({ register, errors, tipoHU, contextoInducao, inducaoQrModo }: Passo3FormularioProps) {
   const canais = ['WhatsApp', 'App BB', 'Outros'];
 
   const [publicoSelecionado, setPublicoSelecionado] = useState('');
@@ -103,6 +104,64 @@ export function Passo3Formulario({ register, errors, tipoHU, contextoInducao }: 
               <p className="text-red-500 text-xs mt-1">{errors.contextoInducao.message as string}</p>
             )}
           </div>
+
+          {tipoHU === 'Indução' && contextoInducao === 'QR Code / Link' && (
+            <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
+              <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] text-[#111214] text-[14px] tracking-[0.07px] w-full">
+                Tipo de QR Code (define o formato sugerido do título):
+              </p>
+              <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
+                <label className="relative rounded-[4px] shrink-0 w-full cursor-pointer">
+                  <div
+                    aria-hidden="true"
+                    className={`absolute border ${inducaoQrModo === 'checkin' ? 'border-[#b4b9c1]' : 'border-[#2d37f5]'} border-solid inset-0 pointer-events-none rounded-[4px]`}
+                  />
+                  <div className="content-stretch flex gap-[8px] items-start p-[12px] relative w-full">
+                    <div className="relative shrink-0 size-[24px]">
+                      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
+                        <path d={inducaoQrModo !== 'checkin' ? svgPaths.p4501f00 : svgPaths.p26f9ce00} fill={inducaoQrModo !== 'checkin' ? '#2D37F5' : '#313338'} />
+                      </svg>
+                    </div>
+                    <input
+                      type="radio"
+                      value="padrao"
+                      {...register('inducaoQrModo')}
+                      className="sr-only"
+                    />
+                    <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-px relative">
+                      <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] text-[#111214] text-[16px] tracking-[0.08px] w-full">
+                        QR Code (título)
+                      </p>
+                    </div>
+                  </div>
+                </label>
+                <label className="relative rounded-[4px] shrink-0 w-full cursor-pointer">
+                  <div
+                    aria-hidden="true"
+                    className={`absolute border ${inducaoQrModo === 'checkin' ? 'border-[#2d37f5]' : 'border-[#b4b9c1]'} border-solid inset-0 pointer-events-none rounded-[4px]`}
+                  />
+                  <div className="content-stretch flex gap-[8px] items-start p-[12px] relative w-full">
+                    <div className="relative shrink-0 size-[24px]">
+                      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
+                        <path d={inducaoQrModo === 'checkin' ? svgPaths.p4501f00 : svgPaths.p26f9ce00} fill={inducaoQrModo === 'checkin' ? '#2D37F5' : '#313338'} />
+                      </svg>
+                    </div>
+                    <input
+                      type="radio"
+                      value="checkin"
+                      {...register('inducaoQrModo')}
+                      className="sr-only"
+                    />
+                    <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-px relative">
+                      <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] text-[#111214] text-[16px] tracking-[0.08px] w-full">
+                        QR Code com evento (check-in)
+                      </p>
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
+          )}
 
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] text-[#111214] text-[14px] tracking-[0.07px] w-full">

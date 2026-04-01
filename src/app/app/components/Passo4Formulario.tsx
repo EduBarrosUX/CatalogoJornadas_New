@@ -7,15 +7,46 @@ interface Passo4FormularioProps {
   watch: UseFormWatch<any>;
 }
 
+/** Placeholder do título para jornadas do tipo Indução (PF/PJ + contexto). */
+export function getInducaoTituloPlaceholder(
+  publico: string,
+  contextoInducao: string,
+  inducaoQrModo?: 'padrao' | 'checkin'
+): string | null {
+  if (publico !== 'PF' && publico !== 'PJ') return null;
+  const prefix = publico === 'PJ' ? 'Indução PJ' : 'Indução PF';
+  if (contextoInducao === 'Outro') {
+    return `${prefix} - Título`;
+  }
+  if (contextoInducao === 'Saudação') {
+    return `${prefix} - Saudação - Título`;
+  }
+  if (contextoInducao === 'Feedback') {
+    return `${prefix} - Feedback - Título`;
+  }
+  if (contextoInducao === 'QR Code / Link') {
+    if (inducaoQrModo === 'checkin') {
+      return `${prefix} - QR Code - Check-in Nome do evento`;
+    }
+    return `${prefix} - QR Code - Título`;
+  }
+  return null;
+}
+
 export function Passo4Formulario({ register, errors, watch }: Passo4FormularioProps) {
   const descricaoFluxo = watch('descricaoFluxo') || '';
   const caracteresRestantes = 198 - descricaoFluxo.length;
   const publico = watch('publico') || '';
   const tipoHU = watch('tipoHU') || '';
   const contextoInducao = watch('contextoInducao') || '';
-  const tituloPlaceholder =
+  const inducaoQrModo = watch('inducaoQrModo') as 'padrao' | 'checkin' | undefined;
+  const inducaoPlaceholder =
     tipoHU === 'Indução' && contextoInducao && publico
-      ? `Indução ${contextoInducao} ${publico} - Digite o Título`
+      ? getInducaoTituloPlaceholder(publico, contextoInducao, inducaoQrModo ?? 'padrao')
+      : null;
+  const tituloPlaceholder =
+    inducaoPlaceholder != null
+      ? inducaoPlaceholder
       : tipoHU === 'Informacional' && publico
       ? `Informacional ${publico} - Digite o Título`
       : publico === 'PJ'

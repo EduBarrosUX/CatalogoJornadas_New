@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import svgPaths from "@/imports/svg-a22losb1wy";
 import svgPathsBreadcrumb from "@/imports/svg-st0q96v9y6";
@@ -37,6 +37,8 @@ interface FormData {
   // Passo 3: Categoria e Tema (ou Canal e Gatilho para alteração)
   categoriaAtivo?: 'Autenticação' | 'Marketing' | 'Utilidade';
   contextoInducao?: 'Saudação' | 'Feedback' | 'QR Code / Link' | 'Outro'; // Para Indução
+  /** QR padrão (Título) vs QR com evento (check-in). Só aplica com contexto "QR Code / Link". */
+  inducaoQrModo?: 'padrao' | 'checkin';
   jornadaInducao?: string; // Para Indução
   tema: string;
   nomeHashInicial: string;
@@ -104,6 +106,7 @@ export function FormularioJornadasMultiStep({ onSubmitSuccess, jornadaEditando }
     templateMeta: jornadaEditando.templateMeta || '',
     categoriaAtivo: jornadaEditando.categoriaAtivo as 'Autenticação' | 'Marketing' | 'Utilidade' | undefined,
     contextoInducao: jornadaEditando.contextoInducao as 'Saudação' | 'Feedback' | 'QR Code / Link' | 'Outro' | undefined,
+    inducaoQrModo: (jornadaEditando as { inducaoQrModo?: 'padrao' | 'checkin' }).inducaoQrModo || 'padrao',
     jornadaInducao: jornadaEditando.jornadaInducao || '',
     tema: jornadaEditando.tema || '',
     nomeHashInicial: jornadaEditando.nomeHashInicial || '',
@@ -129,13 +132,23 @@ export function FormularioJornadasMultiStep({ onSubmitSuccess, jornadaEditando }
   } : undefined;
   
   const { register, watch, handleSubmit, setValue, control, formState: { errors } } = useForm<FormData>({
-    defaultValues
+    defaultValues: {
+      inducaoQrModo: 'padrao',
+      ...defaultValues,
+    },
   });
 
   const tipoInclusao = watch('tipoInclusao');
   const tipoHU = watch('tipoHU');
   const periodicidade = watch('periodicidade');
   const contextoInducao = watch('contextoInducao');
+  const inducaoQrModo = watch('inducaoQrModo');
+
+  useEffect(() => {
+    if (contextoInducao !== 'QR Code / Link') {
+      setValue('inducaoQrModo', 'padrao');
+    }
+  }, [contextoInducao, setValue]);
 
   // Watch all form fields to calculate progress
   const formValues = watch();
@@ -659,6 +672,7 @@ export function FormularioJornadasMultiStep({ onSubmitSuccess, jornadaEditando }
             errors={errors}
             tipoHU={tipoHU}
             contextoInducao={contextoInducao}
+            inducaoQrModo={inducaoQrModo}
           />
         )}
 
@@ -669,6 +683,7 @@ export function FormularioJornadasMultiStep({ onSubmitSuccess, jornadaEditando }
             errors={errors}
             tipoHU={tipoHU}
             contextoInducao={contextoInducao}
+            inducaoQrModo={inducaoQrModo}
           />
         )}
 
