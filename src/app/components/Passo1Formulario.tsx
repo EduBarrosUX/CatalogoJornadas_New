@@ -295,7 +295,7 @@ export function Passo1Formulario({ register, errors, control, utilizaIAGenerativ
             <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
               <div className="content-stretch flex h-[20px] items-start relative shrink-0 w-full">
                 <p className="css-4hzbpn flex-[1_0_0] font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] min-h-px min-w-px not-italic relative text-[#111214] text-[14px] tracking-[0.07px]">
-                  7. Selecione o tipo de jornada
+                  7. Selecione o tipo de jornada:
                 </p>
               </div>
               <div className="content-stretch flex gap-[8px] items-start relative shrink-0 w-full">

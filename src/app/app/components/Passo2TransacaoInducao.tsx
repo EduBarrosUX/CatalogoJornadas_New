@@ -19,7 +19,7 @@ export function Passo2TransacaoInducao({ register, errors, control, tipoHU, cont
           {/* Campo 6: Link para acesso ao Plano de Requisitos */}
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              6. Link para acesso ao Plano de Requisitos:
+              6. Link para acesso ao plano de requisitos:
             </p>
             <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
               <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
@@ -27,8 +27,13 @@ export function Passo2TransacaoInducao({ register, errors, control, tipoHU, cont
                   <div className="content-stretch flex items-center pb-[7px] pl-[12px] pr-[4px] pt-[8px] relative size-full">
                     <input
                       type="url"
-                      {...register('linkPlanoRequisitos')}
-                      placeholder="https://..."
+                      {...register('linkPlanoRequisitos', {
+                        pattern: {
+                          value: /^http:\/\/.+/i,
+                          message: 'Informe uma URL válida iniciando com http://',
+                        },
+                      })}
+                      placeholder="http://..."
                       className="flex-[1_0_0] bg-transparent font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] outline-none placeholder:text-[#686c73]"
                     />
                   </div>
@@ -36,6 +41,9 @@ export function Passo2TransacaoInducao({ register, errors, control, tipoHU, cont
               </div>
               <div className="bg-[#b4b9c1] h-px shrink-0 w-full" />
             </div>
+            {errors.linkPlanoRequisitos && (
+              <p className="text-red-500 text-xs mt-1">{errors.linkPlanoRequisitos.message as string}</p>
+            )}
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#686c73] text-[14px] tracking-[0.196px] w-full">
               Informe o plano de requisitos para todas as transações. Se não for possível, justifique abaixo.
             </p>
@@ -44,7 +52,7 @@ export function Passo2TransacaoInducao({ register, errors, control, tipoHU, cont
           {/* Campo 7: Ausência - Plano de Requisitos */}
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              7. Ausência - Plano de Requisitos:
+              7. Ausência - plano de requisitos:
             </p>
             <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
               <div className="bg-[#f0f2f4] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full min-h-[80px]">
@@ -71,7 +79,7 @@ export function Passo2TransacaoInducao({ register, errors, control, tipoHU, cont
           {/* Campo 6: A INDUÇÃO foi incluída em qual contexto */}
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              6. A INDUÇÃO foi incluída em qual contexto:
+              6. A indução foi incluída em qual contexto:
             </p>
             <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
               {/* Opção: Saudação */}
@@ -174,7 +182,7 @@ export function Passo2TransacaoInducao({ register, errors, control, tipoHU, cont
           {/* Campo 7: Informe em qual jornada a INDUÇÃO foi incluída */}
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              7. Informe em qual jornada a INDUÇÃO foi incluída:
+              7. Informe em qual jornada a indução foi incluída:
             </p>
             <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
               <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">

@@ -37,8 +37,8 @@ interface FormData {
   // Passo 3: Categoria e Tema (ou Canal e Gatilho para alteração)
   categoriaAtivo?: 'Autenticação' | 'Marketing' | 'Utilidade';
   contextoInducao?: 'Saudação' | 'Feedback' | 'QR Code / Link' | 'Outro'; // Para Indução
-  /** QR padrão (Título) vs QR com evento (check-in). Só aplica com contexto "QR Code / Link". */
-  inducaoQrModo?: 'padrao' | 'checkin';
+  /** Resposta para "É check-in de evento?" (sim = check-in, nao = QR padrão). */
+  inducaoQrModo?: 'nao' | 'sim' | 'padrao' | 'checkin';
   jornadaInducao?: string; // Para Indução
   tema: string;
   nomeHashInicial: string;
@@ -106,7 +106,7 @@ export function FormularioJornadasMultiStep({ onSubmitSuccess, jornadaEditando }
     templateMeta: jornadaEditando.templateMeta || '',
     categoriaAtivo: jornadaEditando.categoriaAtivo as 'Autenticação' | 'Marketing' | 'Utilidade' | undefined,
     contextoInducao: jornadaEditando.contextoInducao as 'Saudação' | 'Feedback' | 'QR Code / Link' | 'Outro' | undefined,
-    inducaoQrModo: (jornadaEditando as { inducaoQrModo?: 'padrao' | 'checkin' }).inducaoQrModo || 'padrao',
+    inducaoQrModo: (jornadaEditando as { inducaoQrModo?: 'nao' | 'sim' | 'padrao' | 'checkin' }).inducaoQrModo || 'nao',
     jornadaInducao: jornadaEditando.jornadaInducao || '',
     tema: jornadaEditando.tema || '',
     nomeHashInicial: jornadaEditando.nomeHashInicial || '',
@@ -133,9 +133,11 @@ export function FormularioJornadasMultiStep({ onSubmitSuccess, jornadaEditando }
   
   const { register, watch, handleSubmit, setValue, control, formState: { errors } } = useForm<FormData>({
     defaultValues: {
-      inducaoQrModo: 'padrao',
+      inducaoQrModo: 'nao',
       ...defaultValues,
     },
+    mode: 'onChange',
+    reValidateMode: 'onChange',
   });
 
   const tipoInclusao = watch('tipoInclusao');
@@ -146,7 +148,7 @@ export function FormularioJornadasMultiStep({ onSubmitSuccess, jornadaEditando }
 
   useEffect(() => {
     if (contextoInducao !== 'QR Code / Link') {
-      setValue('inducaoQrModo', 'padrao');
+      setValue('inducaoQrModo', 'nao');
     }
   }, [contextoInducao, setValue]);
 
@@ -693,6 +695,7 @@ export function FormularioJornadasMultiStep({ onSubmitSuccess, jornadaEditando }
             register={register}
             errors={errors}
             watch={watch}
+            setValue={setValue}
           />
         )}
 
@@ -702,6 +705,7 @@ export function FormularioJornadasMultiStep({ onSubmitSuccess, jornadaEditando }
             register={register}
             errors={errors}
             watch={watch}
+            setValue={setValue}
           />
         )}
 

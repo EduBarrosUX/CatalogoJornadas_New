@@ -195,7 +195,7 @@ export function Passo3TransacaoInducao({
 
       <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
         <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-          13. Crie um título que represente a jornada desenvolvida
+          13. Crie um título que represente a jornada desenvolvida:
         </p>
 
         <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">

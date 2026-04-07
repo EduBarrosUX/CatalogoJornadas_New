@@ -48,7 +48,12 @@ export function Passo5Formulario({ register, errors }: Passo5FormularioProps) {
                 <div className="content-stretch flex gap-[8px] items-center pb-[7px] pt-[8px] px-[16px] relative size-full">
                   <input
                     type="url"
-                    {...register('linkFigma')}
+                    {...register('linkFigma', {
+                      pattern: {
+                        value: /^http:\/\/.+/i,
+                        message: 'Informe uma URL válida iniciando com http://',
+                      },
+                    })}
                     placeholder="https://www.figma.com/file/..."
                     className="flex-[1_0_0] bg-transparent font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] outline-none placeholder:text-[rgba(108,112,119,0.5)]"
                   />
@@ -57,6 +62,9 @@ export function Passo5Formulario({ register, errors }: Passo5FormularioProps) {
             </div>
             <div className="bg-[#b4b9c1] h-px shrink-0 w-full" />
           </div>
+          {errors.linkFigma && (
+            <p className="text-red-500 text-xs mt-1">{errors.linkFigma.message as string}</p>
+          )}
         </div>
 
         <div className="bg-[#f0f2ff] h-[170px] relative rounded-[10px] shrink-0 w-full">

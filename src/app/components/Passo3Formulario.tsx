@@ -8,7 +8,7 @@ interface Passo3FormularioProps {
   errors: FieldErrors<any>;
   tipoHU?: 'Transação' | 'Ativo' | 'Indução' | 'Informacional';
   contextoInducao?: 'Saudação' | 'Feedback' | 'QR Code / Link' | 'Outro';
-  inducaoQrModo?: 'padrao' | 'checkin';
+  inducaoQrModo?: 'nao' | 'sim' | 'padrao' | 'checkin';
 }
 
 function normalizeText(text: string) {
@@ -108,29 +108,32 @@ export function Passo3Formulario({ register, errors, tipoHU, contextoInducao, in
           {tipoHU === 'Indução' && contextoInducao === 'QR Code / Link' && (
             <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
               <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] text-[#111214] text-[14px] tracking-[0.07px] w-full">
-                Tipo de QR Code (define o formato sugerido do título):
+                11. É check-in de evento?
               </p>
               <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
                 <label className="relative rounded-[4px] shrink-0 w-full cursor-pointer">
                   <div
                     aria-hidden="true"
-                    className={`absolute border ${inducaoQrModo === 'checkin' ? 'border-[#b4b9c1]' : 'border-[#2d37f5]'} border-solid inset-0 pointer-events-none rounded-[4px]`}
+                    className={`absolute border ${(inducaoQrModo === 'checkin' || inducaoQrModo === 'sim') ? 'border-[#b4b9c1]' : 'border-[#2d37f5]'} border-solid inset-0 pointer-events-none rounded-[4px]`}
                   />
                   <div className="content-stretch flex gap-[8px] items-start p-[12px] relative w-full">
                     <div className="relative shrink-0 size-[24px]">
                       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
-                        <path d={inducaoQrModo !== 'checkin' ? svgPaths.p4501f00 : svgPaths.p26f9ce00} fill={inducaoQrModo !== 'checkin' ? '#2D37F5' : '#313338'} />
+                        <path
+                          d={(inducaoQrModo === 'checkin' || inducaoQrModo === 'sim') ? svgPaths.p26f9ce00 : svgPaths.p4501f00}
+                          fill={(inducaoQrModo === 'checkin' || inducaoQrModo === 'sim') ? '#313338' : '#2D37F5'}
+                        />
                       </svg>
                     </div>
                     <input
                       type="radio"
-                      value="padrao"
+                      value="nao"
                       {...register('inducaoQrModo')}
                       className="sr-only"
                     />
                     <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-px relative">
                       <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] text-[#111214] text-[16px] tracking-[0.08px] w-full">
-                        QR Code (título)
+                        Não
                       </p>
                     </div>
                   </div>
@@ -138,23 +141,26 @@ export function Passo3Formulario({ register, errors, tipoHU, contextoInducao, in
                 <label className="relative rounded-[4px] shrink-0 w-full cursor-pointer">
                   <div
                     aria-hidden="true"
-                    className={`absolute border ${inducaoQrModo === 'checkin' ? 'border-[#2d37f5]' : 'border-[#b4b9c1]'} border-solid inset-0 pointer-events-none rounded-[4px]`}
+                    className={`absolute border ${(inducaoQrModo === 'checkin' || inducaoQrModo === 'sim') ? 'border-[#2d37f5]' : 'border-[#b4b9c1]'} border-solid inset-0 pointer-events-none rounded-[4px]`}
                   />
                   <div className="content-stretch flex gap-[8px] items-start p-[12px] relative w-full">
                     <div className="relative shrink-0 size-[24px]">
                       <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
-                        <path d={inducaoQrModo === 'checkin' ? svgPaths.p4501f00 : svgPaths.p26f9ce00} fill={inducaoQrModo === 'checkin' ? '#2D37F5' : '#313338'} />
+                        <path
+                          d={(inducaoQrModo === 'checkin' || inducaoQrModo === 'sim') ? svgPaths.p4501f00 : svgPaths.p26f9ce00}
+                          fill={(inducaoQrModo === 'checkin' || inducaoQrModo === 'sim') ? '#2D37F5' : '#313338'}
+                        />
                       </svg>
                     </div>
                     <input
                       type="radio"
-                      value="checkin"
+                      value="sim"
                       {...register('inducaoQrModo')}
                       className="sr-only"
                     />
                     <div className="content-stretch flex flex-[1_0_0] flex-col gap-[4px] items-start min-h-px min-w-px relative">
                       <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] text-[#111214] text-[16px] tracking-[0.08px] w-full">
-                        QR Code com evento (check-in)
+                        Sim
                       </p>
                     </div>
                   </div>
@@ -165,7 +171,7 @@ export function Passo3Formulario({ register, errors, tipoHU, contextoInducao, in
 
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              11. Qual o público?
+              {contextoInducao === 'QR Code / Link' ? '12. Qual o público?' : '11. Qual o público?'}
             </p>
             <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
               {[
@@ -205,7 +211,9 @@ export function Passo3Formulario({ register, errors, tipoHU, contextoInducao, in
 
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              12. Em qual canal esse fluxo será disponibilizado?
+              {contextoInducao === 'QR Code / Link'
+                ? '13. Em qual canal esse fluxo será disponibilizado?'
+                : '12. Em qual canal esse fluxo será disponibilizado?'}
             </p>
             <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
               {canais.map((canal) => (

@@ -1,17 +1,19 @@
 
-import { UseFormRegister, FieldErrors, UseFormWatch } from 'react-hook-form';
+import { UseFormRegister, FieldErrors, UseFormWatch, UseFormSetValue } from 'react-hook-form';
+import { useEffect } from 'react';
 
 interface Passo4FormularioProps {
   register: UseFormRegister<any>;
   errors: FieldErrors<any>;
   watch: UseFormWatch<any>;
+  setValue: UseFormSetValue<any>;
 }
 
 /** Placeholder do título para jornadas do tipo Indução (PF/PJ + contexto). */
 export function getInducaoTituloPlaceholder(
   publico: string,
   contextoInducao: string,
-  inducaoQrModo?: 'padrao' | 'checkin'
+  inducaoQrModo?: 'nao' | 'sim' | 'padrao' | 'checkin'
 ): string | null {
   if (publico !== 'PF' && publico !== 'PJ') return null;
   const prefix = publico === 'PJ' ? 'Indução PJ' : 'Indução PF';
@@ -25,21 +27,22 @@ export function getInducaoTituloPlaceholder(
     return `${prefix} - Feedback - Título`;
   }
   if (contextoInducao === 'QR Code / Link') {
-    if (inducaoQrModo === 'checkin') {
-      return `${prefix} - QR Code - Check-in Nome do evento`;
+    if (inducaoQrModo === 'checkin' || inducaoQrModo === 'sim') {
+      return `${prefix} - QR Code - Check-in - Título`;
     }
     return `${prefix} - QR Code - Título`;
   }
   return null;
 }
 
-export function Passo4Formulario({ register, errors, watch }: Passo4FormularioProps) {
+export function Passo4Formulario({ register, errors, watch, setValue }: Passo4FormularioProps) {
   const descricaoFluxo = watch('descricaoFluxo') || '';
   const caracteresRestantes = 198 - descricaoFluxo.length;
   const publico = watch('publico') || '';
   const tipoHU = watch('tipoHU') || '';
   const contextoInducao = watch('contextoInducao') || '';
-  const inducaoQrModo = watch('inducaoQrModo') as 'padrao' | 'checkin' | undefined;
+  const inducaoQrModo = watch('inducaoQrModo') as 'nao' | 'sim' | 'padrao' | 'checkin' | undefined;
+  const tituloFluxo = watch('tituloFluxo') || '';
   const inducaoPlaceholder =
     tipoHU === 'Indução' && contextoInducao && publico
       ? getInducaoTituloPlaceholder(publico, contextoInducao, inducaoQrModo ?? 'padrao')
@@ -55,11 +58,17 @@ export function Passo4Formulario({ register, errors, watch }: Passo4FormularioPr
         ? 'Ativo PF - Titulo'
         : 'Digite o título';
 
+  useEffect(() => {
+    if (!tituloFluxo.trim() && tituloPlaceholder !== 'Digite o título') {
+      setValue('tituloFluxo', tituloPlaceholder, { shouldDirty: true, shouldValidate: true });
+    }
+  }, [tituloFluxo, tituloPlaceholder, setValue]);
+
   return (
     <div className="content-stretch flex flex-col gap-[32px] items-start w-full max-w-[672px]">
       <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
         <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-          16. Crie um título que represente a jornada desenvolvida
+          16. Crie um título que represente a jornada desenvolvida:
         </p>
 
         <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
@@ -70,7 +79,7 @@ export function Passo4Formulario({ register, errors, watch }: Passo4FormularioPr
                   <input
                     type="text"
                     {...register('tituloFluxo', { required: 'Campo obrigatório' })}
-                    placeholder={tituloPlaceholder}
+                    placeholder="Digite o título"
                     className="flex-[1_0_0] bg-transparent font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] outline-none placeholder:text-[#686c73]"
                   />
                 </div>

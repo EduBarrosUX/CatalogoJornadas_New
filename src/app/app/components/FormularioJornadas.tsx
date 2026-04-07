@@ -49,7 +49,10 @@ export function FormularioJornadas({ onBack }: FormularioJornadasProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   
-  const { register, watch, handleSubmit, formState: { errors } } = useForm<FormData>();
+  const { register, watch, handleSubmit, formState: { errors } } = useForm<FormData>({
+    mode: 'onChange',
+    reValidateMode: 'onChange',
+  });
   
   const tipoInclusao = watch('tipoInclusao');
   const tipoJornada = watch('tipoJornada');
@@ -544,7 +547,13 @@ export function FormularioJornadas({ onBack }: FormularioJornadasProps) {
                 label="Link do Figma"
                 type="url"
                 placeholder="https://www.figma.com/file/..."
-                {...register('linkFigma')}
+                {...register('linkFigma', {
+                  pattern: {
+                    value: /^http:\/\/.+/i,
+                    message: 'Informe uma URL válida iniciando com http://',
+                  },
+                })}
+                error={errors.linkFigma?.message}
               />
 
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">

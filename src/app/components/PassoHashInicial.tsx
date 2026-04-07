@@ -208,9 +208,15 @@ export function PassoHashInicial({ register, errors, watch, setValue }: PassoHas
                   <div className="content-stretch flex gap-[8px] items-center pb-[7px] pt-[8px] px-[12px] relative size-full">
                     <div className="content-stretch flex flex-[1_0_0] items-center min-h-px min-w-px relative">
                       <input
-                        type="text"
+                        type="url"
                         placeholder="https://figma.com/file/..."
-                        {...register('linkFigmaAlteracao', { required: true })}
+                        {...register('linkFigmaAlteracao', {
+                          required: 'Campo obrigatório',
+                          pattern: {
+                            value: /^http:\/\/.+/i,
+                            message: 'Informe uma URL válida iniciando com http://',
+                          },
+                        })}
                         className="css-4hzbpn flex-[1_0_0] font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#111214] text-[16px] tracking-[0.08px] bg-transparent border-none outline-none w-full placeholder:text-[#686c73]"
                       />
                     </div>
@@ -222,7 +228,7 @@ export function PassoHashInicial({ register, errors, watch, setValue }: PassoHas
             
             {errors.linkFigmaAlteracao && (
               <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#e3111f] text-[12px]">
-                Este campo é obrigatório
+                {errors.linkFigmaAlteracao.message as string}
               </p>
             )}
           </div>

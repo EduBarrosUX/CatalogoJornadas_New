@@ -14,7 +14,7 @@ export function Passo5Formulario({ register, errors }: Passo5FormularioProps) {
       <div className="content-stretch flex flex-col gap-[24px] items-start relative shrink-0 w-full">
         <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
           <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-            18. Qual é o Input de Gatilho?
+            18. Qual é o input de gatilho?
           </p>
           <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
             <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
@@ -40,7 +40,7 @@ export function Passo5Formulario({ register, errors }: Passo5FormularioProps) {
       <div className="content-stretch flex flex-col gap-[32px] items-start relative shrink-0 w-full">
         <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
           <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-            19. Link do Figma:
+            19. Link do figma:
           </p>
           <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
             <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
@@ -48,7 +48,12 @@ export function Passo5Formulario({ register, errors }: Passo5FormularioProps) {
                 <div className="content-stretch flex gap-[8px] items-center pb-[7px] pt-[8px] px-[16px] relative size-full">
                   <input
                     type="url"
-                    {...register('linkFigma')}
+                    {...register('linkFigma', {
+                      pattern: {
+                        value: /^http:\/\/.+/i,
+                        message: 'Informe uma URL válida iniciando com http://',
+                      },
+                    })}
                     placeholder="https://www.figma.com/file/..."
                     className="flex-[1_0_0] bg-transparent font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] outline-none placeholder:text-[rgba(108,112,119,0.5)]"
                   />
@@ -57,6 +62,9 @@ export function Passo5Formulario({ register, errors }: Passo5FormularioProps) {
             </div>
             <div className="bg-[#b4b9c1] h-px shrink-0 w-full" />
           </div>
+          {errors.linkFigma && (
+            <p className="text-red-500 text-xs mt-1">{errors.linkFigma.message as string}</p>
+          )}
         </div>
 
         <div className="bg-[#f0f2ff] h-[170px] relative rounded-[10px] shrink-0 w-full">

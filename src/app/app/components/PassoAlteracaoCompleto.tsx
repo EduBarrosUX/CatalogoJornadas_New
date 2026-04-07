@@ -13,7 +13,9 @@ export function PassoAlteracaoCompleto({ register, errors, watch, setValue }: Pa
   const hashPermanece = watch('hashPermanece');
   const alteracaoReferenteTRN = watch('alteracaoReferenteTRN');
 
-  const showPerguntaHash = alteracaoReferenteTRN === 'sim' || alteracaoReferenteTRN === 'nao';
+  const isTRNSim = alteracaoReferenteTRN === 'sim';
+  const isTRNNao = alteracaoReferenteTRN === 'nao';
+  const showPerguntaHash = isTRNSim || isTRNNao;
 
   return (
     <div className="content-stretch flex flex-col gap-[32px] items-start relative shrink-0 w-full">
@@ -72,11 +74,11 @@ export function PassoAlteracaoCompleto({ register, errors, watch, setValue }: Pa
         </div>
       </div>
 
-      {alteracaoReferenteTRN === 'sim' && (
+      {isTRNSim && (
         <>
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              9. Link para acesso ao Plano de Requisitos:
+              8. Link para acesso ao plano de requisitos:
             </p>
             <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
               <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
@@ -84,8 +86,13 @@ export function PassoAlteracaoCompleto({ register, errors, watch, setValue }: Pa
                   <div className="content-stretch flex items-center pb-[7px] pl-[12px] pr-[4px] pt-[8px] relative size-full">
                     <input
                       type="url"
-                      {...register('linkPlanoRequisitos')}
-                      placeholder="https://..."
+                      {...register('linkPlanoRequisitos', {
+                        pattern: {
+                          value: /^http:\/\/.+/i,
+                          message: 'Informe uma URL válida iniciando com http://',
+                        },
+                      })}
+                      placeholder="http://..."
                       className="flex-[1_0_0] bg-transparent font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] outline-none placeholder:text-[#686c73]"
                     />
                   </div>
@@ -93,11 +100,14 @@ export function PassoAlteracaoCompleto({ register, errors, watch, setValue }: Pa
               </div>
               <div className="bg-[#b4b9c1] h-px shrink-0 w-full" />
             </div>
+            {errors.linkPlanoRequisitos && (
+              <p className="text-red-500 text-xs mt-1">{errors.linkPlanoRequisitos.message as string}</p>
+            )}
           </div>
 
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              10. Ausência - Plano de Requisitos:
+              9. Ausência - plano de requisitos:
             </p>
             <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
               <div className="bg-[#f0f2f4] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full min-h-[80px]">
@@ -121,7 +131,7 @@ export function PassoAlteracaoCompleto({ register, errors, watch, setValue }: Pa
       {showPerguntaHash && (
         <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
           <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-            8. A Hash Inicial do fluxo permanece a mesma?
+            {isTRNSim ? '10.' : '8.'} A hash inicial do fluxo permanece a mesma?
           </p>
           <div className="content-stretch flex gap-[16px] items-start shrink-0">
             <div className="content-stretch flex gap-[8px] items-start py-[8px] rounded-[2px] shrink-0 cursor-pointer" onClick={() => setValue('hashPermanece', 'sim')}>
@@ -148,14 +158,17 @@ export function PassoAlteracaoCompleto({ register, errors, watch, setValue }: Pa
         <>
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              11. Qual a data da alteração?
+              {isTRNSim ? '11.' : '9.'} Qual a data da alteração?
             </p>
             <DateInput register={register} name="dataAlteracao" rules={{ required: 'Campo obrigatório' }} />
           </div>
 
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              12. Detalhe as alterações que foram realizadas:
+              {isTRNSim ? '12.' : '10.'} Detalhe as alterações que foram realizadas:
+            </p>
+            <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] not-italic relative shrink-0 text-[#686c73] text-[12px] tracking-[0.06px] w-full">
+              Correção técnica, atualização de conteúdo, ajuste de mídia e outros. Detalhe de forma breve
             </p>
             <div className="bg-[#f0f2f4] content-stretch flex flex-col items-start relative rounded-[4px] shrink-0 w-full">
               <div className="bg-[#f0f2f4] relative rounded-[4px] shrink-0 w-full min-h-[120px]">
@@ -181,14 +194,14 @@ export function PassoAlteracaoCompleto({ register, errors, watch, setValue }: Pa
         <>
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              11. Informe qual o nome da nova hash inicial:
+              {isTRNSim ? '11.' : '9.'} Qual o nome da hash inicial?
             </p>
             <div className="bg-[#f0f2f4] content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
               <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
                 <div className="flex flex-row items-center size-full">
                   <div className="content-stretch flex gap-[8px] items-center pb-[7px] pt-[8px] px-[12px] relative size-full">
                     <div className="content-stretch flex flex-[1_0_0] items-center min-h-px min-w-px relative">
-                      <input type="text" placeholder="Ex: consultar_prazo_emprestimo" {...register('novaHashNome', { required: true })} className="css-4hzbpn flex-[1_0_0] font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#111214] text-[16px] tracking-[0.08px] bg-transparent border-none outline-none w-full placeholder:text-[#686c73]" />
+                      <input type="text" placeholder="Ex: consultar_prazo_emprestimo" {...register('novaHashNome', { required: 'Campo obrigatório' })} className="css-4hzbpn flex-[1_0_0] font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#111214] text-[16px] tracking-[0.08px] bg-transparent border-none outline-none w-full placeholder:text-[#686c73]" />
                     </div>
                   </div>
                 </div>
@@ -199,14 +212,32 @@ export function PassoAlteracaoCompleto({ register, errors, watch, setValue }: Pa
 
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              12. Informe o código da nova hash inicial:
+              {isTRNSim ? '12.' : '10.'} Qual a hash inicial (UUID/Hash) ?
             </p>
+            <div className="mb-2 bg-[#e8f2ff] flex flex-col items-start justify-center p-[12px] relative rounded-[8px] w-full">
+              <div aria-hidden="true" className="absolute border border-[#4a90e2] border-solid inset-0 pointer-events-none rounded-[8px]" />
+              <div className="relative w-full">
+                <div className="flex items-start gap-[8px]">
+                  <div className="relative shrink-0 size-[20px] mt-[1px]">
+                    <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 20 20">
+                      <circle cx="10" cy="10" r="8" stroke="#2D37F5" strokeWidth="1.5" fill="none"/>
+                      <path d="M10 6.5v4.5M10 13.5h.01" stroke="#2D37F5" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#111214] text-[14px] leading-[1.4]">
+                      Para informacionais, ativos e induções, se a jornada estiver em uma múltipla resposta, informe a hash da múltipla.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div className="bg-[#f0f2f4] content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
               <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
                 <div className="flex flex-row items-center size-full">
                   <div className="content-stretch flex gap-[8px] items-center pb-[7px] pt-[8px] px-[12px] relative size-full">
                     <div className="content-stretch flex flex-[1_0_0] items-center min-h-px min-w-px relative">
-                      <input type="text" placeholder="Ex: d823ab05-639c-11ea-bff3-005056924583" {...register('novaHashCodigo', { required: true })} className="css-4hzbpn flex-[1_0_0] font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#111214] text-[16px] tracking-[0.08px] bg-transparent border-none outline-none w-full placeholder:text-[#686c73]" />
+                      <input type="text" placeholder="Ex: d823ab05-639c-11ea-bff3-005056924583" {...register('novaHashCodigo', { required: 'Campo obrigatório' })} className="css-4hzbpn flex-[1_0_0] font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#111214] text-[16px] tracking-[0.08px] bg-transparent border-none outline-none w-full placeholder:text-[#686c73]" />
                     </div>
                   </div>
                 </div>
@@ -217,14 +248,17 @@ export function PassoAlteracaoCompleto({ register, errors, watch, setValue }: Pa
 
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              13. Qual a data da alteração?
+              {isTRNSim ? '13.' : '11.'} Qual a data da alteração?
             </p>
             <DateInput register={register} name="dataAlteracao" rules={{ required: 'Campo obrigatório' }} />
           </div>
 
           <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
             <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-              14. Detalhe as alterações que foram realizadas:
+              {isTRNSim ? '14.' : '12.'} Detalhe as alterações que foram realizadas:
+            </p>
+            <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] not-italic relative shrink-0 text-[#686c73] text-[12px] tracking-[0.06px] w-full">
+              Correção técnica, atualização de conteúdo, ajuste de mídia e outros. Detalhe de forma breve
             </p>
             <div className="bg-[#f0f2f4] content-stretch flex flex-col items-start relative rounded-[4px] shrink-0 w-full">
               <div className="bg-[#f0f2f4] relative rounded-[4px] shrink-0 w-full min-h-[120px]">
@@ -249,7 +283,9 @@ export function PassoAlteracaoCompleto({ register, errors, watch, setValue }: Pa
       {showPerguntaHash && (hashPermanece === 'sim' || hashPermanece === 'nao') && (
         <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
           <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
-            Link do Figma:
+            {(isTRNSim
+              ? (hashPermanece === 'sim' ? '13.' : '15.')
+              : (hashPermanece === 'sim' ? '11.' : '13.'))} Link do figma:
           </p>
           <div className="bg-[#f0f2f4] content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
             <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
@@ -257,9 +293,15 @@ export function PassoAlteracaoCompleto({ register, errors, watch, setValue }: Pa
                 <div className="content-stretch flex gap-[8px] items-center pb-[7px] pt-[8px] px-[12px] relative size-full">
                   <div className="content-stretch flex flex-[1_0_0] items-center min-h-px min-w-px relative">
                     <input
-                      type="text"
+                      type="url"
                       placeholder="https://figma.com/file/..."
-                      {...register('linkFigmaAlteracao', { required: 'Campo obrigatório' })}
+                      {...register('linkFigmaAlteracao', {
+                        required: 'Campo obrigatório',
+                        pattern: {
+                          value: /^http:\/\/.+/i,
+                          message: 'Informe uma URL válida iniciando com http://',
+                        },
+                      })}
                       className="css-4hzbpn flex-[1_0_0] font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#111214] text-[16px] tracking-[0.08px] bg-transparent border-none outline-none w-full placeholder:text-[#686c73]"
                     />
                   </div>
@@ -270,7 +312,7 @@ export function PassoAlteracaoCompleto({ register, errors, watch, setValue }: Pa
           </div>
           {errors.linkFigmaAlteracao && (
             <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#e3111f] text-[12px]">
-              Este campo é obrigatório
+              {errors.linkFigmaAlteracao.message as string}
             </p>
           )}
         </div>
