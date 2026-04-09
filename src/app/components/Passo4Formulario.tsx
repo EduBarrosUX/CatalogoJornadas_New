@@ -57,12 +57,19 @@ export function Passo4Formulario({ register, errors, watch, setValue }: Passo4Fo
       : publico === 'PF'
         ? 'Ativo PF - Titulo'
         : 'Digite o título';
-
   useEffect(() => {
+    // Para Indução, o título deve sempre refletir a seleção atual
+    // (contexto/público/check-in), inclusive quando o usuário volta etapas.
+    if (tipoHU === 'Indução' && tituloPlaceholder !== 'Digite o título') {
+      setValue('tituloFluxo', tituloPlaceholder, { shouldDirty: true, shouldValidate: true });
+      return;
+    }
+
+    // Para os demais tipos, mantém o preenchimento inicial quando vazio.
     if (!tituloFluxo.trim() && tituloPlaceholder !== 'Digite o título') {
       setValue('tituloFluxo', tituloPlaceholder, { shouldDirty: true, shouldValidate: true });
     }
-  }, [tituloFluxo, tituloPlaceholder, setValue]);
+  }, [tipoHU, tituloFluxo, tituloPlaceholder, setValue]);
 
   return (
     <div className="content-stretch flex flex-col gap-[32px] items-start w-full max-w-[672px]">
