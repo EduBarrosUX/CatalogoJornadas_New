@@ -88,11 +88,11 @@ export function PassoAlteracaoCompleto({ register, errors, watch, setValue }: Pa
                       type="url"
                       {...register('linkPlanoRequisitos', {
                         pattern: {
-                          value: /^http:\/\/.+/i,
-                          message: 'Informe uma URL válida iniciando com http://',
+                          value: /^https:\/\/.+/i,
+                          message: 'Informe uma URL válida iniciando com https://',
                         },
                       })}
-                      placeholder="http://..."
+                      placeholder="https://..."
                       className="flex-[1_0_0] bg-transparent font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] outline-none placeholder:text-[#686c73]"
                     />
                   </div>
@@ -298,8 +298,8 @@ export function PassoAlteracaoCompleto({ register, errors, watch, setValue }: Pa
                       {...register('linkFigmaAlteracao', {
                         required: 'Campo obrigatório',
                         pattern: {
-                          value: /^http:\/\/.+/i,
-                          message: 'Informe uma URL válida iniciando com http://',
+                          value: /^https:\/\/.+/i,
+                          message: 'Informe uma URL válida iniciando com https://',
                         },
                       })}
                       className="css-4hzbpn flex-[1_0_0] font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#111214] text-[16px] tracking-[0.08px] bg-transparent border-none outline-none w-full placeholder:text-[#686c73]"

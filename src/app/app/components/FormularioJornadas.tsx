@@ -549,8 +549,8 @@ export function FormularioJornadas({ onBack }: FormularioJornadasProps) {
                 placeholder="https://www.figma.com/file/..."
                 {...register('linkFigma', {
                   pattern: {
-                    value: /^http:\/\/.+/i,
-                    message: 'Informe uma URL válida iniciando com http://',
+                    value: /^https:\/\/.+/i,
+                    message: 'Informe uma URL válida iniciando com https://',
                   },
                 })}
                 error={errors.linkFigma?.message}

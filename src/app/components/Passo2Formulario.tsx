@@ -197,11 +197,11 @@ export function Passo2Formulario({ register, errors, control, periodicidade, tip
                       type="url"
                       {...register('linkPlanoRequisitos', {
                         pattern: {
-                          value: /^http:\/\/.+/i,
-                          message: 'Informe uma URL válida iniciando com http://',
+                          value: /^https:\/\/.+/i,
+                          message: 'Informe uma URL válida iniciando com https://',
                         },
                       })}
-                      placeholder="http://..."
+                      placeholder="https://..."
                       className="flex-[1_0_0] bg-transparent font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] outline-none placeholder:text-[#686c73]"
                     />
                   </div>

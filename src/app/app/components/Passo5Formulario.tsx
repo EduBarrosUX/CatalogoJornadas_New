@@ -50,8 +50,8 @@ export function Passo5Formulario({ register, errors }: Passo5FormularioProps) {
                     type="url"
                     {...register('linkFigma', {
                       pattern: {
-                        value: /^http:\/\/.+/i,
-                        message: 'Informe uma URL válida iniciando com http://',
+                        value: /^https:\/\/.+/i,
+                        message: 'Informe uma URL válida iniciando com https://',
                       },
                     })}
                     placeholder="https://www.figma.com/file/..."
