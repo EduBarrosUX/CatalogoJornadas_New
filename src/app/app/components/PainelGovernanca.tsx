@@ -116,9 +116,10 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
     contadorForm.count++;
     const formId = `FORM${String(contadorForm.count).padStart(4, '0')}`;
     
-    // Determinar Status NIA baseado na jornada (alterna entre Produção e Sanitizada)
+    // Status NIA: valor salvo na jornada ou fallback para demonstração
     const niaCycle = ['Produção', 'Inativa', 'Sanitizada', 'Excluída'];
-    const statusNIA = niaCycle[(contadores[j.tipoHU as keyof typeof contadores] - 1) % 4];
+    const statusNIA =
+      j.statusNIA ?? niaCycle[(contadores[j.tipoHU as keyof typeof contadores] - 1) % 4];
     
     // Adicionar Diretoria e Canal de exemplo (distribui entre as opções disponíveis)
     const diretorias = [

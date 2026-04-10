@@ -1,8 +1,8 @@
 import svgPaths from '@/imports/svg-qvrf26u9v2';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 
 interface ToastNotificationProps {
-  message: string;
+  message: ReactNode;
   onClose: () => void;
   duration?: number;
   type?: 'success' | 'error' | 'warning';
@@ -69,7 +69,7 @@ export function ToastNotification({ message, onClose, duration = 5000, type = 's
         <div className="content-stretch flex flex-[1_0_0] gap-[8px] items-center min-h-px min-w-px relative">
           <div className="content-stretch flex flex-[1_0_0] items-center min-h-px min-w-px relative">
             <div className="flex flex-[1_0_0] flex-col font-['BancoDoBrasil_Textos:Medium',sans-serif] justify-center leading-[0] min-h-px min-w-px not-italic relative text-[#111214] text-[14px]">
-              <p className="leading-[1.125]">{message}</p>
+              <div className="leading-[1.125] whitespace-pre-line">{message}</div>
             </div>
           </div>
           

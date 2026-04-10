@@ -2,10 +2,24 @@ import { JornadaCadastrada } from '@/app/App';
 import svgPaths from '@/imports/svg-r15mp4gs3v';
 import Figma from '@/imports/Figma';
 import { ComentarioGovernanca } from '@/app/components/ComentarioGovernanca';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { SelectField } from '@/app/components/SelectField';
 import { ToastNotification } from '@/app/components/ToastNotification';
+import { DateInput } from '@/app/components/DateInput';
 import Edit from '@/imports/Edit';
+
+type StatusNIAValor = 'Produção' | 'Inativa' | 'Sanitizada' | 'Excluída';
+
+function getTodayIso() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+const STATUS_NIA_COM_DATA: StatusNIAValor[] = ['Inativa', 'Sanitizada', 'Excluída'];
 
 interface DetalhesJornadaGovernancaProps {
   jornada: JornadaCadastrada;
@@ -20,7 +34,10 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
   
   // Estado do select (muda conforme o usuário seleciona)
   const [statusSelecionado, setStatusSelecionado] = useState(jornada.status);
-  const [statusNIA, setStatusNIA] = useState<'Produção' | 'Inativa' | 'Sanitizada' | 'Excluída'>('Produção');
+  const [statusNIA, setStatusNIA] = useState<StatusNIAValor>(jornada.statusNIA ?? 'Produção');
+  const { register, setValue, getValues } = useForm<{ dataStatusNIA: string }>({
+    defaultValues: { dataStatusNIA: jornada.dataStatusNIA ?? '' }
+  });
   const [comentario, setComentario] = useState('');
   const [charsRestantes, setCharsRestantes] = useState(500);
   const [abaAtiva, setAbaAtiva] = useState<'dados' | 'historico'>('dados');
@@ -28,6 +45,13 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
   // Estado do Toast
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+
+  useEffect(() => {
+    if (STATUS_NIA_COM_DATA.includes(statusNIA)) {
+      const atual = getValues('dataStatusNIA');
+      if (!atual) setValue('dataStatusNIA', getTodayIso());
+    }
+  }, [statusNIA, setValue, getValues]);
 
   // Dados mockados do histórico de atualizações
   const historicoAtualizacoes = [
@@ -86,10 +110,17 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
     setStatusAtual(statusSelecionado);
     
     if (onSalvar) {
-      onSalvar({
+      const base: Partial<JornadaCadastrada> = {
         status: statusSelecionado,
-        comentarioGovernanca: comentario || jornada.comentarioGovernanca
-      });
+        comentarioGovernanca: comentario || jornada.comentarioGovernanca,
+        statusNIA
+      };
+      if (statusNIA === 'Produção') {
+        base.dataStatusNIA = undefined;
+      } else {
+        base.dataStatusNIA = getValues('dataStatusNIA') || getTodayIso();
+      }
+      onSalvar(base);
     }
     
     // Mostrar toast de sucesso
@@ -275,6 +306,17 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
               />
             </div>
           </div>
+
+          {STATUS_NIA_COM_DATA.includes(statusNIA) && (
+            <div className="content-stretch flex flex-col items-start relative shrink-0 w-[860px]">
+              <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-[328px]">
+                <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">
+                  Data do status NIA
+                </p>
+                <DateInput register={register} name="dataStatusNIA" />
+              </div>
+            </div>
+          )}
 
           {/* Campo de Comentários */}
           <div className="content-stretch flex flex-col items-end justify-center relative shrink-0 w-full">

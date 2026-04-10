@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { FormularioJornadasMultiStep } from '@/app/components/FormularioJornadasMultiStep';
 import { SugestoesExternas } from '@/app/components/SugestoesExternas';
 import { ToastNotification } from '@/app/components/ToastNotification';
@@ -50,6 +50,10 @@ export interface JornadaCadastrada {
   utilizaIAGenerativa?: boolean;
   iaGenerativaRespondeCliente?: boolean;
   formularioID?: string;
+  /** Status NIA na governança (Produção, Inativa, Sanitizada, Excluída) */
+  statusNIA?: 'Produção' | 'Inativa' | 'Sanitizada' | 'Excluída';
+  /** Data associada ao status NIA (yyyy-mm-dd), quando aplicável */
+  dataStatusNIA?: string;
 }
 
 type View = 'formulario' | 'sugestoes' | 'acompanhamento' | 'governanca';
@@ -305,6 +309,7 @@ export default function App() {
     }
   ]);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [successToastMessage, setSuccessToastMessage] = useState<ReactNode>('Jornada cadastrada com sucesso!');
   const [showModalSugestoes, setShowModalSugestoes] = useState(false);
   const [showModalConsultaFeedbacks, setShowModalConsultaFeedbacks] = useState(false);
   const [jornadaSelecionadaAcompanhamento, setJornadaSelecionadaAcompanhamento] = useState<JornadaCadastrada | null>(null);
@@ -416,7 +421,7 @@ export default function App() {
     // Gerar RME automaticamente se for "Novo fluxo"
     let rmeGerado = data.rme;
     
-    if (data.tipoInclusao === 'Nova Jornada' || !data.rme) {
+    if (data.tipoInclusao === 'Nova Jornada' || data.tipoInclusao === 'novo' || !data.rme) {
       // Determinar o prefixo baseado no tipo HU
       let prefixo = '';
       switch (data.tipoHU) {
@@ -496,6 +501,22 @@ export default function App() {
     console.log('Nova jornada criada com todos os campos:', novaJornada);
     
     setJornadas([novaJornada, ...jornadas]);
+    const isFluxoNovo = data.tipoInclusao === 'Nova Jornada' || data.tipoInclusao === 'novo' || !data.tipoInclusao;
+    const isExcecaoAtivo = (data.tipoHU || '').trim() === 'Ativo';
+    if (isFluxoNovo && !isExcecaoAtivo) {
+      setSuccessToastMessage(
+        <>
+          Jornada cadastrada com sucesso!
+          <br />
+          O código da jornada é:{' '}
+          <span className="text-[#2d37f5] font-['BancoDoBrasil_Textos:Bold',sans-serif] tracking-[0.07px]">
+            {rmeGerado}
+          </span>
+        </>
+      );
+    } else {
+      setSuccessToastMessage('Jornada cadastrada com sucesso!');
+    }
     setShowSuccessToast(true);
     
     // Redirecionar para acompanhamento após cadastro
@@ -777,8 +798,18 @@ export default function App() {
                   </>
                 ) : jornadaSelecionadaGovernanca ? (
                   <DetalhesJornadaGovernanca
+                    key={jornadaSelecionadaGovernanca.rme}
                     jornada={jornadaSelecionadaGovernanca}
                     onVoltar={() => setJornadaSelecionadaGovernanca(null)}
+                    onSalvar={(partial) => {
+                      const rme = jornadaSelecionadaGovernanca.rme;
+                      setJornadas((prev) =>
+                        prev.map((j) => (j.rme === rme ? { ...j, ...partial } : j))
+                      );
+                      setJornadaSelecionadaGovernanca((prev) =>
+                        prev && prev.rme === rme ? { ...prev, ...partial } : prev
+                      );
+                    }}
                     onAbrirFormulario={(j) => setJornadaParaEditarGovernanca(j)}
                   />
                 ) : (
@@ -807,7 +838,7 @@ export default function App() {
       {/* Toast Notification */}
       {showSuccessToast && (
         <ToastNotification
-          message="Jornada cadastrada com sucesso!"
+          message={successToastMessage}
           onClose={() => setShowSuccessToast(false)}
         />
       )}

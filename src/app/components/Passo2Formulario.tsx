@@ -57,7 +57,7 @@ export function Passo2Formulario({ register, errors, control, periodicidade, tip
         <SelectFieldForm
           control={control}
           name="sistemaResponsavel"
-          label={`${numeroSistema} Sistema responsável`}
+          label={`${numeroSistema} Sistema responsável:`}
           rules={{ required: 'Campo obrigatório' }}
           options={[
             { value: 'NIA', label: 'NIA' },

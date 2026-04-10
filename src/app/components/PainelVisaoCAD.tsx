@@ -141,7 +141,7 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
     
     return {
       idFormulario: `FORM${numeroForm}`,
-      codigoCatalogo: `${getPrefixoId(j.tipoHU)}${numero}`,
+      codigoCatalogo: j.rme?.trim() ? j.rme : `${getPrefixoId(j.tipoHU)}${numero}`,
       hu: j.numeroHistoria,
       titulo: j.tituloFluxo,
       tipo: j.tipoHU,
