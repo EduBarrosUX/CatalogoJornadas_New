@@ -1,6 +1,5 @@
 import { JornadaCadastrada } from '@/app/App';
 import { AvisoRepresentacaoDetalheJornada } from '@/app/components/AvisoRepresentacaoDetalheJornada';
-import { getStatusJornadaDisplayMasculino } from '@/app/lib/statusJornadaDisplay';
 import svgPaths from '@/imports/svg-r15mp4gs3v';
 import Figma from '@/imports/Figma';
 import { ComentarioGovernanca } from '@/app/components/ComentarioGovernanca';
@@ -31,6 +30,15 @@ interface DetalhesJornadaGovernancaProps {
 }
 
 export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrirFormulario }: DetalhesJornadaGovernancaProps) {
+  const getStatusDisplayGestao = (status: string) => {
+    if (status === 'Nova') return 'Novo';
+    if (status === 'Correção') return 'Devolvido';
+    if (status === 'Aprovada') return 'Aprovado';
+    if (status === 'Implementada') return 'Publicado';
+    if (status === 'Excluída') return 'Invalidado';
+    return status;
+  };
+
   // Estado do status que aparece no badge (só muda ao clicar em Salvar)
   const [statusAtual, setStatusAtual] = useState(jornada.status);
   
@@ -232,7 +240,7 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
               className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[14px] tracking-[0.07px] leading-[1.125]"
               style={{ color: statusColor.text }}
             >
-              {getStatusJornadaDisplayMasculino(statusAtual)}
+              {getStatusDisplayGestao(statusAtual)}
             </span>
           </div>
           <p
@@ -271,11 +279,11 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
                 value={statusSelecionado}
                 onChange={setStatusSelecionado}
                 options={[
-                  { value: 'Nova', label: 'Enviado' },
+                  { value: 'Nova', label: 'Novo' },
                   { value: 'Em análise', label: 'Em análise' },
                   { value: 'Correção', label: 'Devolvido' },
                   { value: 'Aprovada', label: 'Aprovado' },
-                  { value: 'Implementada', label: 'Implementado' },
+                  { value: 'Implementada', label: 'Publicado' },
                   { value: 'Excluída', label: 'Invalidado' }
                 ]}
                 placeholder="Selecione o status"

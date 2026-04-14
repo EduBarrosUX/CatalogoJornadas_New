@@ -623,10 +623,9 @@ export default function App() {
               <>
                 <div className="flex flex-col font-['BancoDoBrasil_Titulos:Bold',sans-serif] justify-center relative shrink-0 text-[64px] w-[769px]" style={{ letterSpacing: '-2px' }}>
                   <p className="css-4hzbpn leading-[normal]">Gestão</p>
-                  <p className="css-4hzbpn leading-[normal]">Formulário de Jornadas</p>
                 </div>
                 <div className="flex flex-col font-['BancoDoBrasil_Textos:Light',sans-serif] justify-center relative shrink-0 text-[20px] w-[700px]">
-                  <p className="css-4hzbpn leading-[normal]">Faça o gerenciamento das jornadas incluídas e alteradas</p>
+                  <p className="css-4hzbpn leading-[normal]">Gerenciamento e validação dos formulários</p>
                 </div>
               </>
             ) : (
@@ -635,7 +634,7 @@ export default function App() {
                   <p className="css-4hzbpn leading-[normal]">{currentView === 'formulario' ? 'Formulário de Jornadas' : 'Acompanhamento'}</p>
                 </div>
                 <div className="flex flex-col font-['BancoDoBrasil_Textos:Light',sans-serif] justify-center relative shrink-0 text-[20px] w-[700px]">
-                  <p className="css-4hzbpn leading-[normal]">Consulte o catálogo de jornadas, inclua novas informações, altere dados existentes, reporte erros e envie sugestões para aprimorar continuamente o conteúdo.</p>
+                  <p className="css-4hzbpn leading-[normal]">Acompanhe os formulários, edite informações e consulte o status de validação.</p>
                 </div>
               </>
             )}

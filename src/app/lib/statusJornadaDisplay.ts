@@ -14,10 +14,10 @@ export function getStatusJornadaDisplayMasculino(status: string): string {
       return 'Aprovado';
     case 'Implementada':
     case 'implementada':
-      return 'Implementado';
+      return 'Publicado';
     case 'Excluída':
     case 'excluída':
-      return 'Excluído';
+      return 'Invalidado';
     default:
       return status;
   }

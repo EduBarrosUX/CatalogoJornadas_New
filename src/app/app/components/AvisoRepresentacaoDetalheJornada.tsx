@@ -12,7 +12,7 @@ export function AvisoRepresentacaoDetalheJornada() {
           </div>
           <div className="flex-1">
             <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#111214] text-[14px] leading-[1.4]">
-              Essa é só uma representação, seguir o padrão do formulário. Todos os dados preenchidos no formulário, deve aparecer nesse detalhamento.
+              Essa é so uma representação , os dados da jornada deve conter  todas as informações do formulário conforme  o tipo de inclusão (novo ou alteração) e jornada.
             </p>
           </div>
         </div>

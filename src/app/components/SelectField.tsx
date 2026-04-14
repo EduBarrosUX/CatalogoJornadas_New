@@ -72,8 +72,8 @@ export function SelectField({ label, value, onChange, options, placeholder = 'Se
 
         {/* Dropdown Menu */}
         {isOpen && (
-          <div className="absolute bg-[#fefefe] overflow-clip p-[4px] shadow-[0px_10px_16px_0px_rgba(24,24,27,0.06),0px_3px_6px_0px_rgba(24,24,27,0.06),0px_0px_1px_0px_rgba(24,24,27,0.04)] top-[calc(100%+4px)] w-full z-50 max-h-[240px] rounded-[4px]">
-            <div className="flex flex-col w-full overflow-y-auto">
+          <div className="absolute bg-[#fefefe] p-[4px] shadow-[0px_10px_16px_0px_rgba(24,24,27,0.06),0px_3px_6px_0px_rgba(24,24,27,0.06),0px_0px_1px_0px_rgba(24,24,27,0.04)] top-[calc(100%+4px)] w-full z-50 rounded-[4px]">
+            <div className="flex flex-col w-full overflow-y-auto max-h-[280px]">
               {options.map((option, index) => (
                 <div key={option.value} className="w-full">
                   <div

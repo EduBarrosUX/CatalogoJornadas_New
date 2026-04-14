@@ -3,7 +3,6 @@ import svgPaths from '@/imports/svg-3dkfh9akxg';
 import svgPathsPaginator from '@/imports/svg-yxb1sqbp9k';
 import svgPathsRadio from '@/imports/svg-st0q96v9y6';
 import type { JornadaCadastrada } from '@/app/App';
-import { getStatusJornadaDisplayMasculino } from '@/app/lib/statusJornadaDisplay';
 import { FiltroPeriodoHierarquico } from '@/app/components/FiltroPeriodoHierarquico';
 import { SelectField } from '@/app/components/SelectField';
 import { ModalPersonalizarFiltros } from '@/app/components/ModalPersonalizarFiltros';
@@ -17,7 +16,17 @@ interface PainelGovernancaProps {
 }
 
 export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizacao = '03/02/2026 14:30' }: PainelGovernancaProps) {
+  const getStatusDisplayGestao = (status: string) => {
+    if (status === 'Nova') return 'Novo';
+    if (status === 'Correção') return 'Devolvido';
+    if (status === 'Aprovada') return 'Aprovado';
+    if (status === 'Implementada') return 'Publicado';
+    if (status === 'Excluída') return 'Invalidado';
+    return status;
+  };
+
   const CANAIS_FORMULARIO = ['WhatsApp', 'App BB', 'Outros'];
+  const PUBLICOS_FORMULARIO = ['PF', 'PJ'];
   const [dataInicio, setDataInicio] = useState(''); // Vazio por padrão
   const [dataTermino, setDataTermino] = useState(''); // Vazio por padrão
   const [periodo, setPeriodo] = useState('');
@@ -32,12 +41,11 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
   const [status, setStatus] = useState('');
   const [temaFiltro, setTemaFiltro] = useState('');
   const [isMaisFiltrosOpen, setIsMaisFiltrosOpen] = useState(false);
-  const [diretoriaFiltro, setDiretoriaFiltro] = useState('');
   const [canalFiltro, setCanalFiltro] = useState('');
+  const [publicoFiltro, setPublicoFiltro] = useState('');
   const [colunasVisiveis, setColunasVisiveis] = useState<string[]>(['TIPO', 'TEMA', 'STATUS', 'DIRETORIA', 'CANAL']);
   const [maisFiltrosExpandido, setMaisFiltrosExpandido] = useState(false); // Controla expansão dos filtros extras
   const [inclusaoFiltro, setInclusaoFiltro] = useState(''); // Filtro de Inclusão
-  const [planoRequisitosFiltro, setPlanoRequisitosFiltro] = useState<'com_link' | 'com_justificativa' | ''>(''); // Filtro (TRN)
 
   // Garantir que STATUS sempre seja renderizado por último
   const colunasOrdenadas = [...colunasVisiveis].sort((a, b) => {
@@ -187,25 +195,16 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
     // Filtro de tema
     const matchTema = !temaFiltro || jornada.tema === temaFiltro;
 
-    // Filtro de diretoria
-    const matchDiretoria = !diretoriaFiltro || jornada.diretoria === diretoriaFiltro;
-
     // Filtro de canal
     const matchCanal = !canalFiltro || jornada.canal === canalFiltro;
+
+    // Filtro de público (mesma base do formulário)
+    const matchPublico = !publicoFiltro || jornada.jornadaOriginal?.publico === publicoFiltro;
 
     // Filtro de inclusão
     const matchInclusao = !inclusaoFiltro || jornada.inclusao === inclusaoFiltro;
 
-    // Filtro de Plano de Requisitos (somente Transação/TRN)
-    const isTransacao = jornada.tipo === 'Transação';
-    const hasLinkPlano = !!jornada.jornadaOriginal?.linkPlanoRequisitos?.trim();
-    const hasJustificativa = !!jornada.jornadaOriginal?.ausenciaPlanoRequisitos?.trim();
-    const matchPlanoRequisitos =
-      !planoRequisitosFiltro ||
-      (planoRequisitosFiltro === 'com_link' && isTransacao && hasLinkPlano) ||
-      (planoRequisitosFiltro === 'com_justificativa' && isTransacao && hasJustificativa);
-
-    return matchSearch && matchTipo && matchStatus && matchData && matchPeriodo && matchTema && matchDiretoria && matchCanal && matchInclusao && matchPlanoRequisitos;
+    return matchSearch && matchTipo && matchStatus && matchData && matchPeriodo && matchTema && matchCanal && matchPublico && matchInclusao;
   });
 
   // Verificar se há algum filtro ativo
@@ -220,10 +219,9 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
     periodoAno ||
     periodoTrimestre ||
     periodoMes ||
-    diretoriaFiltro ||
     canalFiltro ||
     inclusaoFiltro ||
-    planoRequisitosFiltro
+    publicoFiltro
   );
 
   // Paginação
@@ -636,9 +634,9 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
         {/* Filtros Adicionais */}
         <div className="content-stretch flex flex-col items-end relative shrink-0 w-full mb-[16px]">
           <div className="content-stretch flex gap-[8px] items-end justify-end relative shrink-0 w-full">
-            {/* Nome do Fluxo */}
+            {/* Buscar */}
             <div className="content-stretch flex flex-[1_0_0] flex-col gap-[8px] items-start min-h-px min-w-px relative">
-              <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">Nome do Fluxo</p>
+              <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">Buscar</p>
               <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
                 <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
                   <div className="flex flex-row items-center size-full">
@@ -651,7 +649,7 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
                       <div className="content-stretch flex flex-[1_0_0] items-center min-h-px min-w-px relative">
                         <input
                           type="text"
-                          placeholder="Buscar por ID, Titulo"
+                          placeholder="Título, Código ou ID"
                           value={nomeFluxo}
                           onChange={(e) => setNomeFluxo(e.target.value)}
                           className="css-4hzbpn flex-[1_0_0] font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] bg-transparent border-none outline-none w-full"
@@ -664,10 +662,24 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
               </div>
             </div>
 
-            {/* Tipo de Jornada */}
+            {/* Tipo de Inclusão */}
             <div className="content-stretch flex flex-[1_0_0] flex-col gap-[8px] items-start min-h-px min-w-px relative">
               <SelectField
-                label="Tipo de Jornada"
+                label="Tipo de Inclusão"
+                value={inclusaoFiltro}
+                onChange={setInclusaoFiltro}
+                options={[
+                  { value: 'Nova Jornada', label: 'Novo' },
+                  { value: 'Alteração', label: 'Alteração' }
+                ]}
+                placeholder="Filtro"
+              />
+            </div>
+
+            {/* Jornada */}
+            <div className="content-stretch flex flex-[1_0_0] flex-col gap-[8px] items-start min-h-px min-w-px relative">
+              <SelectField
+                label="Jornada"
                 value={tipoJornada}
                 onChange={setTipoJornada}
                 options={[
@@ -680,17 +692,6 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
               />
             </div>
 
-            {/* Tema */}
-            <div className="content-stretch flex flex-[1_0_0] flex-col gap-[8px] items-start min-h-px min-w-px relative">
-              <SelectField
-                label="Tema"
-                value={temaFiltro}
-                onChange={setTemaFiltro}
-                options={temasUnicos.map(tema => ({ value: tema, label: tema }))}
-                placeholder="Filtro"
-              />
-            </div>
-
             {/* Status */}
             <div className="content-stretch flex flex-[1_0_0] flex-col gap-[8px] items-start min-h-px min-w-px relative">
               <SelectField
@@ -698,12 +699,12 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
                 value={status}
                 onChange={setStatus}
                 options={[
-                  { value: 'Nova', label: 'Enviado' },
+                  { value: 'Nova', label: 'Novo' },
                   { value: 'Em análise', label: 'Em análise' },
                   { value: 'Correção', label: 'Devolvido' },
                   { value: 'Aprovada', label: 'Aprovado' },
-                  { value: 'Implementada', label: 'Implementado' },
-                  { value: 'Excluída', label: 'Excluído' }
+                  { value: 'Implementada', label: 'Publicado' },
+                  { value: 'Excluída', label: 'Invalidado' }
                 ]}
                 placeholder="Filtro"
               />
@@ -721,51 +722,16 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
           </div>
         </div>
 
-        {/* Filtros Extras (Diretoria e Canal) - Expandem quando "Mais Filtros" é clicado */}
+        {/* Filtros Extras - Expandem quando "Mais Filtros" é clicado */}
         {maisFiltrosExpandido && (
           <div className="content-stretch flex gap-[8px] items-end relative shrink-0 w-full mb-[16px]">
-            {/* Filtro de Inclusão */}
+            {/* Filtro de Tema */}
             <div className="content-stretch flex flex-[1_0_0] flex-col gap-[8px] items-start min-h-px min-w-px relative">
               <SelectField
-                label="Inclusão"
-                value={inclusaoFiltro}
-                onChange={setInclusaoFiltro}
-                options={[
-                  { value: 'Nova Jornada', label: 'Nova Jornada' },
-                  { value: 'Alteração', label: 'Alteração' }
-                ]}
-                placeholder="Filtro"
-              />
-            </div>
-
-            {/* Filtro: Plano de Requisitos (somente TRN/Transação) */}
-            <div className="content-stretch flex flex-[1_0_0] flex-col gap-[8px] items-start min-h-px min-w-px relative">
-              <SelectField
-                label="Plano de Requisitos"
-                value={planoRequisitosFiltro}
-                onChange={(v) => setPlanoRequisitosFiltro(v as typeof planoRequisitosFiltro)}
-                options={[
-                  { value: 'com_link', label: 'Com link informado' },
-                  { value: 'com_justificativa', label: 'Sem link (com justificativa)' }
-                ]}
-                placeholder="Filtro"
-              />
-            </div>
-
-            {/* Filtro de Diretoria */}
-            <div className="content-stretch flex flex-[1_0_0] flex-col gap-[8px] items-start min-h-px min-w-px relative">
-              <SelectField
-                label="Diretoria"
-                value={diretoriaFiltro}
-                onChange={setDiretoriaFiltro}
-                options={[
-                  { value: 'Diretoria de Negócios Digitais', label: 'Diretoria de Negócios Digitais' },
-                  { value: 'Diretoria de Canais', label: 'Diretoria de Canais' },
-                  { value: 'Diretoria de Tecnologia', label: 'Diretoria de Tecnologia' },
-                  { value: 'Diretoria de Produtos', label: 'Diretoria de Produtos' },
-                  { value: 'Diretoria de Experiência do Cliente', label: 'Diretoria de Experiência do Cliente' },
-                  { value: 'Diretoria de Marketing', label: 'Diretoria de Marketing' }
-                ]}
+                label="Tema"
+                value={temaFiltro}
+                onChange={setTemaFiltro}
+                options={temasUnicos.map(tema => ({ value: tema, label: tema }))}
                 placeholder="Filtro"
               />
             </div>
@@ -780,6 +746,20 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
                   { value: 'WhatsApp', label: 'WhatsApp' },
                   { value: 'App BB', label: 'App BB' },
                   { value: 'Outros', label: 'Outros' }
+                ]}
+                placeholder="Filtro"
+              />
+            </div>
+
+            {/* Filtro de Público (mesma base do Acompanhamento) */}
+            <div className="content-stretch flex flex-[1_0_0] flex-col gap-[8px] items-start min-h-px min-w-px relative">
+              <SelectField
+                label="Público"
+                value={publicoFiltro}
+                onChange={setPublicoFiltro}
+                options={[
+                  { value: 'PF', label: 'Pessoa Física' },
+                  { value: 'PJ', label: 'Pessoa Jurídica' }
                 ]}
                 placeholder="Filtro"
               />
@@ -804,10 +784,9 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
               setPeriodoAno('');
               setPeriodoTrimestre('');
               setPeriodoMes('');
-              setDiretoriaFiltro('');
               setCanalFiltro('');
+              setPublicoFiltro('');
               setInclusaoFiltro('');
-              setPlanoRequisitosFiltro('');
               setCurrentPage(1);
             }}
           />
@@ -970,7 +949,7 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
                       className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[14px] tracking-[0.07px] leading-[1.125] whitespace-nowrap"
                       style={{ color: getStatusColors(jornada.status).text }}
                     >
-                      {getStatusJornadaDisplayMasculino(jornada.status)}
+                      {getStatusDisplayGestao(jornada.status)}
                     </span>
                   </div>
                 </div>

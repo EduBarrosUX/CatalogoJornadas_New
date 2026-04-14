@@ -742,7 +742,7 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
       <div className="flex gap-[8px] items-end mb-[16px]">
         <div className="flex-1 flex flex-col gap-[8px]">
           <label className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[#111214] text-[14px] tracking-[0.07px] leading-[1.125]">
-            Buscar (Por Código ou ID)
+            Buscar
           </label>
           <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
             <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
@@ -756,7 +756,7 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
                   <div className="content-stretch flex flex-[1_0_0] items-center min-h-px min-w-px relative">
                     <input
                       type="text"
-                      placeholder="Buscar por Código ou ID"
+                      placeholder="Título, Código ou ID"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="css-4hzbpn flex-[1_0_0] font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] bg-transparent border-none outline-none w-full"
