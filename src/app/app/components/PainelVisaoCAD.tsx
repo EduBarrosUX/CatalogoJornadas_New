@@ -3,6 +3,7 @@ import svgPaths from '@/imports/svg-3dkfh9akxg';
 import svgPathsPaginator from '@/imports/svg-yxb1sqbp9k';
 import svgPathsRadio from '@/imports/svg-st0q96v9y6';
 import type { JornadaCadastrada } from '@/app/App';
+import { getStatusJornadaDisplayMasculino } from '@/app/lib/statusJornadaDisplay';
 import { FiltroPeriodoHierarquico } from '@/app/components/FiltroPeriodoHierarquico';
 import { SelectField } from '@/app/components/SelectField';
 import { ModalPersonalizarFiltros } from '@/app/components/ModalPersonalizarFiltros';
@@ -19,7 +20,8 @@ interface PainelVisaoCADProps {
 export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, dataUltimaAtualizacao = '03/02/2026 14:30', onEditarJornada }: PainelVisaoCADProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
-  const [tipoJornada, setTipoJornada] = useState('');
+  const [jornadaFiltro, setJornadaFiltro] = useState('');
+  const [tipoInclusaoFiltro, setTipoInclusaoFiltro] = useState('');
   const [temaFiltro, setTemaFiltro] = useState('');
   const [statusFiltro, setStatusFiltro] = useState('');
   const [dataInicio, setDataInicio] = useState(''); // Vazio por padrão
@@ -29,12 +31,14 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
   const [periodoTrimestre, setPeriodoTrimestre] = useState('');
   const [periodoMes, setPeriodoMes] = useState('');
   const [filtroCardAtivo, setFiltroCardAtivo] = useState<string>('');
+  const [filtroStatusMinhas, setFiltroStatusMinhas] = useState<string>('');
   const [isMaisFiltrosOpen, setIsMaisFiltrosOpen] = useState(false);
   const [diretoriaFiltro, setDiretoriaFiltro] = useState('');
   const [canalFiltro, setCanalFiltro] = useState('');
+  const [publicoFiltro, setPublicoFiltro] = useState('');
   const [colunasVisiveis, setColunasVisiveis] = useState<string[]>(['TIPO', 'TEMA', 'STATUS', 'DIRETORIA', 'CANAL']);
   const [maisFiltrosExpandido, setMaisFiltrosExpandido] = useState(false); // Controla expansão dos filtros extras
-  const [abaAtiva, setAbaAtiva] = useState<'todas' | 'minhas'>('todas'); // Estado para controlar a aba ativa
+  const [abaAtiva, setAbaAtiva] = useState<'todas' | 'minhas'>('minhas'); // Estado para controlar a aba ativa
   const dataInicioRef = useRef<HTMLInputElement>(null);
   const dataTerminoRef = useRef<HTMLInputElement>(null);
 
@@ -70,19 +74,19 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
   const getStatusColors = (status: string) => {
     switch (status) {
       case 'Nova':
-        return { bullet: '#4668FF', text: '#4668ff', display: 'Enviada' };
+        return { bullet: '#4668FF', text: '#4668ff', display: getStatusJornadaDisplayMasculino('Nova') };
       case 'Em análise':
-        return { bullet: '#FF6F20', text: '#ff6f20', display: 'Em análise' };
+        return { bullet: '#FF6F20', text: '#ff6f20', display: getStatusJornadaDisplayMasculino('Em análise') };
       case 'Correção':
-        return { bullet: '#FFB31A', text: '#ad5f00', display: 'Devolvida' };
+        return { bullet: '#FFB31A', text: '#ad5f00', display: getStatusJornadaDisplayMasculino('Correção') };
       case 'Aprovada':
-        return { bullet: '#0C8A00', text: '#0c8a00', display: 'Aprovada' };
+        return { bullet: '#0C8A00', text: '#0c8a00', display: getStatusJornadaDisplayMasculino('Aprovada') };
       case 'Implementada':
-        return { bullet: '#5A059C', text: '#5a059c', display: 'Implementada' };
+        return { bullet: '#5A059C', text: '#5a059c', display: getStatusJornadaDisplayMasculino('Implementada') };
       case 'Excluída':
-        return { bullet: '#E3111F', text: '#e3111f', display: 'Excluída' };
+        return { bullet: '#E3111F', text: '#e3111f', display: getStatusJornadaDisplayMasculino('Excluída') };
       default:
-        return { bullet: '#4668FF', text: '#4668ff', display: status };
+        return { bullet: '#4668FF', text: '#4668ff', display: getStatusJornadaDisplayMasculino(status) };
     }
   };
 
@@ -107,17 +111,7 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
 
   // Converter jornadas para formato da tabela com numeração sequencial por tipo
   const contadores = { 'Ativo': 0, 'Transação': 0, 'Indução': 0, 'Informacional': 0 };
-  const jornadasTabela = jornadas
-    // Primeiro filtrar por aba ativa (Todas ou Minhas Entregas)
-    .filter(j => {
-      if (abaAtiva === 'minhas') {
-        // Mostrar apenas jornadas do usuário atual
-        return j.cadastradoPor === 'usuario.atual@bb.com.br';
-      }
-      // Aba "todas" mostra todas as jornadas
-      return true;
-    })
-    .map((j, index) => {
+  const jornadasTabela = jornadas.map((j, index) => {
       contadores[j.tipoHU as keyof typeof contadores]++;
       const numero = String(contadores[j.tipoHU as keyof typeof contadores]).padStart(4, '0');
       const numeroForm = String(index + 1).padStart(4, '0');
@@ -141,11 +135,13 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
     
     return {
       idFormulario: `FORM${numeroForm}`,
-      codigoCatalogo: j.rme?.trim() ? j.rme : `${getPrefixoId(j.tipoHU)}${numero}`,
+      codigoCatalogo: (j.rme?.trim() ? j.rme : `${getPrefixoId(j.tipoHU)}${numero}`).replace(/-/g, ''),
       hu: j.numeroHistoria,
       titulo: j.tituloFluxo,
       tipo: j.tipoHU,
+      tipoInclusao: j.tipoInclusao || 'Nova Jornada',
       tema: j.tema,
+      publico: j.publico || 'Interno',
       data: j.dataAbertura,
       dataInclusao: j.dataAbertura || '01/02/2026',
       status: j.status,
@@ -154,43 +150,51 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
       rme: j.rme,
       diretoria: diretorias[indexDiretoria],
       canal: canais[indexCanal],
+      isMinhaEntrega: index < 4 || j.cadastradoPor === 'usuario.atual@bb.com.br',
       jornadaOriginal: j
     };
   });
 
+  const jornadasAbaAtiva = jornadasTabela.filter((j) => (abaAtiva === 'minhas' ? j.isMinhaEntrega : true));
+
   // Aplicar filtros
-  const jornadasFiltradas = jornadasTabela.filter(jornada => {
+  const jornadasFiltradas = jornadasAbaAtiva.filter(jornada => {
     const searchLower = searchTerm.toLowerCase();
     const matchSearch = !searchTerm || 
       jornada.idFormulario.toLowerCase().includes(searchLower) ||
-      jornada.hu.toLowerCase().includes(searchLower) ||
-      jornada.titulo.toLowerCase().includes(searchLower);
+      jornada.codigoCatalogo.toLowerCase().includes(searchLower);
 
-    const tipoFiltroAtivo = filtroCardAtivo || tipoJornada;
+    const tipoFiltroAtivo = filtroCardAtivo || jornadaFiltro;
     const matchTipo = !tipoFiltroAtivo || jornada.tipo === tipoFiltroAtivo;
+    const matchTipoInclusao = !tipoInclusaoFiltro || jornada.tipoInclusao === tipoInclusaoFiltro;
     const matchTema = !temaFiltro || jornada.tema === temaFiltro;
     const statusInterno = statusFiltro === 'Enviada' ? 'Nova' : statusFiltro;
-    const matchStatus = !statusFiltro || jornada.status === statusInterno;
+    const matchStatusSelect = !statusFiltro || jornada.status === statusInterno;
+    const matchStatusMinha = abaAtiva !== 'minhas' || !filtroStatusMinhas || jornada.status === filtroStatusMinhas;
     const matchDiretoria = !diretoriaFiltro || jornada.diretoria === diretoriaFiltro;
     const matchCanal = !canalFiltro || jornada.canal === canalFiltro;
+    const matchPublico = !publicoFiltro || jornada.publico === publicoFiltro;
 
-    return matchSearch && matchTipo && matchTema && matchStatus && matchDiretoria && matchCanal;
+    return matchSearch && matchTipo && matchTipoInclusao && matchTema && matchStatusSelect && matchStatusMinha && matchDiretoria && matchCanal && matchPublico;
   });
 
   // Verificar se há algum filtro ativo
   const temFiltrosAtivos = !!(
     searchTerm ||
-    tipoJornada ||
+    jornadaFiltro ||
+    tipoInclusaoFiltro ||
     temaFiltro ||
     statusFiltro ||
     dataInicio ||
     dataTermino ||
     filtroCardAtivo ||
+    filtroStatusMinhas ||
     periodoAno ||
     periodoTrimestre ||
     periodoMes ||
     diretoriaFiltro ||
-    canalFiltro
+    canalFiltro ||
+    publicoFiltro
   );
 
   // Paginação
@@ -201,21 +205,29 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
   const jornadasPaginadas = jornadasFiltradas.slice(indexInicio, indexFim);
 
   // Calcular estatísticas reais baseadas nas jornadas da tabela
-  const totalDashboard = jornadasTabela.length;
-  const jornadasNovas = jornadasTabela.filter(j => j.tipoInclusao === 'Nova Jornada').length;
-  const jornadasAlteradas = jornadasTabela.filter(j => j.tipoInclusao === 'Alteração').length;
+  const totalDashboard = jornadasAbaAtiva.length;
+  const jornadasNovas = jornadasAbaAtiva.filter(j => j.tipoInclusao === 'Nova Jornada').length;
+  const jornadasAlteradas = jornadasAbaAtiva.filter(j => j.tipoInclusao === 'Alteração').length;
   
   // Contar por tipo
-  const jornadasAtivo = jornadasTabela.filter(j => j.tipo === 'Ativo').length;
-  const jornadasTransacao = jornadasTabela.filter(j => j.tipo === 'Transação').length;
-  const jornadasInducao = jornadasTabela.filter(j => j.tipo === 'Indução').length;
-  const jornadasInformacional = jornadasTabela.filter(j => j.tipo === 'Informacional').length;
+  const jornadasAtivo = jornadasAbaAtiva.filter(j => j.tipo === 'Ativo').length;
+  const jornadasTransacao = jornadasAbaAtiva.filter(j => j.tipo === 'Transação').length;
+  const jornadasInducao = jornadasAbaAtiva.filter(j => j.tipo === 'Indução').length;
+  const jornadasInformacional = jornadasAbaAtiva.filter(j => j.tipo === 'Informacional').length;
   
   // Calcular percentuais
   const percAtivo = totalDashboard > 0 ? Math.round((jornadasAtivo / totalDashboard) * 100) : 0;
   const percTransacao = totalDashboard > 0 ? Math.round((jornadasTransacao / totalDashboard) * 100) : 0;
   const percInducao = totalDashboard > 0 ? Math.round((jornadasInducao / totalDashboard) * 100) : 0;
   const percInformacional = totalDashboard > 0 ? Math.round((jornadasInformacional / totalDashboard) * 100) : 0;
+  const dashboardsMinhas = [
+    { label: 'Aprovado', status: 'Aprovada', value: jornadasAbaAtiva.filter((j) => j.status === 'Aprovada').length, color: '#0c8a00', soft: '#e7f6e7' },
+    { label: 'Em Análise', status: 'Em análise', value: jornadasAbaAtiva.filter((j) => j.status === 'Em análise').length, color: '#ff6f20', soft: '#ffe8d9' },
+    { label: 'Enviado', status: 'Nova', value: jornadasAbaAtiva.filter((j) => j.status === 'Nova').length, color: '#4668ff', soft: '#e8edff' },
+    { label: 'Devolvido', status: 'Correção', value: jornadasAbaAtiva.filter((j) => j.status === 'Correção').length, color: '#ad5f00', soft: '#fff0d9' },
+    { label: 'Publicado', status: 'Implementada', value: jornadasAbaAtiva.filter((j) => j.status === 'Implementada').length, color: '#5a059c', soft: '#f1e6fb' },
+    { label: 'Invalidado', status: 'Excluída', value: jornadasAbaAtiva.filter((j) => j.status === 'Excluída').length, color: '#e3111f', soft: '#ffe6e8' },
+  ];
 
   // Função auxiliar para renderizar colunas dinamicamente
   const renderColunaHeader = (nomeColuna: string) => {
@@ -267,8 +279,8 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
             </span>
           </div>
           
-          {/* Ícone de lápis para status "Enviada" ou "Correção" */}
-          {(jornada.status === 'Nova' || jornada.status === 'Correção') && onEditarJornada && (
+          {/* Ícone de lápis para status Enviado ou Devolvido em Minhas Entregas */}
+          {abaAtiva === 'minhas' && (jornada.status === 'Nova' || jornada.status === 'Correção') && onEditarJornada && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -328,27 +340,125 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
             {totalDashboard}
           </span>
         </div>
-        
-        {/* Botão Incluir/Alterar */}
-        {onIncluirAlterar && (
-          <button
-            onClick={onIncluirAlterar}
-            className="bg-[#fcfc30] hover:bg-[#e8e82b] transition-colors rounded-[4px] px-[16px] py-[12px] cursor-pointer"
-          >
-            <span className="font-['BancoDoBrasil_Titulos:Bold',sans-serif] text-[#465eff] text-[14px] tracking-[0.07px] uppercase leading-[1.125]">
-              INCLUIR/ALTERAR
-            </span>
-          </button>
-        )}
       </div>
 
-      {/* Cards de estatísticas */}
+      {/* Tabs: Minhas Entregas / Todas as Entregas */}
+      <div className="bg-[#fefefe] content-stretch flex h-[48px] items-end relative w-full mb-[16px]">
+        <div className="content-stretch flex flex-[1_0_0] h-full items-end min-h-px min-w-px overflow-clip relative">
+          <div className="content-stretch flex items-end relative shrink-0">
+            <button
+              onClick={() => setAbaAtiva('minhas')}
+              className="bg-[#fefefe] content-stretch flex h-[48px] items-center justify-center relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+            >
+              {abaAtiva === 'minhas' && (
+                <div className="absolute bottom-px h-0 left-0 right-0">
+                  <div className="absolute inset-[-1px_0]">
+                    <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 280 2">
+                      <path d="M0 1H280" stroke="#2D37F5" strokeWidth="2" />
+                    </svg>
+                  </div>
+                </div>
+              )}
+              {abaAtiva === 'todas' && (
+                <div className="absolute h-0 left-0 right-0 top-[48px]">
+                  <div className="absolute inset-[-1px_0_0_0]">
+                    <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 280 1">
+                      <line stroke="#B4B9C1" x2="280" y1="0.5" y2="0.5" />
+                    </svg>
+                  </div>
+                </div>
+              )}
+              <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-start justify-center px-[32px] relative">
+                <div className={`css-g0mm18 flex flex-col font-['BancoDoBrasil_Titulos:Bold',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[14px] text-center tracking-[0.07px] uppercase ${abaAtiva === 'minhas' ? 'text-[#2d37f5]' : 'text-[#111214]'}`}>
+                  <p className="css-ew64yg leading-[1.125]">MINHAS ENTREGAS</p>
+                </div>
+              </div>
+            </button>
+            <button
+              onClick={() => {
+                setAbaAtiva('todas');
+                setFiltroStatusMinhas('');
+              }}
+              className="bg-[#fefefe] content-stretch flex h-[48px] items-center justify-center relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+            >
+              {abaAtiva === 'todas' && (
+                <div className="absolute bottom-px h-0 left-0 right-0">
+                  <div className="absolute inset-[-1px_0]">
+                    <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 280 2">
+                      <path d="M0 1H280" stroke="#2D37F5" strokeWidth="2" />
+                    </svg>
+                  </div>
+                </div>
+              )}
+              {abaAtiva === 'minhas' && (
+                <div className="absolute h-0 left-0 right-0 top-[48px]">
+                  <div className="absolute inset-[-1px_0_0_0]">
+                    <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 280 1">
+                      <line stroke="#B4B9C1" x2="280" y1="0.5" y2="0.5" />
+                    </svg>
+                  </div>
+                </div>
+              )}
+              <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-start justify-center px-[32px] relative">
+                <div className={`css-g0mm18 flex flex-col font-['BancoDoBrasil_Titulos:Bold',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[14px] text-center tracking-[0.07px] uppercase ${abaAtiva === 'todas' ? 'text-[#2d37f5]' : 'text-[#111214]'}`}>
+                  <p className="css-ew64yg leading-[1.125]">TODAS AS ENTREGAS</p>
+                </div>
+              </div>
+            </button>
+          </div>
+          <div className="flex-[1_0_0] h-full min-h-px min-w-px relative">
+            <div aria-hidden="true" className="absolute border-[#b4b9c1] border-b border-solid inset-0 pointer-events-none" />
+          </div>
+        </div>
+      </div>
+
+      {abaAtiva === 'minhas' ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-[12px] mb-[48px] w-full">
+          {dashboardsMinhas.map((card) => (
+            <div
+              key={card.label}
+              onClick={() => {
+                setFiltroStatusMinhas(filtroStatusMinhas === card.status ? '' : card.status);
+                setCurrentPage(1);
+              }}
+              className="bg-[#fefefe] rounded-[12px] h-[170px] p-[4px] transition-all relative cursor-pointer group"
+            >
+              <div className={`absolute border-l-4 border-solid inset-[4px] pointer-events-none rounded-[12px] transition-shadow ${
+                filtroStatusMinhas === card.status
+                  ? 'shadow-[0px_0px_0px_0px_rgba(70,104,255,0.2),0px_8px_24px_0px_rgba(70,104,255,0.35)]'
+                  : 'shadow-[0px_0px_2px_0px_#b3abab] group-hover:shadow-[0px_0px_0px_0px_rgba(70,104,255,0.1),0px_4px_12px_0px_rgba(70,104,255,0.2)]'
+              }`} style={{ borderColor: card.color }} />
+              <div className="flex items-center justify-between px-[24px] pt-[24px] pb-[8px]">
+                <h4 className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[#686c73] text-[14px] leading-[21px]">
+                  {card.label}
+                </h4>
+                <div className="rounded-[8px] size-[40px] flex items-center justify-center transition-colors" style={{ backgroundColor: card.soft }}>
+                  <svg className="size-[15.99px]" fill="none" preserveAspectRatio="none" viewBox="0 0 15.9896 15.9896">
+                    <path d={svgPaths.p28502300} stroke={card.color} strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
+                  </svg>
+                </div>
+              </div>
+              <div className="px-[24px] pb-[24px]">
+                <p className="font-['BancoDoBrasil_Textos:Bold',sans-serif] text-[24px] leading-[32px] mb-[4px]" style={{ color: card.color }}>
+                  {card.value}
+                </p>
+                <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#686c73] text-[16px] leading-[24px] mb-[4px]">
+                  {totalDashboard > 0 ? Math.round((card.value / totalDashboard) * 100) : 0}% do total
+                </p>
+                <div className="h-[8px] rounded-[33554400px] w-full" style={{ backgroundColor: card.soft }}>
+                  <div className="h-[8px] rounded-[33554400px]" style={{ width: `${totalDashboard > 0 ? Math.round((card.value / totalDashboard) * 100) : 0}%`, backgroundColor: card.color }} />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
       <div className="flex gap-[12px] mb-[48px] w-full overflow-x-auto">
         {/* Card Ativo */}
         <div
           onClick={() => {
             setFiltroCardAtivo(filtroCardAtivo === 'Ativo' ? '' : 'Ativo');
-            setTipoJornada('');
+            setJornadaFiltro('');
             setCurrentPage(1);
           }}
           className="bg-[#fefefe] rounded-[12px] min-w-[280px] flex-1 h-[190px] p-[4px] cursor-pointer transition-all relative group"
@@ -395,7 +505,7 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
         <div
           onClick={() => {
             setFiltroCardAtivo(filtroCardAtivo === 'Transação' ? '' : 'Transação');
-            setTipoJornada('');
+            setJornadaFiltro('');
             setCurrentPage(1);
           }}
           className="bg-[#fefefe] rounded-[12px] min-w-[280px] flex-1 h-[190px] p-[4px] cursor-pointer transition-all relative group"
@@ -442,7 +552,7 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
         <div
           onClick={() => {
             setFiltroCardAtivo(filtroCardAtivo === 'Indução' ? '' : 'Indução');
-            setTipoJornada('');
+            setJornadaFiltro('');
             setCurrentPage(1);
           }}
           className="bg-[#fefefe] rounded-[12px] min-w-[280px] flex-1 h-[190px] p-[4px] cursor-pointer transition-all relative group"
@@ -489,7 +599,7 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
         <div
           onClick={() => {
             setFiltroCardAtivo(filtroCardAtivo === 'Informacional' ? '' : 'Informacional');
-            setTipoJornada('');
+            setJornadaFiltro('');
             setCurrentPage(1);
           }}
           className="bg-[#fefefe] rounded-[12px] min-w-[280px] flex-1 h-[190px] p-[4px] cursor-pointer transition-all relative group"
@@ -532,6 +642,7 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
           </div>
         </div>
       </div>
+      )}
 
       {/* Filtros de Data/Período com Radio Buttons */}
       <div className="content-stretch flex gap-[16px] items-start py-[16.741px] mb-[12px]">
@@ -713,7 +824,7 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
       <div className="flex gap-[8px] items-end mb-[16px]">
         <div className="flex-1 flex flex-col gap-[8px]">
           <label className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[#111214] text-[14px] tracking-[0.07px] leading-[1.125]">
-            Nome do Fluxo
+            Buscar (Por Código ou ID)
           </label>
           <div className="content-stretch flex flex-col items-start relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
             <div className="bg-[#f0f2f4] h-[39px] relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 w-full">
@@ -727,7 +838,7 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
                   <div className="content-stretch flex flex-[1_0_0] items-center min-h-px min-w-px relative">
                     <input
                       type="text"
-                      placeholder="Buscar por ID, Código ou Título"
+                      placeholder="Buscar por Código ou ID"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="css-4hzbpn flex-[1_0_0] font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] bg-transparent border-none outline-none w-full"
@@ -740,35 +851,33 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
           </div>
         </div>
 
-        {/* Selects dinâmicos baseados nas colunas visíveis */}
-        {colunasVisiveis.includes('TIPO') && (
-          <div className="flex-1 flex flex-col gap-[8px]">
-            <SelectField
-              label="Tipo de Jornada"
-              value={tipoJornada}
-              onChange={setTipoJornada}
-              options={[
-                { value: 'Ativo', label: 'Ativo' },
-                { value: 'Transação', label: 'Transação' },
-                { value: 'Indução', label: 'Indução' },
-                { value: 'Informacional', label: 'Informacional' }
-              ]}
-              placeholder="Filtro"
-            />
-          </div>
-        )}
+        <div className="flex-1 flex flex-col gap-[8px]">
+          <SelectField
+            label="Tipo de Inclusão"
+            value={tipoInclusaoFiltro}
+            onChange={setTipoInclusaoFiltro}
+            options={[
+              { value: 'Nova Jornada', label: 'Novo' },
+              { value: 'Alteração', label: 'Alteração' }
+            ]}
+            placeholder="Filtro"
+          />
+        </div>
 
-        {colunasVisiveis.includes('TEMA') && (
-          <div className="flex-1 flex flex-col gap-[8px]">
-            <SelectField
-              label="Tema"
-              value={temaFiltro}
-              onChange={setTemaFiltro}
-              options={temasUnicos.map(tema => ({ value: tema, label: tema }))}
-              placeholder="Filtro"
-            />
-          </div>
-        )}
+        <div className="flex-1 flex flex-col gap-[8px]">
+          <SelectField
+            label="Jornada"
+            value={jornadaFiltro}
+            onChange={setJornadaFiltro}
+            options={[
+              { value: 'Ativo', label: 'Ativo' },
+              { value: 'Transação', label: 'Transação' },
+              { value: 'Indução', label: 'Indução' },
+              { value: 'Informacional', label: 'Informacional' }
+            ]}
+            placeholder="Filtro"
+          />
+        </div>
 
         {colunasVisiveis.includes('STATUS') && (
           <div className="flex-1 flex flex-col gap-[8px]">
@@ -777,12 +886,12 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
               value={statusFiltro}
               onChange={setStatusFiltro}
               options={[
-                { value: 'Enviada', label: 'Enviada' },
+                { value: 'Enviada', label: 'Enviado' },
                 { value: 'Em análise', label: 'Em análise' },
-                { value: 'Correção', label: 'Devolvida' },
-                { value: 'Aprovada', label: 'Aprovada' },
-                { value: 'Implementada', label: 'Implementada' },
-                { value: 'Excluída', label: 'Excluída' }
+                { value: 'Correção', label: 'Devolvido' },
+                { value: 'Aprovada', label: 'Aprovado' },
+                { value: 'Implementada', label: 'Implementado' },
+                { value: 'Excluída', label: 'Excluído' }
               ]}
               placeholder="Filtro"
             />
@@ -800,23 +909,16 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
         </button>
       </div>
 
-      {/* Filtros Extras (Diretoria e Canal) - Expandem quando "Mais Filtros" é clicado */}
+      {/* Filtros Extras (Tema, Canal e Público) - Expandem quando "Mais Filtros" é clicado */}
       {maisFiltrosExpandido && (
         <div className="flex gap-[8px] items-end mb-[16px]">
-          {/* Filtro de Diretoria */}
+          {/* Filtro de Tema */}
           <div className="flex-1 flex flex-col gap-[8px]">
             <SelectField
-              label="Diretoria"
-              value={diretoriaFiltro}
-              onChange={setDiretoriaFiltro}
-              options={[
-                { value: 'Diretoria de Negócios Digitais', label: 'Diretoria de Negócios Digitais' },
-                { value: 'Diretoria de Canais', label: 'Diretoria de Canais' },
-                { value: 'Diretoria de Tecnologia', label: 'Diretoria de Tecnologia' },
-                { value: 'Diretoria de Produtos', label: 'Diretoria de Produtos' },
-                { value: 'Diretoria de Experiência do Cliente', label: 'Diretoria de Experiência do Cliente' },
-                { value: 'Diretoria de Marketing', label: 'Diretoria de Marketing' }
-              ]}
+              label="Tema"
+              value={temaFiltro}
+              onChange={setTemaFiltro}
+              options={temasUnicos.map(tema => ({ value: tema, label: tema }))}
               placeholder="Filtro"
             />
           </div>
@@ -836,8 +938,19 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
             />
           </div>
 
-          {/* Espaços vazios para manter o alinhamento */}
-          <div className="flex-1" />
+          {/* Filtro de Público */}
+          <div className="flex-1 flex flex-col gap-[8px]">
+            <SelectField
+              label="Público"
+              value={publicoFiltro}
+              onChange={setPublicoFiltro}
+              options={[
+                { value: 'Interno', label: 'Interno' },
+                { value: 'Externo', label: 'Externo' }
+              ]}
+              placeholder="Filtro"
+            />
+          </div>
         </div>
       )}
 
@@ -851,17 +964,20 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
             onClick={() => {
               // Limpar todos os filtros
               setSearchTerm('');
-              setTipoJornada('');
+              setJornadaFiltro('');
+              setTipoInclusaoFiltro('');
               setTemaFiltro('');
               setStatusFiltro('');
               setDataInicio('');
               setDataTermino('');
               setFiltroCardAtivo('');
+              setFiltroStatusMinhas('');
               setPeriodoAno('');
               setPeriodoTrimestre('');
               setPeriodoMes('');
               setDiretoriaFiltro('');
               setCanalFiltro('');
+              setPublicoFiltro('');
               setCurrentPage(1);
             }}
             className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[#2d37f5] text-[14px] tracking-[0.07px] leading-[1.125] cursor-pointer hover:opacity-70 transition-opacity"
@@ -870,77 +986,6 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
           </button>
         </div>
       )}
-
-      {/* Tabs: Todas as Entregas / Minhas Entregas */}
-      <div className="bg-[#fefefe] content-stretch flex items-center relative w-full h-[48px] mb-[16px]">
-        {/* Tab: Todas as Entregas */}
-        <button
-          onClick={() => setAbaAtiva('todas')}
-          className="bg-[#fefefe] content-stretch flex flex-1 h-[48px] items-center justify-center min-h-px min-w-px relative rounded-tl-[4px] rounded-tr-[4px] cursor-pointer hover:opacity-80 transition-opacity"
-        >
-          {abaAtiva === 'todas' && (
-            <div className="absolute bottom-px h-0 left-0 right-0">
-              <div className="absolute inset-[-1px_0]">
-                <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 451 2">
-                  <path d="M0 1H451" stroke="#2D37F5" strokeWidth="2" />
-                </svg>
-              </div>
-            </div>
-          )}
-          {abaAtiva === 'minhas' && (
-            <div className="absolute h-0 left-0 right-0 top-[48px]">
-              <div className="absolute inset-[-1px_0_0_0]">
-                <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 451 1">
-                  <line stroke="#B4B9C1" x2="451" y1="0.5" y2="0.5" />
-                </svg>
-              </div>
-            </div>
-          )}
-          <div className="relative shrink-0">
-            <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-start justify-center px-[32px] relative">
-              <div className="content-stretch flex gap-[8px] h-[32px] items-center relative shrink-0">
-                <div className={`flex flex-col font-['BancoDoBrasil_Titulos:Bold',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[14px] text-center tracking-[0.07px] uppercase whitespace-nowrap ${abaAtiva === 'todas' ? 'text-[#2d37f5]' : 'text-[#111214]'}`}>
-                  <p className="leading-[1.125]">TODAS AS ENTREGAS</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </button>
-
-        {/* Tab: Minhas Entregas */}
-        <button
-          onClick={() => setAbaAtiva('minhas')}
-          className="bg-[#fefefe] content-stretch flex flex-1 h-[48px] items-center justify-center min-h-px min-w-px relative rounded-tl-[4px] rounded-tr-[4px] cursor-pointer hover:opacity-80 transition-opacity"
-        >
-          {abaAtiva === 'minhas' && (
-            <div className="absolute bottom-px h-0 left-0 right-0">
-              <div className="absolute inset-[-1px_0]">
-                <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 451 2">
-                  <path d="M0 1H451" stroke="#2D37F5" strokeWidth="2" />
-                </svg>
-              </div>
-            </div>
-          )}
-          {abaAtiva === 'todas' && (
-            <div className="absolute h-0 left-0 right-0 top-[48px]">
-              <div className="absolute inset-[-1px_0_0_0]">
-                <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 451 1">
-                  <line stroke="#B4B9C1" x2="451" y1="0.5" y2="0.5" />
-                </svg>
-              </div>
-            </div>
-          )}
-          <div className="h-[32px] relative shrink-0">
-            <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex h-full items-start justify-center px-[32px] relative">
-              <div className="content-stretch flex gap-[8px] h-[32px] items-center relative shrink-0">
-                <div className={`flex flex-col font-['BancoDoBrasil_Titulos:Bold',sans-serif] justify-center leading-[0] not-italic relative shrink-0 text-[14px] text-center tracking-[0.07px] uppercase whitespace-nowrap ${abaAtiva === 'minhas' ? 'text-[#2d37f5]' : 'text-[#111214]'}`}>
-                  <p className="leading-[1.125]">MINHAS ENTREGAS</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </button>
-      </div>
 
       {/* Tabela */}
       <div className="w-full">
@@ -1089,7 +1134,7 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
                 </p>
               </div>
 
-              {/* Status com ícone de edição para Correção e Em análise */}
+              {/* Status com ícone de edição para Enviado e Devolvido */}
               <div className="flex flex-1 items-center relative min-w-0">
                 <div className="bg-[#f0f2f4] flex gap-[2px] h-[24px] items-center justify-center px-[8px] pl-[4px] py-[4px] rounded-full border border-[#d4d8dd]">
                   <svg className="size-[16px]" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
@@ -1104,7 +1149,7 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
                 </div>
                 
                 {/* Ícone de lápis para status "Correção" ou "Em análise" */}
-                {(jornada.status === 'Correção' || jornada.status === 'Em análise') && onEditarJornada && (
+                {abaAtiva === 'minhas' && (jornada.status === 'Correção' || jornada.status === 'Nova') && onEditarJornada && (
                   <button
                     onClick={(e) => {
                       e.stopPropagation();

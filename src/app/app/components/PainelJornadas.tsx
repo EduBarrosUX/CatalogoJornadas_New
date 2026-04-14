@@ -4,6 +4,7 @@ import svgPathsPaginator from '@/imports/svg-yxb1sqbp9k';
 import svgPathsRadio from '@/imports/svg-st0q96v9y6';
 import svgPathsCheckbox from '@/imports/svg-hv9yqctnmg';
 import type { JornadaCadastrada, FeedbackUsuario } from '@/app/App';
+import { getStatusJornadaDisplayMasculino } from '@/app/lib/statusJornadaDisplay';
 import { ModalFeedback } from '@/app/components/ModalFeedback';
 import { MessagesSquare } from 'lucide-react';
 import Edit from '@/imports/Edit-83-14391';
@@ -52,19 +53,19 @@ export function PainelJornadas({ onIncluirAlterar, onVerDetalhes, jornadas, onEn
   const getStatusColors = (status: string) => {
     switch (status) {
       case 'Nova':
-        return { bullet: '#4668FF', text: '#4668ff', display: 'Enviada' };
+        return { bullet: '#4668FF', text: '#4668ff', display: getStatusJornadaDisplayMasculino('Nova') };
       case 'Em análise':
-        return { bullet: '#FF6F20', text: '#ff6f20', display: 'Em análise' };
+        return { bullet: '#FF6F20', text: '#ff6f20', display: getStatusJornadaDisplayMasculino('Em análise') };
       case 'Correção':
-        return { bullet: '#FFB31A', text: '#ad5f00', display: 'Correção' };
+        return { bullet: '#FFB31A', text: '#ad5f00', display: getStatusJornadaDisplayMasculino('Correção') };
       case 'Aprovada':
-        return { bullet: '#0C8A00', text: '#0c8a00', display: 'Aprovada' };
+        return { bullet: '#0C8A00', text: '#0c8a00', display: getStatusJornadaDisplayMasculino('Aprovada') };
       case 'Implementada':
-        return { bullet: '#5A059C', text: '#5a059c', display: 'Implementada' };
+        return { bullet: '#5A059C', text: '#5a059c', display: getStatusJornadaDisplayMasculino('Implementada') };
       case 'Excluída':
-        return { bullet: '#E3111F', text: '#e3111f', display: 'Excluída' };
+        return { bullet: '#E3111F', text: '#e3111f', display: getStatusJornadaDisplayMasculino('Excluída') };
       default:
-        return { bullet: '#4668FF', text: '#4668ff', display: status };
+        return { bullet: '#4668FF', text: '#4668ff', display: getStatusJornadaDisplayMasculino(status) };
     }
   };
 
@@ -721,7 +722,7 @@ export function PainelJornadas({ onIncluirAlterar, onVerDetalhes, jornadas, onEn
               onChange={setStatusFiltro}
               options={[
                 { value: 'Produção', label: 'Produção' },
-                { value: 'Sanitizada', label: 'Sanitizada' }
+                { value: 'Sanitizada', label: 'Sanitizado' }
               ]}
               placeholder="Filtro"
             />

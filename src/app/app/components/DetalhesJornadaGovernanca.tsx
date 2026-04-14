@@ -1,4 +1,6 @@
 import { JornadaCadastrada } from '@/app/App';
+import { AvisoRepresentacaoDetalheJornada } from '@/app/components/AvisoRepresentacaoDetalheJornada';
+import { getStatusJornadaDisplayMasculino } from '@/app/lib/statusJornadaDisplay';
 import svgPaths from '@/imports/svg-r15mp4gs3v';
 import Figma from '@/imports/Figma';
 import { ComentarioGovernanca } from '@/app/components/ComentarioGovernanca';
@@ -82,7 +84,7 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
     {
       id: 4,
       tipo: 'statusNIA',
-      alteracao: 'Status NIA alterado de "Sanitizada" para "Produção"',
+      alteracao: 'Status NIA alterado de "Sanitizado" para "Produção"',
       usuario: 'C987654 - Maria Silva',
       data: '03/02/2026',
       horario: '09:10'
@@ -148,14 +150,6 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
     }
   };
 
-  // Mapear status para nome de exibição no Painel Governança
-  const getStatusDisplayName = (status: string) => {
-    if (status === 'Correção') {
-      return 'Devolvida';
-    }
-    return status;
-  };
-
   // Mapear status para descrição
   const getStatusDescription = (status: string) => {
     switch (status) {
@@ -209,7 +203,7 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
                   <p className="css-ew64yg leading-[1.125]">/</p>
                 </div>
                 <div className="css-g0mm18 flex flex-col justify-center relative shrink-0">
-                  <p className="css-ew64yg leading-[1.125]">{jornada.rme}</p>
+                  <p className="css-ew64yg leading-[1.125]">{jornada.rme?.replace(/-/g, '')}</p>
                 </div>
               </div>
             </div>
@@ -238,7 +232,7 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
               className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[14px] tracking-[0.07px] leading-[1.125]"
               style={{ color: statusColor.text }}
             >
-              {getStatusDisplayName(statusAtual)}
+              {getStatusJornadaDisplayMasculino(statusAtual)}
             </span>
           </div>
           <p
@@ -277,12 +271,12 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
                 value={statusSelecionado}
                 onChange={setStatusSelecionado}
                 options={[
-                  { value: 'Nova', label: 'Nova' },
-                  { value: 'Em análise', label: 'Em Análise' },
-                  { value: 'Correção', label: 'Devolvida' },
-                  { value: 'Aprovada', label: 'Aprovada' },
-                  { value: 'Implementada', label: 'Implementada' },
-                  { value: 'Excluída', label: 'Excluída' }
+                  { value: 'Nova', label: 'Enviado' },
+                  { value: 'Em análise', label: 'Em análise' },
+                  { value: 'Correção', label: 'Devolvido' },
+                  { value: 'Aprovada', label: 'Aprovado' },
+                  { value: 'Implementada', label: 'Implementado' },
+                  { value: 'Excluída', label: 'Excluído' }
                 ]}
                 placeholder="Selecione o status"
               />
@@ -298,9 +292,9 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
                 onChange={(value) => setStatusNIA(value as 'Produção' | 'Inativa' | 'Sanitizada' | 'Excluída')}
                 options={[
                   { value: 'Produção', label: 'Produção' },
-                  { value: 'Inativa', label: 'Inativa' },
-                  { value: 'Sanitizada', label: 'Sanitizada' },
-                  { value: 'Excluída', label: 'Excluída' }
+                  { value: 'Inativa', label: 'Inativo' },
+                  { value: 'Sanitizada', label: 'Sanitizado' },
+                  { value: 'Excluída', label: 'Excluído' }
                 ]}
                 placeholder="Selecione o status NIA"
               />
@@ -428,6 +422,7 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
             {abaAtiva === 'dados' ? (
               /* Conteúdo da Tab - Dados da Jornada */
               <div className="bg-white border border-[#ebf2ff] rounded-[4px] p-[32px] shrink-0 w-full">
+                <AvisoRepresentacaoDetalheJornada />
                 {/* Seção 1: Informações Básicas */}
                 <div className="mb-[32px]">
                   <div className="mb-[24px] pb-[16px] border-b border-[#e5e7eb] flex items-center justify-between">
@@ -449,10 +444,10 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
                         Número da História
                       </p>
                       <a
-                        href={`#${jornada.numeroHistoria}`}
+                        href={`#${jornada.numeroHistoria?.replace(/\D/g, '')}`}
                         className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[#2d37f5] text-[16px] leading-[24px] hover:text-[#1e28d5] hover:underline transition-colors cursor-pointer"
                       >
-                        {jornada.numeroHistoria}
+                        {jornada.numeroHistoria?.replace(/\D/g, '')}
                       </a>
                     </div>
 
@@ -512,7 +507,7 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
                         RME
                       </p>
                       <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#686c73] text-[16px] leading-[24px]">
-                        {jornada.rme}
+                        {jornada.rme?.replace(/-/g, '')}
                       </p>
                     </div>
 

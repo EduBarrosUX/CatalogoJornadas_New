@@ -89,20 +89,43 @@ const STEP_LABELS_SIMPLIFICADO = [
   'Título e Canal'
 ];
 
+/** Valores persistidos em JornadaCadastrada vs valores internos do formulário (react-hook-form). */
+function normalizeTipoInclusaoForForm(raw: string | undefined): 'novo' | 'alteracao' | 'alteracao-trn' {
+  if (!raw) return 'novo';
+  const r = String(raw).trim();
+  if (r === 'Nova Jornada' || r === 'novo') return 'novo';
+  if (r === 'Alteração' || r === 'alteracao') return 'alteracao';
+  if (r === 'alteracao-trn') return 'alteracao-trn';
+  return 'novo';
+}
+
+function normalizePeriodicidadeForForm(raw: string | undefined): 'unico' | 'recorrente' {
+  if (!raw) return 'unico';
+  const r = String(raw).trim().toLowerCase();
+  if (r === 'recorrente') return 'recorrente';
+  if (r === 'unico' || r === 'único') return 'unico';
+  return 'unico';
+}
+
+/** Número da história (GENTI): apenas dígitos. */
+export function normalizeNumeroHistoria(raw: string | undefined): string {
+  return String(raw ?? '').replace(/\D/g, '');
+}
+
 export function FormularioJornadasMultiStep({ onSubmitSuccess, jornadaEditando }: FormularioJornadasMultiStepProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [canalSelecionado, setCanalSelecionado] = useState<string>(jornadaEditando?.canais?.[0] || '');
   
   // Determinar valores iniciais baseados na jornada sendo editada
   const defaultValues = jornadaEditando ? {
-    numeroHistoria: jornadaEditando.numeroHistoria || '',
-    tipoInclusao: (jornadaEditando.tipoInclusao as 'novo' | 'alteracao' | 'alteracao-trn') || 'novo',
+    numeroHistoria: normalizeNumeroHistoria(jornadaEditando.numeroHistoria),
+    tipoInclusao: normalizeTipoInclusaoForForm(jornadaEditando.tipoInclusao),
     dataImplementacao: jornadaEditando.dataImplementacao || '',
     diretoria: jornadaEditando.diretoria || '',
     tipoHU: jornadaEditando.tipoHU as 'Transação' | 'Ativo' | 'Indução' | 'Informacional',
     rme: jornadaEditando.rme || '',
     sistemaResponsavel: jornadaEditando.sistemaResponsavel || '',
-    periodicidade: (jornadaEditando.periodicidade as 'unico' | 'recorrente') || 'unico',
+    periodicidade: normalizePeriodicidadeForForm(jornadaEditando.periodicidade),
     templateMeta: jornadaEditando.templateMeta || '',
     categoriaAtivo: jornadaEditando.categoriaAtivo as 'Autenticação' | 'Marketing' | 'Utilidade' | undefined,
     contextoInducao: jornadaEditando.contextoInducao as 'Saudação' | 'Feedback' | 'QR Code / Link' | 'Outro' | undefined,
@@ -222,7 +245,11 @@ export function FormularioJornadasMultiStep({ onSubmitSuccess, jornadaEditando }
     const canalFinal = canalSelecionado === 'Outros'
       ? (data.canalOutro?.trim() || 'Outros')
       : canalSelecionado;
-    const formData = { ...data, canais: canalFinal ? [canalFinal] : [] };
+    const formData = {
+      ...data,
+      canais: canalFinal ? [canalFinal] : [],
+      numeroHistoria: normalizeNumeroHistoria(data.numeroHistoria),
+    };
     console.log('=== DEBUG FORMULÁRIO ===');
     console.log('1. Dados brutos do formulário (data):', data);
     console.log('2. Canal selecionado:', canalSelecionado);

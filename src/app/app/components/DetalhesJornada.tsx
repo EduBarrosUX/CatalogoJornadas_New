@@ -1,35 +1,36 @@
 import { JornadaCadastrada } from '@/app/App';
+import { AvisoRepresentacaoDetalheJornada } from '@/app/components/AvisoRepresentacaoDetalheJornada';
+import { getStatusJornadaDisplayMasculino } from '@/app/lib/statusJornadaDisplay';
 import svgPaths from '@/imports/svg-r15mp4gs3v';
 import Figma from '@/imports/Figma';
 import Edit from '@/imports/Edit-83-14391';
-import { ComentarioGovernanca } from '@/app/components/ComentarioGovernanca';
+import { useState } from 'react';
 
 interface DetalhesJornadaProps {
   jornada: JornadaCadastrada;
   onVoltar: () => void;
   onEditar?: () => void;
-  isPainelGovernanca?: boolean;
 }
 
-export function DetalhesJornada({ jornada, onVoltar, onEditar, isPainelGovernanca = false }: DetalhesJornadaProps) {
+export function DetalhesJornada({ jornada, onVoltar, onEditar }: DetalhesJornadaProps) {
+  const [abaAtiva, setAbaAtiva] = useState<'dados' | 'historico'>('dados');
   // Mapear status para cores e texto
   const getStatusInfo = (status: string) => {
     switch (status) {
       case 'Nova':
-        return { bullet: '#4668FF', text: '#4668ff', display: 'Enviada' };
+        return { bullet: '#4668FF', text: '#4668ff', display: getStatusJornadaDisplayMasculino('Nova') };
       case 'Em análise':
-        return { bullet: '#FF6F20', text: '#ff6f20', display: 'Em análise' };
+        return { bullet: '#FF6F20', text: '#ff6f20', display: getStatusJornadaDisplayMasculino('Em análise') };
       case 'Correção':
-        // No Painel Governança mostra "Devolvida", no Painel CAD mostra "Devolvida"
-        return { bullet: '#FFB31A', text: '#ad5f00', display: isPainelGovernanca ? 'Devolvida' : 'Devolvida' };
+        return { bullet: '#FFB31A', text: '#ad5f00', display: getStatusJornadaDisplayMasculino('Correção') };
       case 'Aprovada':
-        return { bullet: '#0C8A00', text: '#0c8a00', display: 'Aprovada' };
+        return { bullet: '#0C8A00', text: '#0c8a00', display: getStatusJornadaDisplayMasculino('Aprovada') };
       case 'Implementada':
-        return { bullet: '#5A059C', text: '#5a059c', display: 'Implementada' };
+        return { bullet: '#5A059C', text: '#5a059c', display: getStatusJornadaDisplayMasculino('Implementada') };
       case 'Excluída':
-        return { bullet: '#E3111F', text: '#e3111f', display: 'Excluída' };
+        return { bullet: '#E3111F', text: '#e3111f', display: getStatusJornadaDisplayMasculino('Excluída') };
       default:
-        return { bullet: '#4668FF', text: '#4668ff', display: status };
+        return { bullet: '#4668FF', text: '#4668ff', display: getStatusJornadaDisplayMasculino(status) };
     }
   };
 
@@ -86,7 +87,7 @@ export function DetalhesJornada({ jornada, onVoltar, onEditar, isPainelGovernanc
                   <p className="css-ew64yg leading-[1.125]">/</p>
                 </div>
                 <div className="css-g0mm18 flex flex-col justify-center relative shrink-0">
-                  <p className="css-ew64yg leading-[1.125]">{jornada.rme}</p>
+                  <p className="css-ew64yg leading-[1.125]">{jornada.rme?.replace(/-/g, '')}</p>
                 </div>
               </div>
             </div>
@@ -135,49 +136,91 @@ export function DetalhesJornada({ jornada, onVoltar, onEditar, isPainelGovernanc
         </svg>
       </div>
 
-      {/* Comentário da Governança - mostrar apenas quando status é "Correção" */}
-      {jornada.status === 'Correção' && jornada.comentarioGovernanca && (
-        <ComentarioGovernanca comentario={jornada.comentarioGovernanca} />
-      )}
-
-      {/* Seção Dados da Jornada - Collapsible */}
-      <div className="mb-[24px]">
-        <div className="bg-[#ebf2ff] rounded-tl-[4px] rounded-tr-[4px] h-[40px] w-full flex items-center justify-between px-[16px]">
-          <div className="flex items-center gap-[12px]">
-            <span className="font-['BancoDoBrasil_Titulos:Bold',sans-serif] text-[#2d37f5] text-[16px] leading-[24px]">
-              Dados da Jornada
-            </span>
-            
-            {/* Ícone de lápis para status "Nova" ou "Correção" */}
-            {(jornada.status === 'Nova' || jornada.status === 'Correção') && onEditar && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onEditar();
-                }}
-                className="flex items-center justify-center size-[24px] shrink-0 rounded-[4px] hover:bg-[rgba(255,255,255,0.3)] transition-colors cursor-pointer"
-                title="Editar jornada"
-              >
-                <div className="size-[24px]">
-                  <Edit />
+      <div className="bg-[#fefefe] content-stretch flex h-[48px] items-end relative shrink-0 w-[512.7px] mb-[16px]">
+        <div className="content-stretch flex flex-[1_0_0] h-full items-end min-h-px min-w-px overflow-clip relative">
+          <div className="content-stretch flex items-end relative shrink-0">
+            <button
+              onClick={() => setAbaAtiva('dados')}
+              className="bg-[#fefefe] content-stretch flex h-[48px] items-center justify-center relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+            >
+              {abaAtiva === 'dados' && (
+                <div className="absolute bottom-px h-0 left-0 right-0">
+                  <div className="absolute inset-[-1px_0]">
+                    <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 211 2">
+                      <path d="M0 1H211" stroke="#2D37F5" strokeWidth="2" />
+                    </svg>
+                  </div>
                 </div>
-              </button>
-            )}
+              )}
+              {abaAtiva === 'historico' && (
+                <div className="absolute h-0 left-0 right-0 top-[48px]">
+                  <div className="absolute inset-[-1px_0_0_0]">
+                    <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 211 1">
+                      <line stroke="#B4B9C1" x2="211" y1="0.5" y2="0.5" />
+                    </svg>
+                  </div>
+                </div>
+              )}
+              <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-start justify-center px-[32px] relative">
+                <div className={`css-g0mm18 flex flex-col font-['BancoDoBrasil_Titulos:Bold',sans-serif] justify-center text-[14px] text-center tracking-[0.07px] uppercase ${abaAtiva === 'dados' ? 'text-[#2d37f5]' : 'text-[#111214]'}`}>
+                  <p className="css-ew64yg leading-[1.125]">Dados da Jornada</p>
+                </div>
+              </div>
+            </button>
+            <button
+              onClick={() => setAbaAtiva('historico')}
+              className="bg-[#fefefe] content-stretch flex h-[48px] items-center justify-center relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+            >
+              {abaAtiva === 'historico' && (
+                <div className="absolute bottom-px h-0 left-0 right-0">
+                  <div className="absolute inset-[-1px_0]">
+                    <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 267 2">
+                      <path d="M0 1H267" stroke="#2D37F5" strokeWidth="2" />
+                    </svg>
+                  </div>
+                </div>
+              )}
+              {abaAtiva === 'dados' && (
+                <div className="absolute h-0 left-0 right-0 top-[48px]">
+                  <div className="absolute inset-[-1px_0_0_0]">
+                    <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 267 1">
+                      <line stroke="#B4B9C1" x2="267" y1="0.5" y2="0.5" />
+                    </svg>
+                  </div>
+                </div>
+              )}
+              <div className="bg-clip-padding border-0 border-[transparent] border-solid content-stretch flex items-start justify-center px-[32px] relative">
+                <div className={`css-g0mm18 flex flex-col font-['BancoDoBrasil_Titulos:Bold',sans-serif] justify-center text-[14px] text-center tracking-[0.07px] uppercase ${abaAtiva === 'historico' ? 'text-[#2d37f5]' : 'text-[#111214]'}`}>
+                  <p className="css-ew64yg leading-[1.125]">Histórico de Atualização</p>
+                </div>
+              </div>
+            </button>
           </div>
-          
-          <svg className="size-[24px]" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
-            <path d={svgPaths.p3053c630} fill="#2D37F5" />
-          </svg>
+          <div className="flex-[1_0_0] h-full min-h-px min-w-px relative">
+            <div aria-hidden="true" className="absolute border-[#b4b9c1] border-b border-solid inset-0 pointer-events-none" />
+          </div>
         </div>
+      </div>
 
-        {/* Grid de dados em 2 colunas */}
-        <div className="bg-white border border-[#ebf2ff] rounded-bl-[4px] rounded-br-[4px] p-[32px]">
+      {abaAtiva === 'dados' ? (
+      <div className="mb-[24px]">
+        <div className="bg-white border border-[#ebf2ff] rounded-[4px] p-[32px]">
+          <AvisoRepresentacaoDetalheJornada />
           {/* Seção 1: Informações Básicas */}
           <div className="mb-[32px]">
-            <div className="mb-[24px] pb-[16px] border-b border-[#e5e7eb]">
+            <div className="mb-[24px] pb-[16px] border-b border-[#e5e7eb] flex items-center justify-between">
               <h3 className="font-['BancoDoBrasil_Titulos:Bold',sans-serif] text-[#111214] text-[18px] leading-[24px]">
                 1. Informações Básicas
               </h3>
+              {(jornada.status === 'Nova' || jornada.status === 'Correção') && onEditar && (
+                <button
+                  className="size-[24px] hover:opacity-60 transition-opacity cursor-pointer"
+                  title="Editar"
+                  onClick={() => onEditar()}
+                >
+                  <Edit />
+                </button>
+              )}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-[40px] gap-y-[32px]">
               {/* Número da História */}
@@ -186,10 +229,10 @@ export function DetalhesJornada({ jornada, onVoltar, onEditar, isPainelGovernanc
                   Número da História
                 </p>
                 <a
-                  href={`#${jornada.numeroHistoria}`}
+                  href={`#${jornada.numeroHistoria?.replace(/\D/g, '')}`}
                   className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[#2d37f5] text-[16px] leading-[24px] hover:text-[#1e28d5] hover:underline transition-colors cursor-pointer"
                 >
-                  {jornada.numeroHistoria}
+                  {jornada.numeroHistoria?.replace(/\D/g, '')}
                 </a>
               </div>
 
@@ -276,7 +319,7 @@ export function DetalhesJornada({ jornada, onVoltar, onEditar, isPainelGovernanc
                   RME
                 </p>
                 <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#686c73] text-[16px] leading-[24px]">
-                  {jornada.rme}
+                  {jornada.rme?.replace(/-/g, '')}
                 </p>
               </div>
 
@@ -445,6 +488,13 @@ export function DetalhesJornada({ jornada, onVoltar, onEditar, isPainelGovernanc
           </div>
         </div>
       </div>
+      ) : (
+        <div className="bg-white border border-[#ebf2ff] rounded-[4px] p-[32px] mb-[24px]">
+          <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#686c73] text-[16px] leading-[24px]">
+            Nenhuma atualização registrada ainda.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

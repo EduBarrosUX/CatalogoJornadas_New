@@ -5,7 +5,7 @@ interface StatusTagProps {
 
 // Mapeamento de status para cores (bullet e texto)
 const statusStyles: Record<string, { bulletColor: string; textColor: string; label: string }> = {
-  'Enviada': { bulletColor: '#4668FF', textColor: '#4668ff', label: 'Enviada' },
+  'Enviada': { bulletColor: '#4668FF', textColor: '#4668ff', label: 'Enviado' },
   'Aprovado': { bulletColor: '#0C8A00', textColor: '#0c8a00', label: 'Aprovado' },
   'Em Análise': { bulletColor: '#FF6F20', textColor: '#ff6f20', label: 'Em Análise' },
   'Pendente Correção': { bulletColor: '#FFB31A', textColor: '#ad5f00', label: 'Pendente' },

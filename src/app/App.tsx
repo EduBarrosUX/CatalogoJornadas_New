@@ -205,7 +205,7 @@ export default function App() {
     {
       tipoHU: 'Ativo',
       tema: 'Cadastro',
-      numeroHistoria: 'US-1234',
+      numeroHistoria: '10203040',
       tituloFluxo: 'Abertura de Conta Digital',
       descricaoFluxo: 'Fluxo completo para abertura de conta digital para novos clientes pessoa física',
       segmento: ['Varejo', 'Digital'],
@@ -231,7 +231,7 @@ export default function App() {
     {
       tipoHU: 'Transação',
       tema: 'Pagamentos',
-      numeroHistoria: 'US-2345',
+      numeroHistoria: '10203041',
       tituloFluxo: 'Transferência PIX',
       descricaoFluxo: 'Fluxo de transferência via PIX para diferentes tipos de chave',
       segmento: ['Varejo', 'Empresas'],
@@ -257,7 +257,7 @@ export default function App() {
     {
       tipoHU: 'Indução',
       tema: 'Onboarding',
-      numeroHistoria: 'US-3456',
+      numeroHistoria: '10203042',
       tituloFluxo: 'Tutorial Primeiro Acesso',
       descricaoFluxo: 'Jornada de indução para novos usuários do aplicativo',
       segmento: ['Varejo'],
@@ -284,7 +284,7 @@ export default function App() {
     {
       tipoHU: 'Informacional',
       tema: 'Produtos',
-      numeroHistoria: 'US-4567',
+      numeroHistoria: '10203043',
       tituloFluxo: 'Consulta Saldo e Extrato',
       descricaoFluxo: 'Fluxo informacional para consulta de saldo e extrato de conta corrente',
       segmento: ['Varejo', 'Empresas', 'Private'],
@@ -313,6 +313,7 @@ export default function App() {
   const [showModalSugestoes, setShowModalSugestoes] = useState(false);
   const [showModalConsultaFeedbacks, setShowModalConsultaFeedbacks] = useState(false);
   const [jornadaSelecionadaAcompanhamento, setJornadaSelecionadaAcompanhamento] = useState<JornadaCadastrada | null>(null);
+  const [jornadaParaEditarAcompanhamento, setJornadaParaEditarAcompanhamento] = useState<JornadaCadastrada | null>(null);
   const [jornadaSelecionadaGovernanca, setJornadaSelecionadaGovernanca] = useState<JornadaCadastrada | null>(null);
   const [acompanhamentoSubView, setAcompanhamentoSubView] = useState<AcompanhamentoSubView>('painel');
   const [jornadaParaEditarGovernanca, setJornadaParaEditarGovernanca] = useState<JornadaCadastrada | null>(null);
@@ -468,7 +469,7 @@ export default function App() {
     const novaJornada: JornadaCadastrada = {
       tipoHU: data.tipoHU || '',
       tema: data.tema || '',
-      numeroHistoria: data.numeroHistoria || '',
+      numeroHistoria: (data.numeroHistoria || '').replace(/\D/g, ''),
       tituloFluxo: data.tituloFluxo || '',
       descricaoFluxo: data.descricaoFluxo || '',
       segmento: data.segmento || [],
@@ -570,7 +571,7 @@ export default function App() {
               <>
                 <div className="flex flex-col font-['BancoDoBrasil_Titulos:Bold',sans-serif] justify-center relative shrink-0 text-[64px] w-[769px]" style={{ letterSpacing: '-2px' }}>
                   <p className="css-4hzbpn leading-[normal]">Gestão</p>
-                  <p className="css-4hzbpn leading-[normal]">Catálogo de Jornadas</p>
+                  <p className="css-4hzbpn leading-[normal]">Formulário de Jornadas</p>
                 </div>
                 <div className="flex flex-col font-['BancoDoBrasil_Textos:Light',sans-serif] justify-center relative shrink-0 text-[20px] w-[700px]">
                   <p className="css-4hzbpn leading-[normal]">Faça o gerenciamento das jornadas incluídas e alteradas</p>
@@ -579,7 +580,7 @@ export default function App() {
             ) : (
               <>
                 <div className="flex flex-col font-['BancoDoBrasil_Titulos:Bold',sans-serif] justify-center relative shrink-0 text-[64px] w-[769px]" style={{ letterSpacing: '-2px' }}>
-                  <p className="css-4hzbpn leading-[normal]">Catálogo de Jornadas</p>
+                  <p className="css-4hzbpn leading-[normal]">{currentView === 'formulario' ? 'Formulário de Jornadas' : 'Acompanhamento'}</p>
                 </div>
                 <div className="flex flex-col font-['BancoDoBrasil_Textos:Light',sans-serif] justify-center relative shrink-0 text-[20px] w-[700px]">
                   <p className="css-4hzbpn leading-[normal]">Consulte o catálogo de jornadas, inclua novas informações, altere dados existentes, reporte erros e envie sugestões para aprimorar continuamente o conteúdo.</p>
@@ -676,7 +677,7 @@ export default function App() {
                     : 'bg-transparent text-[#465eff] hover:bg-white/20'
                 }`}
               >
-                Catálogo
+                Formulário
               </button>
               <button
                 onClick={() => setCurrentView('acompanhamento')}
@@ -686,7 +687,7 @@ export default function App() {
                     : 'bg-transparent text-[#465eff] hover:bg-white/20'
                 }`}
               >
-                Acompanhamento dos formulários
+                Acompanhamento
               </button>
               <button
                 onClick={() => setCurrentView('governanca')}
@@ -739,17 +740,24 @@ export default function App() {
                       <span className="text-[#111214] font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[16px]">Formulário</span>
                     </div>
                     <FormularioJornadasMultiStep
+                      key={jornadaParaEditarAcompanhamento?.rme ?? 'form-novo-acompanhamento'}
                       onSubmitSuccess={(data) => {
                         handleNovaJornada(data);
+                        setJornadaParaEditarAcompanhamento(null);
                         setAcompanhamentoSubView('painel');
                       }}
-                      jornadaEditando={null}
+                      jornadaEditando={jornadaParaEditarAcompanhamento}
                     />
                   </>
                 ) : jornadaSelecionadaAcompanhamento ? (
                   <DetalhesJornada
                     jornada={jornadaSelecionadaAcompanhamento}
                     onVoltar={() => setJornadaSelecionadaAcompanhamento(null)}
+                    onEditar={() => {
+                      setJornadaParaEditarAcompanhamento(jornadaSelecionadaAcompanhamento);
+                      setJornadaSelecionadaAcompanhamento(null);
+                      setAcompanhamentoSubView('formulario');
+                    }}
                   />
                 ) : (
                   <PainelVisaoCAD
@@ -759,6 +767,10 @@ export default function App() {
                       if (jornada.jornadaOriginal) {
                         setJornadaSelecionadaAcompanhamento(jornada.jornadaOriginal);
                       }
+                    }}
+                    onEditarJornada={(jornada) => {
+                      setJornadaParaEditarAcompanhamento(jornada);
+                      setAcompanhamentoSubView('formulario');
                     }}
                   />
                 )}
@@ -788,6 +800,7 @@ export default function App() {
                       <span className="text-[#111214] font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[16px]">Formulário</span>
                     </div>
                     <FormularioJornadasMultiStep
+                      key={jornadaParaEditarGovernanca?.rme ?? 'form-novo-gestao'}
                       onSubmitSuccess={(data) => {
                         handleNovaJornada(data);
                         setJornadaParaEditarGovernanca(null);

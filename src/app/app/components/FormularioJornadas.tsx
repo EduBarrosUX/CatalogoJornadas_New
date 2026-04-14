@@ -172,8 +172,11 @@ export function FormularioJornadas({ onBack }: FormularioJornadasProps) {
               
               <InputField
                 label="Número da História no GENTI *"
-                placeholder="Ex: HU-12345"
-                {...register('numeroHistoria', { required: 'Campo obrigatório' })}
+                placeholder="Ex: 10203040"
+                {...register('numeroHistoria', {
+                  required: 'Campo obrigatório',
+                  setValueAs: (v) => String(v ?? '').replace(/\D/g, ''),
+                })}
                 error={errors.numeroHistoria?.message}
               />
 

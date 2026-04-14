@@ -3,6 +3,7 @@ import svgPaths from '@/imports/svg-3dkfh9akxg';
 import svgPathsPaginator from '@/imports/svg-yxb1sqbp9k';
 import svgPathsRadio from '@/imports/svg-st0q96v9y6';
 import type { JornadaCadastrada } from '@/app/App';
+import { getStatusJornadaDisplayMasculino } from '@/app/lib/statusJornadaDisplay';
 import { FiltroPeriodoHierarquico } from '@/app/components/FiltroPeriodoHierarquico';
 import { SelectField } from '@/app/components/SelectField';
 import { ModalPersonalizarFiltros } from '@/app/components/ModalPersonalizarFiltros';
@@ -73,14 +74,6 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
     }
   };
 
-  // Mapear status para nome de exibição no Painel Governança
-  const getStatusDisplayName = (status: string) => {
-    if (status === 'Correção') {
-      return 'Devolvida';
-    }
-    return status;
-  };
-
   // Mapear tipo para prefixo do ID
   const getPrefixoId = (tipo: string) => {
     switch (tipo) {
@@ -140,7 +133,7 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
       tipo: j.tipoHU,
       data: j.dataAbertura,
       formId: formId, // ID do formulário
-      codigoCatalogo: `${getPrefixoId(j.tipoHU)}${numero}`, // RME-0001, TRN-0001, etc
+      codigoCatalogo: `${getPrefixoId(j.tipoHU)}${numero}`.replace(/-/g, ''),
       titulo: j.tituloFluxo,
       tema: j.tema,
       status: j.status,
@@ -704,12 +697,12 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
                 value={status}
                 onChange={setStatus}
                 options={[
-                  { value: 'Nova', label: 'Nova' },
+                  { value: 'Nova', label: 'Enviado' },
                   { value: 'Em análise', label: 'Em análise' },
-                  { value: 'Correção', label: 'Devolvida' },
-                  { value: 'Aprovada', label: 'Aprovada' },
-                  { value: 'Implementada', label: 'Implementada' },
-                  { value: 'Excluída', label: 'Excluída' }
+                  { value: 'Correção', label: 'Devolvido' },
+                  { value: 'Aprovada', label: 'Aprovado' },
+                  { value: 'Implementada', label: 'Implementado' },
+                  { value: 'Excluída', label: 'Excluído' }
                 ]}
                 placeholder="Filtro"
               />
@@ -976,7 +969,7 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
                       className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[14px] tracking-[0.07px] leading-[1.125] whitespace-nowrap"
                       style={{ color: getStatusColors(jornada.status).text }}
                     >
-                      {getStatusDisplayName(jornada.status)}
+                      {getStatusJornadaDisplayMasculino(jornada.status)}
                     </span>
                   </div>
                 </div>

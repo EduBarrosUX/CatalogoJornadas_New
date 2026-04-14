@@ -27,7 +27,12 @@ export function Passo1Formulario({ register, errors, control, utilizaIAGenerativ
               <div className="content-stretch flex items-center pb-[7px] pl-[12px] pr-[4px] pt-[8px] relative size-full">
                 <input
                   type="text"
-                  {...register('numeroHistoria', { required: 'Campo obrigatório' })}
+                  inputMode="numeric"
+                  autoComplete="off"
+                  {...register('numeroHistoria', {
+                    required: 'Campo obrigatório',
+                    setValueAs: (v) => String(v ?? '').replace(/\D/g, ''),
+                  })}
                   placeholder="Ex: 10203040"
                   className="flex-[1_0_0] bg-transparent font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] outline-none placeholder:text-[#686c73]"
                 />
