@@ -3,7 +3,6 @@ import svgPaths from '@/imports/svg-3dkfh9akxg';
 import svgPathsPaginator from '@/imports/svg-yxb1sqbp9k';
 import svgPathsRadio from '@/imports/svg-st0q96v9y6';
 import type { JornadaCadastrada } from '@/app/App';
-import { getStatusJornadaDisplayMasculino } from '@/app/lib/statusJornadaDisplay';
 import { FiltroPeriodoHierarquico } from '@/app/components/FiltroPeriodoHierarquico';
 import { SelectField } from '@/app/components/SelectField';
 import { ModalPersonalizarFiltros } from '@/app/components/ModalPersonalizarFiltros';
@@ -18,6 +17,8 @@ interface PainelVisaoCADProps {
 }
 
 export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, dataUltimaAtualizacao = '03/02/2026 14:30', onEditarJornada }: PainelVisaoCADProps) {
+  const CANAIS_FORMULARIO = ['WhatsApp', 'App BB', 'Outros'];
+  const PUBLICOS_FORMULARIO = ['PF', 'PJ'];
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [jornadaFiltro, setJornadaFiltro] = useState('');
@@ -31,7 +32,7 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
   const [periodoTrimestre, setPeriodoTrimestre] = useState('');
   const [periodoMes, setPeriodoMes] = useState('');
   const [filtroCardAtivo, setFiltroCardAtivo] = useState<string>('');
-  const [filtroStatusMinhas, setFiltroStatusMinhas] = useState<string>('');
+  const [filtroStatusCards, setFiltroStatusCards] = useState<string>('');
   const [isMaisFiltrosOpen, setIsMaisFiltrosOpen] = useState(false);
   const [diretoriaFiltro, setDiretoriaFiltro] = useState('');
   const [canalFiltro, setCanalFiltro] = useState('');
@@ -63,6 +64,14 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
     return `${year}-${month}-${day}`;
   };
 
+  const normalizePublico = (publico?: string) => {
+    if (!publico) return '';
+    const lower = publico.toLowerCase();
+    if (lower.includes('física') || lower === 'pf') return 'PF';
+    if (lower.includes('jurídica') || lower === 'pj') return 'PJ';
+    return publico;
+  };
+
   // Garantir que STATUS sempre seja renderizado por último
   const colunasOrdenadas = [...colunasVisiveis].sort((a, b) => {
     if (a === 'STATUS') return 1;
@@ -74,19 +83,19 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
   const getStatusColors = (status: string) => {
     switch (status) {
       case 'Nova':
-        return { bullet: '#4668FF', text: '#4668ff', display: getStatusJornadaDisplayMasculino('Nova') };
+        return { bullet: '#4668FF', text: '#4668ff', display: 'Enviado' };
       case 'Em análise':
-        return { bullet: '#FF6F20', text: '#ff6f20', display: getStatusJornadaDisplayMasculino('Em análise') };
+        return { bullet: '#FF6F20', text: '#ff6f20', display: 'Em Análise' };
       case 'Correção':
-        return { bullet: '#FFB31A', text: '#ad5f00', display: getStatusJornadaDisplayMasculino('Correção') };
+        return { bullet: '#FFB31A', text: '#ad5f00', display: 'Devolvido' };
       case 'Aprovada':
-        return { bullet: '#0C8A00', text: '#0c8a00', display: getStatusJornadaDisplayMasculino('Aprovada') };
+        return { bullet: '#0C8A00', text: '#0c8a00', display: 'Aprovado' };
       case 'Implementada':
-        return { bullet: '#5A059C', text: '#5a059c', display: getStatusJornadaDisplayMasculino('Implementada') };
+        return { bullet: '#5A059C', text: '#5a059c', display: 'Publicado' };
       case 'Excluída':
-        return { bullet: '#E3111F', text: '#e3111f', display: getStatusJornadaDisplayMasculino('Excluída') };
+        return { bullet: '#E3111F', text: '#e3111f', display: 'Invalidado' };
       default:
-        return { bullet: '#4668FF', text: '#4668ff', display: getStatusJornadaDisplayMasculino(status) };
+        return { bullet: '#4668FF', text: '#4668ff', display: status };
     }
   };
 
@@ -119,7 +128,7 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
     // Determinar Status NIA baseado na jornada
     const statusNIA = contadores[j.tipoHU as keyof typeof contadores] % 2 === 0 ? 'Produção' : 'Sanitizada';
     
-    // Adicionar Diretoria e Canal de exemplo (distribui entre as opções disponíveis)
+    // Adicionar Diretoria e Canal/Público alinhados ao formulário
     const diretorias = [
       'Diretoria de Negócios Digitais',
       'Diretoria de Canais',
@@ -128,7 +137,7 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
       'Diretoria de Experiência do Cliente',
       'Diretoria de Marketing'
     ];
-    const canais = ['Mobile', 'Web', 'Agência'];
+    const canais = CANAIS_FORMULARIO;
     
     const indexDiretoria = contadores[j.tipoHU as keyof typeof contadores] % diretorias.length;
     const indexCanal = contadores[j.tipoHU as keyof typeof contadores] % canais.length;
@@ -141,7 +150,7 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
       tipo: j.tipoHU,
       tipoInclusao: j.tipoInclusao || 'Nova Jornada',
       tema: j.tema,
-      publico: j.publico || 'Interno',
+      publico: normalizePublico(j.publico) || PUBLICOS_FORMULARIO[index % PUBLICOS_FORMULARIO.length],
       data: j.dataAbertura,
       dataInclusao: j.dataAbertura || '01/02/2026',
       status: j.status,
@@ -149,8 +158,8 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
       statusColor: getStatusColors(j.status),
       rme: j.rme,
       diretoria: diretorias[indexDiretoria],
-      canal: canais[indexCanal],
-      isMinhaEntrega: index < 4 || j.cadastradoPor === 'usuario.atual@bb.com.br',
+      canal: j.canais?.[0] || canais[indexCanal],
+      isMinhaEntrega: true,
       jornadaOriginal: j
     };
   });
@@ -168,14 +177,13 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
     const matchTipo = !tipoFiltroAtivo || jornada.tipo === tipoFiltroAtivo;
     const matchTipoInclusao = !tipoInclusaoFiltro || jornada.tipoInclusao === tipoInclusaoFiltro;
     const matchTema = !temaFiltro || jornada.tema === temaFiltro;
-    const statusInterno = statusFiltro === 'Enviada' ? 'Nova' : statusFiltro;
-    const matchStatusSelect = !statusFiltro || jornada.status === statusInterno;
-    const matchStatusMinha = abaAtiva !== 'minhas' || !filtroStatusMinhas || jornada.status === filtroStatusMinhas;
+    const matchStatusSelect = !statusFiltro || jornada.status === statusFiltro;
+    const matchStatusCards = !filtroStatusCards || jornada.status === filtroStatusCards;
     const matchDiretoria = !diretoriaFiltro || jornada.diretoria === diretoriaFiltro;
     const matchCanal = !canalFiltro || jornada.canal === canalFiltro;
     const matchPublico = !publicoFiltro || jornada.publico === publicoFiltro;
 
-    return matchSearch && matchTipo && matchTipoInclusao && matchTema && matchStatusSelect && matchStatusMinha && matchDiretoria && matchCanal && matchPublico;
+    return matchSearch && matchTipo && matchTipoInclusao && matchTema && matchStatusSelect && matchStatusCards && matchDiretoria && matchCanal && matchPublico;
   });
 
   // Verificar se há algum filtro ativo
@@ -188,7 +196,7 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
     dataInicio ||
     dataTermino ||
     filtroCardAtivo ||
-    filtroStatusMinhas ||
+    filtroStatusCards ||
     periodoAno ||
     periodoTrimestre ||
     periodoMes ||
@@ -208,18 +216,15 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
   const totalDashboard = jornadasAbaAtiva.length;
   const jornadasNovas = jornadasAbaAtiva.filter(j => j.tipoInclusao === 'Nova Jornada').length;
   const jornadasAlteradas = jornadasAbaAtiva.filter(j => j.tipoInclusao === 'Alteração').length;
-  
-  // Contar por tipo
   const jornadasAtivo = jornadasAbaAtiva.filter(j => j.tipo === 'Ativo').length;
   const jornadasTransacao = jornadasAbaAtiva.filter(j => j.tipo === 'Transação').length;
   const jornadasInducao = jornadasAbaAtiva.filter(j => j.tipo === 'Indução').length;
   const jornadasInformacional = jornadasAbaAtiva.filter(j => j.tipo === 'Informacional').length;
-  
-  // Calcular percentuais
   const percAtivo = totalDashboard > 0 ? Math.round((jornadasAtivo / totalDashboard) * 100) : 0;
   const percTransacao = totalDashboard > 0 ? Math.round((jornadasTransacao / totalDashboard) * 100) : 0;
   const percInducao = totalDashboard > 0 ? Math.round((jornadasInducao / totalDashboard) * 100) : 0;
   const percInformacional = totalDashboard > 0 ? Math.round((jornadasInformacional / totalDashboard) * 100) : 0;
+  
   const dashboardsMinhas = [
     { label: 'Aprovado', status: 'Aprovada', value: jornadasAbaAtiva.filter((j) => j.status === 'Aprovada').length, color: '#0c8a00', soft: '#e7f6e7' },
     { label: 'Em Análise', status: 'Em análise', value: jornadasAbaAtiva.filter((j) => j.status === 'Em análise').length, color: '#ff6f20', soft: '#ffe8d9' },
@@ -232,7 +237,7 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
   // Função auxiliar para renderizar colunas dinamicamente
   const renderColunaHeader = (nomeColuna: string) => {
     const labelMap: Record<string, string> = {
-      'TIPO': 'TIPO',
+      'TIPO': 'JORNADA',
       'TEMA': 'TEMA',
       'STATUS': 'STATUS',
       'DIRETORIA': 'DIRETORIA',
@@ -279,8 +284,8 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
             </span>
           </div>
           
-          {/* Ícone de lápis para status Enviado ou Devolvido em Minhas Entregas */}
-          {abaAtiva === 'minhas' && (jornada.status === 'Nova' || jornada.status === 'Correção') && onEditarJornada && (
+          {/* Ícone de lápis para status Enviado ou Devolvido */}
+          {(jornada.status === 'Nova' || jornada.status === 'Correção') && onEditarJornada && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -377,7 +382,7 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
             <button
               onClick={() => {
                 setAbaAtiva('todas');
-                setFiltroStatusMinhas('');
+                setFiltroStatusCards('');
               }}
               className="bg-[#fefefe] content-stretch flex h-[48px] items-center justify-center relative rounded-tl-[4px] rounded-tr-[4px] shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
             >
@@ -416,15 +421,15 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-[12px] mb-[48px] w-full">
           {dashboardsMinhas.map((card) => (
             <div
-              key={card.label}
+              key={`${abaAtiva}-${card.label}`}
               onClick={() => {
-                setFiltroStatusMinhas(filtroStatusMinhas === card.status ? '' : card.status);
+                setFiltroStatusCards(filtroStatusCards === card.status ? '' : card.status);
                 setCurrentPage(1);
               }}
               className="bg-[#fefefe] rounded-[12px] h-[170px] p-[4px] transition-all relative cursor-pointer group"
             >
               <div className={`absolute border-l-4 border-solid inset-[4px] pointer-events-none rounded-[12px] transition-shadow ${
-                filtroStatusMinhas === card.status
+                filtroStatusCards === card.status
                   ? 'shadow-[0px_0px_0px_0px_rgba(70,104,255,0.2),0px_8px_24px_0px_rgba(70,104,255,0.35)]'
                   : 'shadow-[0px_0px_2px_0px_#b3abab] group-hover:shadow-[0px_0px_0px_0px_rgba(70,104,255,0.1),0px_4px_12px_0px_rgba(70,104,255,0.2)]'
               }`} style={{ borderColor: card.color }} />
@@ -453,195 +458,108 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
           ))}
         </div>
       ) : (
-      <div className="flex gap-[12px] mb-[48px] w-full overflow-x-auto">
-        {/* Card Ativo */}
-        <div
-          onClick={() => {
-            setFiltroCardAtivo(filtroCardAtivo === 'Ativo' ? '' : 'Ativo');
-            setJornadaFiltro('');
-            setCurrentPage(1);
-          }}
-          className="bg-[#fefefe] rounded-[12px] min-w-[280px] flex-1 h-[190px] p-[4px] cursor-pointer transition-all relative group"
-        >
-          <div 
-            className={`absolute border-[#9333ea] border-l-4 border-solid inset-[4px] pointer-events-none rounded-[12px] transition-shadow ${
-              filtroCardAtivo === 'Ativo' 
-                ? 'shadow-[0px_0px_0px_0px_rgba(147,51,234,0.2),0px_8px_24px_0px_rgba(147,51,234,0.35)]' 
-                : 'shadow-[0px_0px_2px_0px_#b3abab] group-hover:shadow-[0px_0px_0px_0px_rgba(147,51,234,0.1),0px_4px_12px_0px_rgba(147,51,234,0.2)]'
-            }`}
-          />
-          <div className="flex items-center justify-between px-[24px] pt-[24px] pb-[8px]">
-            <h4 className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[#686c73] text-[14px] leading-[21px]">
-              Ativo
-            </h4>
-            <div className={`rounded-[8px] size-[40px] flex items-center justify-center transition-colors ${
-              filtroCardAtivo === 'Ativo' ? 'bg-[#9333ea]' : 'bg-[#f3e8ff]'
-            }`}>
-              <svg className="size-[15.99px]" fill="none" preserveAspectRatio="none" viewBox="0 0 15.9896 15.9896">
-                <path 
-                  d={svgPaths.p28502300} 
-                  stroke={filtroCardAtivo === 'Ativo' ? 'white' : '#9333ea'} 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth="1.33333" 
-                />
-              </svg>
+        <div className="flex gap-[12px] mb-[48px] w-full overflow-x-auto">
+          <div
+            onClick={() => {
+              setFiltroCardAtivo(filtroCardAtivo === 'Ativo' ? '' : 'Ativo');
+              setJornadaFiltro('');
+              setCurrentPage(1);
+            }}
+            className="bg-[#fefefe] rounded-[12px] min-w-[280px] flex-1 h-[190px] p-[4px] cursor-pointer transition-all relative group"
+          >
+            <div className={`absolute border-[#9333ea] border-l-4 border-solid inset-[4px] pointer-events-none rounded-[12px] transition-shadow ${filtroCardAtivo === 'Ativo' ? 'shadow-[0px_0px_0px_0px_rgba(147,51,234,0.2),0px_8px_24px_0px_rgba(147,51,234,0.35)]' : 'shadow-[0px_0px_2px_0px_#b3abab] group-hover:shadow-[0px_0px_0px_0px_rgba(147,51,234,0.1),0px_4px_12px_0px_rgba(147,51,234,0.2)]'}`} />
+            <div className="flex items-center justify-between px-[24px] pt-[24px] pb-[8px]">
+              <h4 className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[#686c73] text-[14px] leading-[21px]">Ativo</h4>
+              <div className={`rounded-[8px] size-[40px] flex items-center justify-center transition-colors ${filtroCardAtivo === 'Ativo' ? 'bg-[#9333ea]' : 'bg-[#f3e8ff]'}`}>
+                <svg className="size-[15.99px]" fill="none" preserveAspectRatio="none" viewBox="0 0 15.9896 15.9896">
+                  <path d={svgPaths.p28502300} stroke={filtroCardAtivo === 'Ativo' ? 'white' : '#9333ea'} strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
+                </svg>
+              </div>
+            </div>
+            <div className="px-[24px] pb-[24px]">
+              <p className="font-['BancoDoBrasil_Textos:Bold',sans-serif] text-[#9333ea] text-[24px] leading-[32px] mb-[4px]">{jornadasAtivo}</p>
+              <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#686c73] text-[16px] leading-[24px] mb-[4px]">{percAtivo}% do total</p>
+              <div className="bg-[#f3e8ff] h-[8px] rounded-[33554400px] w-full">
+                <div className="bg-[#9333ea] h-[8px] rounded-[33554400px]" style={{ width: `${percAtivo}%` }} />
+              </div>
             </div>
           </div>
-          <div className="px-[24px] pb-[24px]">
-            <p className="font-['BancoDoBrasil_Textos:Bold',sans-serif] text-[#9333ea] text-[24px] leading-[32px] mb-[4px]">
-              {jornadasAtivo}
-            </p>
-            <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#686c73] text-[16px] leading-[24px] mb-[4px]">
-              {percAtivo}% do total
-            </p>
-            <div className="bg-[#f3e8ff] h-[8px] rounded-[33554400px] w-full">
-              <div className="bg-[#9333ea] h-[8px] rounded-[33554400px]" style={{ width: `${percAtivo}%` }} />
+          <div
+            onClick={() => {
+              setFiltroCardAtivo(filtroCardAtivo === 'Transação' ? '' : 'Transação');
+              setJornadaFiltro('');
+              setCurrentPage(1);
+            }}
+            className="bg-[#fefefe] rounded-[12px] min-w-[280px] flex-1 h-[190px] p-[4px] cursor-pointer transition-all relative group"
+          >
+            <div className={`absolute border-[#059669] border-l-4 border-solid inset-[4px] pointer-events-none rounded-[12px] transition-shadow ${filtroCardAtivo === 'Transação' ? 'shadow-[0px_0px_0px_0px_rgba(5,150,105,0.2),0px_8px_24px_0px_rgba(5,150,105,0.35)]' : 'shadow-[0px_0px_2px_0px_#b3abab] group-hover:shadow-[0px_0px_0px_0px_rgba(5,150,105,0.1),0px_4px_12px_0px_rgba(5,150,105,0.2)]'}`} />
+            <div className="flex items-center justify-between px-[24px] pt-[24px] pb-[8px]">
+              <h4 className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[#686c73] text-[14px] leading-[21px]">Transação</h4>
+              <div className={`rounded-[8px] size-[40px] flex items-center justify-center transition-colors ${filtroCardAtivo === 'Transação' ? 'bg-[#059669]' : 'bg-[#d1fae5]'}`}>
+                <svg className="size-[15.99px]" fill="none" preserveAspectRatio="none" viewBox="0 0 15.9896 15.9896">
+                  <path d={svgPaths.p28502300} stroke={filtroCardAtivo === 'Transação' ? 'white' : '#059669'} strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
+                </svg>
+              </div>
+            </div>
+            <div className="px-[24px] pb-[24px]">
+              <p className="font-['BancoDoBrasil_Textos:Bold',sans-serif] text-[#059669] text-[24px] leading-[32px] mb-[4px]">{jornadasTransacao}</p>
+              <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#686c73] text-[16px] leading-[24px] mb-[4px]">{percTransacao}% do total</p>
+              <div className="bg-[#d1fae5] h-[8px] rounded-[33554400px] w-full">
+                <div className="bg-[#059669] h-[8px] rounded-[33554400px]" style={{ width: `${percTransacao}%` }} />
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* Card Transação */}
-        <div
-          onClick={() => {
-            setFiltroCardAtivo(filtroCardAtivo === 'Transação' ? '' : 'Transação');
-            setJornadaFiltro('');
-            setCurrentPage(1);
-          }}
-          className="bg-[#fefefe] rounded-[12px] min-w-[280px] flex-1 h-[190px] p-[4px] cursor-pointer transition-all relative group"
-        >
-          <div 
-            className={`absolute border-[#059669] border-l-4 border-solid inset-[4px] pointer-events-none rounded-[12px] transition-shadow ${
-              filtroCardAtivo === 'Transação' 
-                ? 'shadow-[0px_0px_0px_0px_rgba(5,150,105,0.2),0px_8px_24px_0px_rgba(5,150,105,0.35)]' 
-                : 'shadow-[0px_0px_2px_0px_#b3abab] group-hover:shadow-[0px_0px_0px_0px_rgba(5,150,105,0.1),0px_4px_12px_0px_rgba(5,150,105,0.2)]'
-            }`}
-          />
-          <div className="flex items-center justify-between px-[24px] pt-[24px] pb-[8px]">
-            <h4 className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[#686c73] text-[14px] leading-[21px]">
-              Transação
-            </h4>
-            <div className={`rounded-[8px] size-[40px] flex items-center justify-center transition-colors ${
-              filtroCardAtivo === 'Transação' ? 'bg-[#059669]' : 'bg-[#d1fae5]'
-            }`}>
-              <svg className="size-[15.99px]" fill="none" preserveAspectRatio="none" viewBox="0 0 15.9896 15.9896">
-                <path 
-                  d={svgPaths.p28502300} 
-                  stroke={filtroCardAtivo === 'Transação' ? 'white' : '#059669'} 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth="1.33333" 
-                />
-              </svg>
+          <div
+            onClick={() => {
+              setFiltroCardAtivo(filtroCardAtivo === 'Indução' ? '' : 'Indução');
+              setJornadaFiltro('');
+              setCurrentPage(1);
+            }}
+            className="bg-[#fefefe] rounded-[12px] min-w-[280px] flex-1 h-[190px] p-[4px] cursor-pointer transition-all relative group"
+          >
+            <div className={`absolute border-[#ea580c] border-l-4 border-solid inset-[4px] pointer-events-none rounded-[12px] transition-shadow ${filtroCardAtivo === 'Indução' ? 'shadow-[0px_0px_0px_0px_rgba(234,88,12,0.2),0px_8px_24px_0px_rgba(234,88,12,0.35)]' : 'shadow-[0px_0px_2px_0px_#b3abab] group-hover:shadow-[0px_0px_0px_0px_rgba(234,88,12,0.1),0px_4px_12px_0px_rgba(234,88,12,0.2)]'}`} />
+            <div className="flex items-center justify-between px-[24px] pt-[24px] pb-[8px]">
+              <h4 className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[#686c73] text-[14px] leading-[21px]">Indução</h4>
+              <div className={`rounded-[8px] size-[40px] flex items-center justify-center transition-colors ${filtroCardAtivo === 'Indução' ? 'bg-[#ea580c]' : 'bg-[#ffedd5]'}`}>
+                <svg className="size-[15.99px]" fill="none" preserveAspectRatio="none" viewBox="0 0 15.9896 15.9896">
+                  <path d={svgPaths.p28502300} stroke={filtroCardAtivo === 'Indução' ? 'white' : '#ea580c'} strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
+                </svg>
+              </div>
+            </div>
+            <div className="px-[24px] pb-[24px]">
+              <p className="font-['BancoDoBrasil_Textos:Bold',sans-serif] text-[#ea580c] text-[24px] leading-[32px] mb-[4px]">{jornadasInducao}</p>
+              <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#686c73] text-[16px] leading-[24px] mb-[4px]">{percInducao}% do total</p>
+              <div className="bg-[#ffedd5] h-[8px] rounded-[33554400px] w-full">
+                <div className="bg-[#ea580c] h-[8px] rounded-[33554400px]" style={{ width: `${percInducao}%` }} />
+              </div>
             </div>
           </div>
-          <div className="px-[24px] pb-[24px]">
-            <p className="font-['BancoDoBrasil_Textos:Bold',sans-serif] text-[#059669] text-[24px] leading-[32px] mb-[4px]">
-              {jornadasTransacao}
-            </p>
-            <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#686c73] text-[16px] leading-[24px] mb-[4px]">
-              {percTransacao}% do total
-            </p>
-            <div className="bg-[#d1fae5] h-[8px] rounded-[33554400px] w-full">
-              <div className="bg-[#059669] h-[8px] rounded-[33554400px]" style={{ width: `${percTransacao}%` }} />
+          <div
+            onClick={() => {
+              setFiltroCardAtivo(filtroCardAtivo === 'Informacional' ? '' : 'Informacional');
+              setJornadaFiltro('');
+              setCurrentPage(1);
+            }}
+            className="bg-[#fefefe] rounded-[12px] min-w-[280px] flex-1 h-[190px] p-[4px] cursor-pointer transition-all relative group"
+          >
+            <div className={`absolute border-[#0284c7] border-l-4 border-solid inset-[4px] pointer-events-none rounded-[12px] transition-shadow ${filtroCardAtivo === 'Informacional' ? 'shadow-[0px_0px_0px_0px_rgba(2,132,199,0.2),0px_8px_24px_0px_rgba(2,132,199,0.35)]' : 'shadow-[0px_0px_2px_0px_#b3abab] group-hover:shadow-[0px_0px_0px_0px_rgba(2,132,199,0.1),0px_4px_12px_0px_rgba(2,132,199,0.2)]'}`} />
+            <div className="flex items-center justify-between px-[24px] pt-[24px] pb-[8px]">
+              <h4 className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[#686c73] text-[14px] leading-[21px]">Informacional</h4>
+              <div className={`rounded-[8px] size-[40px] flex items-center justify-center transition-colors ${filtroCardAtivo === 'Informacional' ? 'bg-[#0284c7]' : 'bg-[#e0f2fe]'}`}>
+                <svg className="size-[15.99px]" fill="none" preserveAspectRatio="none" viewBox="0 0 15.9896 15.9896">
+                  <path d={svgPaths.p28502300} stroke={filtroCardAtivo === 'Informacional' ? 'white' : '#0284c7'} strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33333" />
+                </svg>
+              </div>
             </div>
-          </div>
-        </div>
-
-        {/* Card Indução */}
-        <div
-          onClick={() => {
-            setFiltroCardAtivo(filtroCardAtivo === 'Indução' ? '' : 'Indução');
-            setJornadaFiltro('');
-            setCurrentPage(1);
-          }}
-          className="bg-[#fefefe] rounded-[12px] min-w-[280px] flex-1 h-[190px] p-[4px] cursor-pointer transition-all relative group"
-        >
-          <div 
-            className={`absolute border-[#ea580c] border-l-4 border-solid inset-[4px] pointer-events-none rounded-[12px] transition-shadow ${
-              filtroCardAtivo === 'Indução' 
-                ? 'shadow-[0px_0px_0px_0px_rgba(234,88,12,0.2),0px_8px_24px_0px_rgba(234,88,12,0.35)]' 
-                : 'shadow-[0px_0px_2px_0px_#b3abab] group-hover:shadow-[0px_0px_0px_0px_rgba(234,88,12,0.1),0px_4px_12px_0px_rgba(234,88,12,0.2)]'
-            }`}
-          />
-          <div className="flex items-center justify-between px-[24px] pt-[24px] pb-[8px]">
-            <h4 className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[#686c73] text-[14px] leading-[21px]">
-              Indução
-            </h4>
-            <div className={`rounded-[8px] size-[40px] flex items-center justify-center transition-colors ${
-              filtroCardAtivo === 'Indução' ? 'bg-[#ea580c]' : 'bg-[#ffedd5]'
-            }`}>
-              <svg className="size-[15.99px]" fill="none" preserveAspectRatio="none" viewBox="0 0 15.9896 15.9896">
-                <path 
-                  d={svgPaths.p28502300} 
-                  stroke={filtroCardAtivo === 'Indução' ? 'white' : '#ea580c'} 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth="1.33333" 
-                />
-              </svg>
-            </div>
-          </div>
-          <div className="px-[24px] pb-[24px]">
-            <p className="font-['BancoDoBrasil_Textos:Bold',sans-serif] text-[#ea580c] text-[24px] leading-[32px] mb-[4px]">
-              {jornadasInducao}
-            </p>
-            <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#686c73] text-[16px] leading-[24px] mb-[4px]">
-              {percInducao}% do total
-            </p>
-            <div className="bg-[#ffedd5] h-[8px] rounded-[33554400px] w-full">
-              <div className="bg-[#ea580c] h-[8px] rounded-[33554400px]" style={{ width: `${percInducao}%` }} />
+            <div className="px-[24px] pb-[24px]">
+              <p className="font-['BancoDoBrasil_Textos:Bold',sans-serif] text-[#0284c7] text-[24px] leading-[32px] mb-[4px]">{jornadasInformacional}</p>
+              <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#686c73] text-[16px] leading-[24px] mb-[4px]">{percInformacional}% do total</p>
+              <div className="bg-[#e0f2fe] h-[8px] rounded-[33554400px] w-full">
+                <div className="bg-[#0284c7] h-[8px] rounded-[33554400px]" style={{ width: `${percInformacional}%` }} />
+              </div>
             </div>
           </div>
         </div>
-
-        {/* Card Informacional */}
-        <div
-          onClick={() => {
-            setFiltroCardAtivo(filtroCardAtivo === 'Informacional' ? '' : 'Informacional');
-            setJornadaFiltro('');
-            setCurrentPage(1);
-          }}
-          className="bg-[#fefefe] rounded-[12px] min-w-[280px] flex-1 h-[190px] p-[4px] cursor-pointer transition-all relative group"
-        >
-          <div 
-            className={`absolute border-[#0284c7] border-l-4 border-solid inset-[4px] pointer-events-none rounded-[12px] transition-shadow ${
-              filtroCardAtivo === 'Informacional' 
-                ? 'shadow-[0px_0px_0px_0px_rgba(2,132,199,0.2),0px_8px_24px_0px_rgba(2,132,199,0.35)]' 
-                : 'shadow-[0px_0px_2px_0px_#b3abab] group-hover:shadow-[0px_0px_0px_0px_rgba(2,132,199,0.1),0px_4px_12px_0px_rgba(2,132,199,0.2)]'
-            }`}
-          />
-          <div className="flex items-center justify-between px-[24px] pt-[24px] pb-[8px]">
-            <h4 className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[#686c73] text-[14px] leading-[21px]">
-              Informacional
-            </h4>
-            <div className={`rounded-[8px] size-[40px] flex items-center justify-center transition-colors ${
-              filtroCardAtivo === 'Informacional' ? 'bg-[#0284c7]' : 'bg-[#e0f2fe]'
-            }`}>
-              <svg className="size-[15.99px]" fill="none" preserveAspectRatio="none" viewBox="0 0 15.9896 15.9896">
-                <path 
-                  d={svgPaths.p28502300} 
-                  stroke={filtroCardAtivo === 'Informacional' ? 'white' : '#0284c7'} 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth="1.33333" 
-                />
-              </svg>
-            </div>
-          </div>
-          <div className="px-[24px] pb-[24px]">
-            <p className="font-['BancoDoBrasil_Textos:Bold',sans-serif] text-[#0284c7] text-[24px] leading-[32px] mb-[4px]">
-              {jornadasInformacional}
-            </p>
-            <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#686c73] text-[16px] leading-[24px] mb-[4px]">
-              {percInformacional}% do total
-            </p>
-            <div className="bg-[#e0f2fe] h-[8px] rounded-[33554400px] w-full">
-              <div className="bg-[#0284c7] h-[8px] rounded-[33554400px]" style={{ width: `${percInformacional}%` }} />
-            </div>
-          </div>
-        </div>
-      </div>
       )}
 
       {/* Filtros de Data/Período com Radio Buttons */}
@@ -886,12 +804,12 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
               value={statusFiltro}
               onChange={setStatusFiltro}
               options={[
-                { value: 'Enviada', label: 'Enviado' },
-                { value: 'Em análise', label: 'Em análise' },
+                { value: 'Nova', label: 'Enviado' },
+                { value: 'Em análise', label: 'Em Análise' },
                 { value: 'Correção', label: 'Devolvido' },
                 { value: 'Aprovada', label: 'Aprovado' },
-                { value: 'Implementada', label: 'Implementado' },
-                { value: 'Excluída', label: 'Excluído' }
+                { value: 'Implementada', label: 'Publicado' },
+                { value: 'Excluída', label: 'Invalidado' }
               ]}
               placeholder="Filtro"
             />
@@ -930,9 +848,9 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
               value={canalFiltro}
               onChange={setCanalFiltro}
               options={[
-                { value: 'Mobile', label: 'Mobile' },
-                { value: 'Web', label: 'Web' },
-                { value: 'Agência', label: 'Agência' }
+                { value: 'WhatsApp', label: 'WhatsApp' },
+                { value: 'App BB', label: 'App BB' },
+                { value: 'Outros', label: 'Outros' }
               ]}
               placeholder="Filtro"
             />
@@ -945,8 +863,8 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
               value={publicoFiltro}
               onChange={setPublicoFiltro}
               options={[
-                { value: 'Interno', label: 'Interno' },
-                { value: 'Externo', label: 'Externo' }
+                { value: 'PF', label: 'Pessoa Física' },
+                { value: 'PJ', label: 'Pessoa Jurídica' }
               ]}
               placeholder="Filtro"
             />
@@ -971,7 +889,7 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
               setDataInicio('');
               setDataTermino('');
               setFiltroCardAtivo('');
-              setFiltroStatusMinhas('');
+              setFiltroStatusCards('');
               setPeriodoAno('');
               setPeriodoTrimestre('');
               setPeriodoMes('');
@@ -1022,10 +940,10 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
               </svg>
             </div>
 
-            {/* Tipo - Coluna fixa */}
+            {/* Jornada - Coluna fixa */}
             <div className="flex flex-1 gap-[4px] items-center min-w-0">
               <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[#111214] text-[14px] tracking-[0.07px] uppercase leading-[1.125]">
-                TIPO
+                JORNADA
               </p>
               <svg className="size-[24px]" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
                 <path d={svgPaths.p4c95ef0} fill="#888D95" />
@@ -1106,7 +1024,7 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
                 </p>
               </div>
 
-              {/* Tipo - Coluna fixa */}
+              {/* Jornada - Coluna fixa */}
               <div className="flex flex-1 items-center min-w-0">
                 <p className="flex-1 font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#111214] text-[14px] tracking-[0.196px] leading-[1.125]">
                   {jornada.tipo}
@@ -1148,8 +1066,8 @@ export function PainelVisaoCAD({ onIncluirAlterar, onVerDetalhes, jornadas, data
                   </span>
                 </div>
                 
-                {/* Ícone de lápis para status "Correção" ou "Em análise" */}
-                {abaAtiva === 'minhas' && (jornada.status === 'Correção' || jornada.status === 'Nova') && onEditarJornada && (
+                {/* Ícone de lápis para status Enviado ou Devolvido */}
+                {(jornada.status === 'Correção' || jornada.status === 'Nova') && onEditarJornada && (
                   <button
                     onClick={(e) => {
                       e.stopPropagation();

@@ -17,6 +17,7 @@ interface PainelGovernancaProps {
 }
 
 export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizacao = '03/02/2026 14:30' }: PainelGovernancaProps) {
+  const CANAIS_FORMULARIO = ['WhatsApp', 'App BB', 'Outros'];
   const [dataInicio, setDataInicio] = useState(''); // Vazio por padrão
   const [dataTermino, setDataTermino] = useState(''); // Vazio por padrão
   const [periodo, setPeriodo] = useState('');
@@ -123,7 +124,7 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
       'Diretoria de Experiência do Cliente',
       'Diretoria de Marketing'
     ];
-    const canais = ['Mobile', 'Web', 'Agência'];
+    const canais = CANAIS_FORMULARIO;
     
     const indexDiretoria = contadores[j.tipoHU as keyof typeof contadores] % diretorias.length;
     const indexCanal = contadores[j.tipoHU as keyof typeof contadores] % canais.length;
@@ -145,7 +146,7 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
       cor: getStatusColors(j.status).bullet,
       rme: j.rme,
       diretoria: diretorias[indexDiretoria],
-      canal: canais[indexCanal],
+      canal: j.canais?.[0] || canais[indexCanal],
       // ADICIONAR: jornada original completa
       jornadaOriginal: j
     };
@@ -776,9 +777,9 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
                 value={canalFiltro}
                 onChange={setCanalFiltro}
                 options={[
-                  { value: 'Mobile', label: 'Mobile' },
-                  { value: 'Web', label: 'Web' },
-                  { value: 'Agência', label: 'Agência' }
+                  { value: 'WhatsApp', label: 'WhatsApp' },
+                  { value: 'App BB', label: 'App BB' },
+                  { value: 'Outros', label: 'Outros' }
                 ]}
                 placeholder="Filtro"
               />
@@ -827,10 +828,10 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
                 </svg>
               </div>
 
-              {/* TIPO */}
+              {/* JORNADA */}
               <div className="flex flex-1 gap-[4px] items-center min-w-0">
                 <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[#111214] text-[14px] tracking-[0.07px] uppercase leading-[1.125]">
-                  TIPO
+                  JORNADA
                 </p>
                 <svg className="size-[24px]" fill="none" preserveAspectRatio="none" viewBox="0 0 24 24">
                   <path d={svgPaths.p4c95ef0} fill="#888D95" />
@@ -917,7 +918,7 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
                   </p>
                 </div>
 
-                {/* TIPO */}
+                {/* JORNADA */}
                 <div className="flex flex-1 items-center min-w-0">
                   <p className="flex-1 font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#111214] text-[14px] tracking-[0.196px] leading-[1.125]">
                     {jornada.tipo}

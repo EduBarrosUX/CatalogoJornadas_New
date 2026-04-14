@@ -276,7 +276,7 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
                   { value: 'Correção', label: 'Devolvido' },
                   { value: 'Aprovada', label: 'Aprovado' },
                   { value: 'Implementada', label: 'Implementado' },
-                  { value: 'Excluída', label: 'Excluído' }
+                  { value: 'Excluída', label: 'Invalidado' }
                 ]}
                 placeholder="Selecione o status"
               />
