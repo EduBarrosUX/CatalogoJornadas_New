@@ -127,7 +127,7 @@ export function DetalhesJornada({ jornada, onVoltar, onEditar }: DetalhesJornada
             {getStatusDescription(jornada.status)}
           </p>
         </div>
-        {jornada.status === 'Correção' && jornada.comentarioGovernanca && (
+        {(jornada.status === 'Correção' || jornada.status === 'Excluída') && jornada.comentarioGovernanca && (
           <div className="bg-[#fff7e8] border border-[#ffb31a] rounded-[8px] p-[12px]">
             <p className="font-['BancoDoBrasil_Textos:Bold',sans-serif] text-[#ad5f00] text-[13px] leading-[1.2] mb-[6px]">
               Comentário da Governança

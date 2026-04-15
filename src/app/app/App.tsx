@@ -357,7 +357,8 @@ export default function App() {
       iaGenerativaRespondeCliente: false,
       inputGatilho: 'Cliente solicita contestação da compra',
       nomeHashInicial: '#contestacao-cartao',
-      hashInicio: '#contestacao'
+      hashInicio: '#contestacao',
+      comentarioGovernanca: 'Jornada invalidada por inconsistência entre o tipo de inclusão informado e os dados obrigatórios do formulário.'
     }
   ]);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
