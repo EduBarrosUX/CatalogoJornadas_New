@@ -357,8 +357,7 @@ export default function App() {
       iaGenerativaRespondeCliente: false,
       inputGatilho: 'Cliente solicita contestação da compra',
       nomeHashInicial: '#contestacao-cartao',
-      hashInicio: '#contestacao',
-      comentarioGovernanca: 'Jornada invalidada por inconsistência entre o tipo de inclusão informado e os dados obrigatórios do formulário.'
+      hashInicio: '#contestacao'
     }
   ]);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
@@ -558,18 +557,19 @@ export default function App() {
     const isFluxoNovo = data.tipoInclusao === 'Nova Jornada' || data.tipoInclusao === 'novo' || !data.tipoInclusao;
     const isExcecaoAtivo = (data.tipoHU || '').trim() === 'Ativo';
     if (isFluxoNovo && !isExcecaoAtivo) {
+      const codigoSemTracos = (rmeGerado || '').replace(/-/g, '');
       setSuccessToastMessage(
         <>
-          Jornada cadastrada com sucesso!
+          Formulário cadastrado com sucesso!
           <br />
-          O código da jornada é:{' '}
+          Gerado o código da jornada :{' '}
           <span className="text-[#2d37f5] font-['BancoDoBrasil_Textos:Bold',sans-serif] tracking-[0.07px]">
-            {rmeGerado}
+            {codigoSemTracos}
           </span>
         </>
       );
     } else {
-      setSuccessToastMessage('Jornada cadastrada com sucesso!');
+      setSuccessToastMessage('Formulário cadastrado com sucesso!');
     }
     setShowSuccessToast(true);
     
@@ -635,7 +635,11 @@ export default function App() {
                   <p className="css-4hzbpn leading-[normal]">{currentView === 'formulario' ? 'Formulário de Jornadas' : 'Acompanhamento'}</p>
                 </div>
                 <div className="flex flex-col font-['BancoDoBrasil_Textos:Light',sans-serif] justify-center relative shrink-0 text-[20px] w-[700px]">
-                  <p className="css-4hzbpn leading-[normal]">Acompanhe os formulários, edite informações e consulte o status de validação.</p>
+                  <p className="css-4hzbpn leading-[normal]">
+                    {currentView === 'formulario'
+                      ? 'Explore o catálogo de jornadas, adicione novas informações, atualize dados existentes, reporte possíveis inconsistências e compartilhe suas sugestões para evoluirmos com o nosso Catálogo de Jornadas.'
+                      : 'Acompanhe os formulários, edite informações e consulte o status de validação.'}
+                  </p>
                 </div>
               </>
             )}

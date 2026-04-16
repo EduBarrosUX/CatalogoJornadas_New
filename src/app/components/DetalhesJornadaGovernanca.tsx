@@ -20,6 +20,21 @@ function getTodayIso() {
   return `${y}-${m}-${day}`;
 }
 
+function getTodayBr() {
+  const d = new Date();
+  const day = String(d.getDate()).padStart(2, '0');
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const y = d.getFullYear();
+  return `${day}/${m}/${y}`;
+}
+
+function getCurrentTime() {
+  const d = new Date();
+  const h = String(d.getHours()).padStart(2, '0');
+  const min = String(d.getMinutes()).padStart(2, '0');
+  return `${h}:${min}`;
+}
+
 const STATUS_NIA_COM_DATA: StatusNIAValor[] = ['Inativa', 'Sanitizada', 'Excluída'];
 
 interface DetalhesJornadaGovernancaProps {
@@ -50,6 +65,9 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
   });
   const [comentario, setComentario] = useState('');
   const [charsRestantes, setCharsRestantes] = useState(500);
+  const [observacao, setObservacao] = useState('');
+  const [charsRestantesObservacao, setCharsRestantesObservacao] = useState(500);
+  const [observacoesSalvas, setObservacoesSalvas] = useState(jornada.observacoesGovernanca ?? []);
   const [abaAtiva, setAbaAtiva] = useState<'dados' | 'historico'>('dados');
   
   // Estado do Toast
@@ -64,7 +82,7 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
   }, [statusNIA, setValue, getValues]);
 
   // Dados mockados do histórico de atualizações
-  const historicoAtualizacoes = [
+  const historicoBase = [
     {
       id: 1,
       tipo: 'status',
@@ -107,6 +125,18 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
     }
   ];
 
+  const historicoAtualizacoes = [
+    ...observacoesSalvas.map((obs, index) => ({
+      id: 1000 + index,
+      tipo: 'observacao',
+      alteracao: `Observação adicionada: "${obs.texto}"`,
+      usuario: obs.usuario || 'Governança',
+      data: obs.data,
+      horario: obs.horario
+    })),
+    ...historicoBase
+  ];
+
   const handleComentarioChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const texto = e.target.value;
     if (texto.length <= 500) {
@@ -115,14 +145,39 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
     }
   };
 
+  const handleObservacaoChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const texto = e.target.value;
+    if (texto.length <= 500) {
+      setObservacao(texto);
+      setCharsRestantesObservacao(500 - texto.length);
+    }
+  };
+
   const handleSalvar = () => {
+    const observacaoLimpa = observacao.trim();
+    const novaObservacao = observacaoLimpa
+      ? {
+          texto: observacaoLimpa,
+          data: getTodayBr(),
+          horario: getCurrentTime(),
+          usuario: 'Governança'
+        }
+      : null;
+    const proximaListaObservacoes = novaObservacao ? [novaObservacao, ...observacoesSalvas] : observacoesSalvas;
+
     // Atualizar o status atual (que aparece no badge)
     setStatusAtual(statusSelecionado);
+    setObservacoesSalvas(proximaListaObservacoes);
+    if (novaObservacao) {
+      setObservacao('');
+      setCharsRestantesObservacao(500);
+    }
     
     if (onSalvar) {
       const base: Partial<JornadaCadastrada> = {
         status: statusSelecionado,
         comentarioGovernanca: comentario || jornada.comentarioGovernanca,
+        observacoesGovernanca: proximaListaObservacoes,
         statusNIA
       };
       if (statusNIA === 'Produção') {
@@ -330,10 +385,36 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
             </div>
           )}
 
-          {/* Campo de Comentários */}
+          {/* Campo de Observações */}
           <div className="content-stretch flex flex-col items-end justify-center relative shrink-0 w-full">
             <div className="content-stretch flex flex-col gap-[8px] h-[227px] items-start relative shrink-0 w-full">
-              <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">Comentários da jornada</p>
+              <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">Observações</p>
+              <div className="bg-[#f0f2f4] content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px overflow-clip relative rounded-tl-[4px] rounded-tr-[4px] w-full">
+                <div className="bg-[#f0f2f4] flex-[1_0_0] min-h-px min-w-px relative rounded-tl-[4px] rounded-tr-[4px] w-full">
+                  <div className="content-stretch flex items-start pt-[8px] px-[16px] relative size-full">
+                    <textarea
+                      placeholder="Mensagem..."
+                      className="css-4hzbpn flex-[1_0_0] font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.4] min-h-px min-w-px not-italic relative text-[#6c7077] text-[14px] bg-transparent border-none outline-none w-full resize-none"
+                      rows={8}
+                      value={observacao}
+                      onChange={handleObservacaoChange}
+                    />
+                  </div>
+                </div>
+                <div className="h-[11px] relative shrink-0 w-full">
+                  <div className="absolute bg-[#f0f2f4] inset-0" />
+                </div>
+                <div className="bg-[#f0f2f4] h-[4px] shrink-0 w-full" />
+                <div className="bg-[#b4b9c1] h-px shrink-0 w-full" />
+              </div>
+              <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#6c7077] text-[14px] tracking-[0.196px] w-full">{charsRestantesObservacao} caracteres restantes</p>
+            </div>
+          </div>
+
+          {/* Campo de Comentário do validador */}
+          <div className="content-stretch flex flex-col items-end justify-center relative shrink-0 w-full">
+            <div className="content-stretch flex flex-col gap-[8px] h-[227px] items-start relative shrink-0 w-full">
+              <p className="css-4hzbpn font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.125] not-italic relative shrink-0 text-[#111214] text-[14px] tracking-[0.07px] w-full">Comentário do validador</p>
               <div className="bg-[#f0f2f4] content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px overflow-clip relative rounded-tl-[4px] rounded-tr-[4px] w-full">
                 <div className="bg-[#f0f2f4] flex-[1_0_0] min-h-px min-w-px relative rounded-tl-[4px] rounded-tr-[4px] w-full">
                   <div className="content-stretch flex items-start pt-[8px] px-[16px] relative size-full">
