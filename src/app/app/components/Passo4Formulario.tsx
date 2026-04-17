@@ -1,6 +1,6 @@
 
 import { UseFormRegister, FieldErrors, UseFormWatch, UseFormSetValue } from 'react-hook-form';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface Passo4FormularioProps {
   register: UseFormRegister<any>;
@@ -50,24 +50,29 @@ export function Passo4Formulario({ register, errors, watch, setValue }: Passo4Fo
   const tituloPlaceholder =
     inducaoPlaceholder != null
       ? inducaoPlaceholder
-      : tipoHU === 'Informacional' && publico
-      ? `Informacional ${publico} - Digite o Título`
-      : publico === 'PJ'
-      ? 'Ativo PJ - Titulo'
-      : publico === 'PF'
-        ? 'Ativo PF - Titulo'
-        : 'Digite o título';
+      : (publico === 'PF' || publico === 'PJ') && tipoHU === 'Transação'
+        ? `Transação ${publico} - Titulo`
+        : (publico === 'PF' || publico === 'PJ') && tipoHU === 'Ativo'
+          ? `Ativo ${publico} - Titulo`
+          : (publico === 'PF' || publico === 'PJ') && tipoHU === 'Informacional'
+            ? `Informacional ${publico} - Titulo`
+            : 'Digite o título';
+
+  const lastAutoTitleRef = useRef<string>('');
   useEffect(() => {
-    // Para Indução, o título deve sempre refletir a seleção atual
-    // (contexto/público/check-in), inclusive quando o usuário volta etapas.
-    if (tipoHU === 'Indução' && tituloPlaceholder !== 'Digite o título') {
+    if (tituloPlaceholder === 'Digite o título') return;
+
+    const lastAuto = lastAutoTitleRef.current;
+    if (tipoHU === 'Indução') {
       setValue('tituloFluxo', tituloPlaceholder, { shouldDirty: true, shouldValidate: true });
+      lastAutoTitleRef.current = tituloPlaceholder;
       return;
     }
 
-    // Para os demais tipos, mantém o preenchimento inicial quando vazio.
-    if (!tituloFluxo.trim() && tituloPlaceholder !== 'Digite o título') {
+    // Preenche automaticamente enquanto o usuário não personalizar o campo.
+    if (!tituloFluxo.trim() || tituloFluxo === lastAuto) {
       setValue('tituloFluxo', tituloPlaceholder, { shouldDirty: true, shouldValidate: true });
+      lastAutoTitleRef.current = tituloPlaceholder;
     }
   }, [tipoHU, tituloFluxo, tituloPlaceholder, setValue]);
 
@@ -86,7 +91,7 @@ export function Passo4Formulario({ register, errors, watch, setValue }: Passo4Fo
                   <input
                     type="text"
                     {...register('tituloFluxo', { required: 'Campo obrigatório' })}
-                    placeholder="Digite o título"
+                    placeholder={tituloPlaceholder}
                     className="flex-[1_0_0] bg-transparent font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[1.25] min-h-px min-w-px not-italic relative text-[#686c73] text-[16px] tracking-[0.08px] outline-none placeholder:text-[#686c73]"
                   />
                 </div>

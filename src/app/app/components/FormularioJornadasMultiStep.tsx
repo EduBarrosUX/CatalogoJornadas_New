@@ -691,6 +691,7 @@ export function FormularioJornadasMultiStep({ onSubmitSuccess, jornadaEditando }
             onCanaisChange={handleCanaisChange}
             tipoHU={tipoHU}
             watch={watch}
+            setValue={setValue}
           />
         )}
 

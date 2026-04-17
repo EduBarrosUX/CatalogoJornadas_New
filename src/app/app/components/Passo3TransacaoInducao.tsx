@@ -1,5 +1,5 @@
 
-import { UseFormRegister, FieldErrors, UseFormWatch } from 'react-hook-form';
+import { UseFormRegister, FieldErrors, UseFormWatch, UseFormSetValue } from 'react-hook-form';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import svgPaths from '@/imports/svg-st0q96v9y6';
 
@@ -10,6 +10,7 @@ interface Passo3TransacaoInducaoProps {
   onCanaisChange: (values: string[]) => void;
   tipoHU?: 'Transação' | 'Ativo' | 'Indução' | 'Informacional';
   watch: UseFormWatch<any>;
+  setValue: UseFormSetValue<any>;
 }
 
 function normalizeText(text: string) {
@@ -21,12 +22,14 @@ export function Passo3TransacaoInducao({
   errors,
   tipoHU,
   watch,
+  setValue,
   canaisSelecionados,
   onCanaisChange
 }: Passo3TransacaoInducaoProps) {
   const descricaoFluxo = watch('descricaoFluxo') || '';
   const caracteresRestantes = 198 - descricaoFluxo.length;
   const publico = watch('publico') || '';
+  const tituloFluxo = watch('tituloFluxo') || '';
   const canal = watch('canais') || '';
   const canalOutro = watch('canalOutro') || '';
   const [publicoSelecionado, setPublicoSelecionado] = useState(publico);
@@ -37,15 +40,24 @@ export function Passo3TransacaoInducao({
   const temaInputRef = useRef<HTMLInputElement>(null);
 
   const tituloPlaceholder =
-    canalSelecionado === 'Outros'
-      ? 'Outros'
-      : tipoHU === 'Transação'
-        ? publicoSelecionado === 'PJ'
-          ? 'Transação PJ - Titulo'
-          : publicoSelecionado === 'PF'
-            ? 'Transação PF - Titulo'
-            : 'Digite o título'
-        : 'Digite o título';
+    tipoHU === 'Transação' && (publicoSelecionado === 'PF' || publicoSelecionado === 'PJ')
+      ? `Transação ${publicoSelecionado} - Titulo`
+      : tipoHU === 'Ativo' && (publicoSelecionado === 'PF' || publicoSelecionado === 'PJ')
+        ? `Ativo ${publicoSelecionado} - Titulo`
+        : tipoHU === 'Informacional' && (publicoSelecionado === 'PF' || publicoSelecionado === 'PJ')
+          ? `Informacional ${publicoSelecionado} - Titulo`
+          : 'Digite o título';
+
+  const lastAutoTitleRef = useRef<string>('');
+
+  useEffect(() => {
+    if (tituloPlaceholder === 'Digite o título') return;
+    const lastAuto = lastAutoTitleRef.current;
+    if (!tituloFluxo.trim() || tituloFluxo === lastAuto) {
+      setValue('tituloFluxo', tituloPlaceholder, { shouldDirty: true, shouldValidate: true });
+      lastAutoTitleRef.current = tituloPlaceholder;
+    }
+  }, [tituloFluxo, tituloPlaceholder, setValue]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
