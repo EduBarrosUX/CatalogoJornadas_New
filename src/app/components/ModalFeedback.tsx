@@ -144,7 +144,7 @@ export function ModalFeedback({ isOpen, onClose, onSubmit, jornadas }: ModalFeed
                       {/* Text */}
                       <div className="flex-1 flex flex-col gap-[4px]">
                         <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[#111214] text-[16px] leading-[18px] tracking-[0.08px]">
-                          Reportar problema
+                          Reportar erro
                         </p>
                         <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#686c73] text-[14px] leading-[15.75px] tracking-[0.196px]">
                           Reportar erro ou inconsistência
@@ -231,7 +231,7 @@ export function ModalFeedback({ isOpen, onClose, onSubmit, jornadas }: ModalFeed
                     type="submit"
                     className="flex-1 bg-[#fcfc30] hover:bg-[#eded20] px-[24px] py-[12px] h-[45px] rounded-[8px] font-['BancoDoBrasil_Titulos:Bold',sans-serif] text-[#465eff] text-[14px] leading-[21px] uppercase transition-colors"
                   >
-                    {tipo === 'sugestao' ? 'Enviar Sugestão' : 'Reportar Problema'}
+                    {tipo === 'sugestao' ? 'Enviar Sugestão' : 'Reportar Erro'}
                   </button>
                 </div>
               )}

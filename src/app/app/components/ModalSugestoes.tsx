@@ -205,13 +205,13 @@ export function ModalSugestoes({ onClose, onSubmit }: ModalSugestoesProps) {
                       </div>
                       <div className="flex flex-col gap-[4px] items-start" data-name="Container">
                         <div className="content-stretch flex h-[18px] items-start w-[480px]">
-                          <p className="flex-[1_0_0] font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[18px] min-h-px min-w-px not-italic text-left text-[#111214] text-[16px] tracking-[0.08px]">Reportar problema</p>
+                          <p className="flex-[1_0_0] font-['BancoDoBrasil_Textos:Medium',sans-serif] leading-[18px] min-h-px min-w-px not-italic text-left text-[#111214] text-[16px] tracking-[0.08px]">Reportar erro</p>
                         </div>
                         <div className="h-[15.75px] relative shrink-0 w-[480px]" data-name="Container">
                           <div className="content-stretch flex flex-col h-[15.75px] items-start justify-center" data-name="Container">
                             <div className="h-[15.75px] relative shrink-0 w-[480px]">
                               <div className="bg-clip-padding border-0 border-[transparent] border-solid relative size-full">
-                                <p className="absolute font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[15.75px] left-0 not-italic text-[#686c73] text-[14px] top-[-1px] tracking-[0.196px] whitespace-nowrap">Reportar erro ou inconsistência</p>
+                                <p className="absolute font-['BancoDoBrasil_Textos:Regular',sans-serif] leading-[15.75px] left-0 not-italic text-[#686c73] text-[14px] top-[-1px] tracking-[0.196px] whitespace-nowrap">Erro ou inconsistência</p>
                               </div>
                             </div>
                           </div>
@@ -330,7 +330,7 @@ export function ModalSugestoes({ onClose, onSubmit }: ModalSugestoesProps) {
               >
                 <div className="bg-clip-padding border-0 border-[transparent] border-solid relative size-full">
                   <p className="-translate-x-1/2 absolute font-['BancoDoBrasil_Titulos:Bold',sans-serif] leading-[21px] left-1/2 not-italic text-[#465eff] text-[14px] text-center top-[11px] uppercase whitespace-nowrap">
-                    {tipoSelecionado === 'sugestao' ? 'Enviar Sugestão' : 'Reportar Problema'}
+                    {tipoSelecionado === 'sugestao' ? 'Enviar Sugestão' : 'Reportar Erro'}
                   </p>
                 </div>
               </button>

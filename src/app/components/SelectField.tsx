@@ -12,6 +12,7 @@ interface SelectFieldProps {
 
 export function SelectField({ label, value, onChange, options, placeholder = 'Selecione', allowClear = false }: SelectFieldProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [openUpwards, setOpenUpwards] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Fechar dropdown ao clicar fora
@@ -38,6 +39,17 @@ export function SelectField({ label, value, onChange, options, placeholder = 'Se
       setIsOpen(!isOpen);
     }
   };
+
+  useEffect(() => {
+    if (!isOpen || !containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const menuMaxHeight = 280;
+    const gutter = 16;
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    const shouldOpenUp = spaceBelow < menuMaxHeight + gutter && spaceAbove > spaceBelow;
+    setOpenUpwards(shouldOpenUp);
+  }, [isOpen]);
 
   return (
     <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full" ref={containerRef}>
@@ -72,7 +84,11 @@ export function SelectField({ label, value, onChange, options, placeholder = 'Se
 
         {/* Dropdown Menu */}
         {isOpen && (
-          <div className="absolute bg-[#fefefe] p-[4px] shadow-[0px_10px_16px_0px_rgba(24,24,27,0.06),0px_3px_6px_0px_rgba(24,24,27,0.06),0px_0px_1px_0px_rgba(24,24,27,0.04)] top-[calc(100%+4px)] w-full z-50 rounded-[4px]">
+          <div
+            className={`absolute bg-[#fefefe] p-[4px] shadow-[0px_10px_16px_0px_rgba(24,24,27,0.06),0px_3px_6px_0px_rgba(24,24,27,0.06),0px_0px_1px_0px_rgba(24,24,27,0.04)] w-full z-50 rounded-[4px] ${
+              openUpwards ? 'bottom-[calc(100%+4px)]' : 'top-[calc(100%+4px)]'
+            }`}
+          >
             <div className="flex flex-col w-full overflow-y-auto max-h-[280px]">
               {options.map((option, index) => (
                 <div key={option.value} className="w-full">

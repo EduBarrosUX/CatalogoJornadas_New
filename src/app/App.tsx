@@ -378,6 +378,7 @@ export default function App() {
       anexoNome: 'print-data-campo.png',
       dataEnvio: '31/03/2026 14:22',
       origem: 'Catálogo',
+      status: 'Enviado',
     },
     {
       id: 'fb-2',
@@ -385,6 +386,7 @@ export default function App() {
       descricao: 'Adicionar filtro por presença de Plano de Requisitos no painel.',
       dataEnvio: '31/03/2026 14:45',
       origem: 'Catálogo',
+      status: 'Em análise',
     },
     {
       id: 'fb-3',
@@ -394,6 +396,7 @@ export default function App() {
       anexoNome: 'evidencia-quebra-linha.jpg',
       dataEnvio: '31/03/2026 15:02',
       origem: 'Catálogo',
+      status: 'Ajustado',
     },
     {
       id: 'fb-4',
@@ -401,6 +404,7 @@ export default function App() {
       descricao: 'Incluir filtro por diretoria no topo da visão acompanhamento.',
       dataEnvio: '31/03/2026 15:10',
       origem: 'Catálogo',
+      status: 'Invalidado',
     },
     {
       id: 'fb-5',
@@ -410,6 +414,7 @@ export default function App() {
       anexoNome: 'validacao-codigo-fluxo.pdf',
       dataEnvio: '31/03/2026 15:18',
       origem: 'Catálogo',
+      status: 'Enviado',
     },
     {
       id: 'fb-6',
@@ -417,6 +422,7 @@ export default function App() {
       descricao: 'Padronizar textos de ajuda do Plano de Requisitos em todos os fluxos.',
       dataEnvio: '31/03/2026 15:24',
       origem: 'Catálogo',
+      status: 'Em análise',
     },
     {
       id: 'fb-7',
@@ -426,6 +432,7 @@ export default function App() {
       anexoNome: 'passos-reproducao.docx',
       dataEnvio: '31/03/2026 15:33',
       origem: 'Catálogo',
+      status: 'Ajustado',
     },
     {
       id: 'fb-8',
@@ -433,6 +440,7 @@ export default function App() {
       descricao: 'Adicionar contador de registros encontrados na tabela de consulta.',
       dataEnvio: '31/03/2026 15:37',
       origem: 'Catálogo',
+      status: 'Invalidado',
     },
     {
       id: 'fb-9',
@@ -442,6 +450,7 @@ export default function App() {
       anexoNome: 'captura-canal-outros.png',
       dataEnvio: '31/03/2026 15:42',
       origem: 'Catálogo',
+      status: 'Enviado',
     },
     {
       id: 'fb-10',
@@ -449,6 +458,7 @@ export default function App() {
       descricao: 'Permitir exportar a lista de consultas em CSV.',
       dataEnvio: '31/03/2026 15:48',
       origem: 'Catálogo',
+      status: 'Em análise',
     },
     {
       id: 'fb-11',
@@ -458,6 +468,7 @@ export default function App() {
       anexoNome: 'video-status-nia.mp4',
       dataEnvio: '31/03/2026 15:54',
       origem: 'Catálogo',
+      status: 'Ajustado',
     },
     {
       id: 'fb-12',
@@ -465,6 +476,7 @@ export default function App() {
       descricao: 'Exibir destaque para jornadas sem Plano de Requisitos.',
       dataEnvio: '31/03/2026 16:01',
       origem: 'Catálogo',
+      status: 'Invalidado',
     },
   ]);
 
@@ -603,6 +615,7 @@ export default function App() {
         anexoNome: arquivo?.name,
         dataEnvio,
         origem: 'Catálogo',
+        status: 'Enviado',
       },
       ...prev,
     ]);
@@ -924,6 +937,10 @@ export default function App() {
         <ModalConsultaFeedbacks
           onClose={() => setShowModalConsultaFeedbacks(false)}
           registros={registrosFeedback}
+          modo={currentView === 'governanca' ? 'gestao' : 'catalogo'}
+          onAtualizarRegistro={(id, partial) => {
+            setRegistrosFeedback((prev) => prev.map((r) => (r.id === id ? { ...r, ...partial } : r)));
+          }}
         />
       )}
     </div>
