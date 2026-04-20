@@ -38,7 +38,7 @@ export function DetalhesJornada({ jornada, onVoltar, onEditar }: DetalhesJornada
   const getStatusDescription = (status: string) => {
     switch (status) {
       case 'Nova':
-        return 'Solicitação enviada aguardando análise da governança';
+        return 'Solicitação enviada aguardando análise do validador';
       case 'Em análise':
         return 'Aguardando análise do validador';
       case 'Correção':
