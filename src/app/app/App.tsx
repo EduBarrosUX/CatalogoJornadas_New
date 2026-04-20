@@ -619,6 +619,7 @@ export default function App() {
       },
       ...prev,
     ]);
+    setSuccessToastMessage(tipo === 'sugestao' ? 'Sugestão enviada com sucesso!' : 'Erro enviado com sucesso!');
     setShowSuccessToast(true);
   };
 

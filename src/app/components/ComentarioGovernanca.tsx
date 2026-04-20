@@ -29,7 +29,7 @@ export function ComentarioGovernanca({ comentario }: ComentarioGovernancaProps) 
       <Relationship />
       <div className="content-stretch flex flex-[1_0_0] flex-col gap-[8px] items-start leading-[1.125] min-h-px min-w-px not-italic relative self-stretch text-[#686c73] text-[14px] tracking-[0.07px]">
         <p className="font-['BancoDoBrasil_Textos:Bold',sans-serif] relative shrink-0 w-full">
-          Comentário da Governança:
+          Comentário do validador:
         </p>
         <p className="font-['BancoDoBrasil_Textos:Medium',sans-serif] relative shrink-0 w-full">
           {comentario}

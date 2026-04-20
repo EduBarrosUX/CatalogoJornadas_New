@@ -265,30 +265,30 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
         <div className="flex items-center justify-between mb-[24px] w-full">
           {/* Métricas Unificadas */}
           <div className="flex items-center gap-[32px]">
-            {/* Jornadas cadastradas */}
+            {/* Formulários Cadastrados */}
             <div className="flex items-center gap-[6px]">
               <span className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[#686c73] text-[16px]">
-                Jornadas cadastradas:
+                Formulários Cadastrados:
               </span>
               <span className="font-['BancoDoBrasil_Textos:Bold',sans-serif] text-[#465eff] text-[20px]">
                 {totalDashboard}
               </span>
             </div>
             
-            {/* Novas */}
+            {/* Novos */}
             <div className="flex items-center gap-[6px]">
               <span className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[#686c73] text-[16px]">
-                Novas:
+                Novos:
               </span>
               <span className="font-['BancoDoBrasil_Textos:Bold',sans-serif] text-[#465eff] text-[20px]">
                 {jornadasNovas}
               </span>
             </div>
             
-            {/* Alteradas */}
+            {/* Alterados */}
             <div className="flex items-center gap-[6px]">
               <span className="font-['BancoDoBrasil_Textos:Medium',sans-serif] text-[#686c73] text-[16px]">
-                Alteradas:
+                Alterados:
               </span>
               <span className="font-['BancoDoBrasil_Textos:Bold',sans-serif] text-[#465eff] text-[20px]">
                 {jornadasAlteradas}
@@ -296,7 +296,7 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
             </div>
           </div>
 
-          {/* Botão Subir Aprovadas */}
+          {/* Botão Subir Aprovados */}
           <button 
             className="bg-[#0C8A00] flex items-center gap-[8px] px-[16px] py-[12px] rounded-[4px] hover:bg-[#0a7400] transition-colors cursor-pointer"
             onClick={() => {
@@ -305,7 +305,7 @@ export function PainelGovernanca({ onVerDetalhes, jornadas, dataUltimaAtualizaca
             }}
           >
             <span className="font-['BancoDoBrasil_Titulos:Bold',sans-serif] text-white text-[14px] tracking-[0.07px] uppercase leading-[1.125]">
-              SUBIR APROVADAS ({jornadasAprovadas})
+              SUBIR APROVADOS ({jornadasAprovadas})
             </span>
           </button>
         </div>

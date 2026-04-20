@@ -308,7 +308,7 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
         {(statusAtual === 'Correção' || statusAtual === 'Excluída') && (jornada.comentarioGovernanca || comentario) && (
           <div className="bg-[#fff7e8] border border-[#ffb31a] rounded-[8px] p-[12px]">
             <p className="font-['BancoDoBrasil_Textos:Bold',sans-serif] text-[#ad5f00] text-[13px] leading-[1.2] mb-[6px]">
-              Comentário da Governança
+              Comentário do validador
             </p>
             <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#686c73] text-[14px] leading-[1.4]">
               {comentario || jornada.comentarioGovernanca}

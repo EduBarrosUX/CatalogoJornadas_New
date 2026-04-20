@@ -40,7 +40,7 @@ export function DetalhesJornada({ jornada, onVoltar, onEditar }: DetalhesJornada
       case 'Nova':
         return 'Solicitação enviada aguardando análise da governança';
       case 'Em análise':
-        return 'Solicitação sendo analisada pela equipe de governança';
+        return 'Aguardando análise do validador';
       case 'Correção':
         return 'Solicitação devolvida e precisa de correções antes de prosseguir';
       case 'Aprovada':
@@ -130,7 +130,7 @@ export function DetalhesJornada({ jornada, onVoltar, onEditar }: DetalhesJornada
         {(jornada.status === 'Correção' || jornada.status === 'Excluída') && jornada.comentarioGovernanca && (
           <div className="bg-[#fff7e8] border border-[#ffb31a] rounded-[8px] p-[12px]">
             <p className="font-['BancoDoBrasil_Textos:Bold',sans-serif] text-[#ad5f00] text-[13px] leading-[1.2] mb-[6px]">
-              Comentário da Governança
+              Comentário do validador
             </p>
             <p className="font-['BancoDoBrasil_Textos:Regular',sans-serif] text-[#686c73] text-[14px] leading-[1.4]">
               {jornada.comentarioGovernanca}
