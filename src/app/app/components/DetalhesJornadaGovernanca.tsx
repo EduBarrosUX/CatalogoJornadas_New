@@ -219,7 +219,7 @@ export function DetalhesJornadaGovernanca({ jornada, onVoltar, onSalvar, onAbrir
       case 'Nova':
         return 'Solicitação aguardando análise';
       case 'Em análise':
-        return 'Solicitação sendo analisada';
+        return 'Aguardando análise do validador';
       case 'Correção':
         return 'Solicitação devolvida e precisa de correções antes de prosseguir';
       case 'Aprovada':
